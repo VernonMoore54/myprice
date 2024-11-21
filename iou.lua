@@ -581,7 +581,7 @@ local function autoStory()
         
         if not LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat") then
             SendWebhook("Farming `Caesar's Headband` to purchase `Hamon`")
-            task.wait(60)
+            task.wait(3)
             farmItem("Zeppeli's Hat", 1)
         end
 
@@ -629,7 +629,7 @@ local function autoStory()
             if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1") then
             firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options.Option1.TextButton.MouseButton1Click)
             end
-            task.wait(10)
+            task.wait(3)
             autoStory()
         else
             Teleport()
@@ -723,7 +723,7 @@ local function autoStory()
                     autoStory()
                 end
             end
-            task.wait(10)
+            task.wait(5)
             collectAndSell("Mysterious Arrow", 25)
 			collectAndSell("Rokakaka", 25)
 			collectAndSell("Diamond", 10)
