@@ -581,7 +581,7 @@ local function autoStory()
         
         if not LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat") then
             SendWebhook("Farming `Caesar's Headband` to purchase `Hamon`")
-            task.wait(60)
+            task.wait(30)
             farmItem("Zeppeli's Hat", 1)
         end
 
@@ -589,8 +589,8 @@ local function autoStory()
             print("WHERE DID THE MONEY GO FOR HAMON?")
             SendWebhook("Collecting `$10000` for `Hamon`")
             collectAndSell("Mysterious Arrow", 25)
-			collectAndSell("Rokakaka", 25)
-			collectAndSell("Diamond", 10)
+            collectAndSell("Rokakaka", 25)
+	    collectAndSell("Diamond", 10)
             collectAndSell("Steel Ball", 10)
             collectAndSell("Quinton's Glove", 10)
             collectAndSell("Pure Rokakaka", 10)
