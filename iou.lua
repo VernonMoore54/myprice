@@ -833,9 +833,11 @@ local function autoStory()
 end
 
 task.spawn(function()
-    while task.wait(3) do
+    while task.wait(10) do
         if checkPrestige(LocalPlayer.PlayerStats.Level.Value, LocalPlayer.PlayerStats.Prestige.Value) then
             print("Prestiged")
+            Teleport()
+            task.wait(1)
             Teleport()
         elseif LocalPlayer.PlayerStats.Level.Value == 50 then
 		    if not Character:FindFirstChild("FocusCam") then
