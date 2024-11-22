@@ -23,7 +23,7 @@ local HRP = Character.PrimaryPart
 local part
 local dontTPOnDeath = true
 
-if LocalPlayer.PlayerStats.Level.Value == 50 then while true do print("Level 50, Auto pres disabled") task.wait(10) end end
+if LocalPlayer.PlayerStats.Level.Value == 50 then while true do print("Level 50, Auto pres disabled") task.wait(9999999) end end
 
 if not LocalPlayer.PlayerGui:FindFirstChild("HUD") then
     print("I FOUND IT")
@@ -177,11 +177,11 @@ local function TPReturner()
        pcall(function()
         if getgenv().lessPing then
             game:GetService("TeleportService"):Teleport(2809202155, game:GetService("Players").LocalPlayer)
-
+     
             game:GetService("TeleportService").TeleportInitFailed:Connect(function()
                  game:GetService("TeleportService"):Teleport(2809202155, game:GetService("Players").LocalPlayer)
             end)
-
+            
             repeat task.wait() until game.JobId ~= game.JobId
         end
 
@@ -237,23 +237,23 @@ local function UseRoka()
     if not Character:FindFirstChild("Rokakaka") then
         Character:FindFirstChildWhichIsA("Humanoid"):EquipTool(Player.Backpack:FindFirstChild("Rokakaka"))
     end
-
+    
     repeat
         game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 8, 0, true, nil, 1)
         task.wait(0.05)
     until Player.PlayerGui:FindFirstChild("DialogueGui")
-
+    
     if Player.PlayerGui:FindFirstChild("DialogueGui") then
         repeat
             game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 8, 0, true, nil, 1)
             task.wait(0.05)
         until Player.PlayerGui.DialogueGui.Frame.Options:FindFirstChild("Option1")
-
+        
         local EatOption = Player.PlayerGui.DialogueGui.Frame.Options:FindFirstChild("Option1")
         repeat task.wait() until EatOption.Visible
-
+        
         firesignal(EatOption.TextButton.MouseButton1Click)
-
+        
         repeat task.wait() until not Player.PlayerGui.DialogueGui.Frame.Parent
     end
 end
@@ -295,7 +295,7 @@ end
 --main function (entrypoint) of standfarm
 local function attemptStandFarm()
     LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(500, 2010, 500)
-
+    
     if LocalPlayer.PlayerStats.Stand.Value == "None" then
         print("DEBUG CHECK, USING MYSTERIOUS ARROW")
         useItem("Mysterious Arrow", "II")
@@ -331,7 +331,7 @@ local function getitem(item, itemIndex)
     LocalPlayer.Backpack.ChildAdded:Connect(function()
         gotItem = true
     end)
-
+    
     task.spawn(function()
         while not gotItem do
             task.wait()
@@ -343,9 +343,9 @@ local function getitem(item, itemIndex)
 
     task.spawn(function()
         fireproximityprompt(item["ProximityPrompt"][itemIndex])
-
+        
         local screenGui = LocalPlayer.PlayerGui:WaitForChild("ScreenGui",5)
-
+        
         if not screenGui then
             return
         end
@@ -365,7 +365,7 @@ local function getitem(item, itemIndex)
             end
         end
     end)
-
+    
     task.spawn(function()
         for i=timeout, 1, -1 do
             task.wait(1)
@@ -396,7 +396,7 @@ local function farmItem(itemName, amount)
             getitem(items, itemIndex)
         end
     end
-
+    
     return true
 end
 
@@ -417,7 +417,7 @@ local function storyDialogue()
     ["Storyline"] = {"#1", "#1", "#1", "#2", "#3", "#3", "#3", "#4", "#5", "#6", "#7", "#8", "#9", "#10", "#11", "#11", "#12", "#14"},
     ["Dialogue"] = {"Dialogue2", "Dialogue6", "Dialogue6", "Dialogue3", "Dialogue3", "Dialogue3", "Dialogue6", "Dialogue3", "Dialogue5", "Dialogue5", "Dialogue5", "Dialogue4", "Dialogue7", "Dialogue6", "Dialogue8", "Dialogue11", "Dialogue3", "Dialogue2"}
     }
-
+    
     for counter = 1, 18, 1 do
        RemoteEvent:FireServer("EndDialogue", {["NPC"] = "Storyline".. " " .. Quest["Storyline"][counter],["Dialogue"] = Quest["Dialogue"][counter],["Option"] = "Option1"})
     end
@@ -449,13 +449,13 @@ local function killNPC(npcName, playerDistance, dontDestroyOnKill, extraParamete
 
             Character.StandMorph.PrimaryPart.CFrame = NPC.HumanoidRootPart.CFrame + NPC.HumanoidRootPart.CFrame.lookVector * -1.1
             HRP.CFrame = Character.StandMorph.PrimaryPart.CFrame + Character.StandMorph.PrimaryPart.CFrame.lookVector - Vector3.new(0, playerDistance, 0)
-
+            
             if not Character:FindFirstChild("FocusCam") then
                 local FocusCam = Instance.new("ObjectValue", Character)
                 FocusCam.Name = "FocusCam"
                 FocusCam.Value = Character.StandMorph.PrimaryPart
             end
-
+            
             if Character:FindFirstChild("FocusCam") and Character.FocusCam.Value ~= Character.StandMorph.PrimaryPart then
                 Character.FocusCam.Value = Character.StandMorph.PrimaryPart
             end
@@ -477,7 +477,7 @@ local function killNPC(npcName, playerDistance, dontDestroyOnKill, extraParamete
         if not NPC or NPC.Parent == nil then
             return
         end
-
+    
         if game:GetService("CollectionService"):HasTag(NPC, "Blocking") then
             RemoteEvent:FireServer("InputBegan", {["Input"] = Enum.KeyCode.R})
         elseif NPC.Humanoid.Health <= 1 then
@@ -491,7 +491,7 @@ local function killNPC(npcName, playerDistance, dontDestroyOnKill, extraParamete
             RemoteFunction:InvokeServer("Attack", "m1")
         end
     end
-
+    
 
     deadCheck = LocalPlayer.PlayerGui.HUD.Main.DropMoney.Money.ChildAdded:Connect(function(child)
         local number = tonumber(string.match(child.Name,"%d+"))
@@ -513,17 +513,17 @@ local function killNPC(npcName, playerDistance, dontDestroyOnKill, extraParamete
             deadCheck:Disconnect()
             beingTargeted = false
         end
-
+    
         if extraParameters then
             extraParameters()
         end
-
+    
         task.spawn(setStandMorphPosition)
         task.spawn(HamonCharge)
         task.spawn(BlockBreaker)
     end
-
-
+    
+    
     print(doneKilled)
     return doneKilled
 end 
@@ -549,7 +549,7 @@ local function allocateSkills() --this should allocate the destructive shit stuf
         RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Destructive Power III",["SkillTreeType"] = "Stand"})
         RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Destructive Power II",["SkillTreeType"] = "Stand"})
         RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Destructive Power I",["SkillTreeType"] = "Stand"})
-
+        
         if LocalPlayer.PlayerStats.Spec.Value == "Hamon (William Zeppeli)" then
             RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Hamon Punch V",["SkillTreeType"] = "Spec"})
             RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Lung Capacity V", ["SkillTreeType"] = "Spec"})
@@ -570,7 +570,7 @@ local function autoStory()
         repeat task.wait() until LocalPlayer.PlayerStats.Stand.Value ~= oldStand
         autoStory()
     end
-
+    
 
     if LocalPlayer.PlayerStats.Spec.Value == "None" and LocalPlayer.PlayerStats.Level.Value >= 25 then
         local function collectAndSell(toolName, amount)
@@ -578,7 +578,7 @@ local function autoStory()
             LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(toolName))
             endDialogue("Merchant", "Dialogue5", "Option2")
         end
-
+        
         if not LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat") then
             SendWebhook("Farming `Caesar's Headband` to purchase `Hamon`")
             task.wait(60)
@@ -635,20 +635,20 @@ local function autoStory()
             Teleport()
         end
     end
-
+        
     while #questPanel:GetChildren() < 2 and repeatCount < 1000 do
         if not questPanel:FindFirstChild("Take down 3 vampires") then
             SendWebhook("Account: `" .. LocalPlayer.Name .. "`\nTook around: `".. (tick() - lastTick).. " seconds` to complete a quest")
             lastTick = tick()
             endDialogue("William Zeppeli", "Dialogue4", "Option1")
         end
-
+    
         LocalPlayer.QuestsRemoteFunction:InvokeServer({[1] = "ReturnData"})
         storyDialogue()
         task.wait(0.01)
         repeatCount = repeatCount + 1
     end
-
+    
 
     if repeatCount >= 1000 then
         Teleport()
@@ -668,7 +668,7 @@ local function autoStory()
     elseif not getgenv().standList[LocalPlayer.PlayerStats.Stand.Value] and LocalPlayer.PlayerStats.Level.Value >= 3 and dontTPOnDeath then
         print('NO STAND?')
         task.wait(5)
-
+    
         farmItem("Rokakaka", 25)
         farmItem("Mysterious Arrow", 25)
 		farmItem("Zeppeli's Hat", 1)
@@ -681,7 +681,7 @@ local function autoStory()
         else
             Teleport()
         end
-
+    
     elseif questPanel:FindFirstChild("Defeat Leaky Eye Luca") and getgenv().standList[LocalPlayer.PlayerStats.Stand.Value] then
         print("LEAKY EYE LUCA")
         SendWebhook("Killing `Leaky Eye Luca`")
@@ -833,13 +833,11 @@ local function autoStory()
 end
 
 task.spawn(function()
-    while task.wait(10) do 
+    while task.wait(3) do
         if checkPrestige(LocalPlayer.PlayerStats.Level.Value, LocalPlayer.PlayerStats.Prestige.Value) then
             print("Prestiged")
             Teleport()
-            task.wait(1)
-            Teleport()
-        else task.wati(3) if LocalPlayer.PlayerStats.Level.Value == 50 then
+        elseif LocalPlayer.PlayerStats.Level.Value == 50 then
 		    if not Character:FindFirstChild("FocusCam") then
                 Character.FocusCam:Destroy()
                 break
