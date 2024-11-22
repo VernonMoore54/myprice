@@ -2,6 +2,27 @@
 -- bug fixes by Vezise/vez/_vez0
 -- hamon fix by DuongNoob (cuz me vez was too lazy)
 
+ local function Teleport()
+    while task.wait() do
+       pcall(function()
+        if getgenv().lessPing then
+            game:GetService("TeleportService"):Teleport(2809202155, game:GetService("Players").LocalPlayer)
+     
+            game:GetService("TeleportService").TeleportInitFailed:Connect(function()
+                 game:GetService("TeleportService"):Teleport(2809202155, game:GetService("Players").LocalPlayer)
+            end)
+            
+            repeat task.wait() until game.JobId ~= game.JobId
+        end
+
+       TPReturner()
+       if foundAnything ~= "" then
+          TPReturner()
+       end
+       end)
+    end
+ end
+
 game:GetService("CoreGui").DescendantAdded:Connect(function(child)
     if child.Name == "ErrorPrompt" then
         local GrabError = child:FindFirstChild("ErrorMessage",true)
@@ -23,7 +44,7 @@ local HRP = Character.PrimaryPart
 local part
 local dontTPOnDeath = true
 
-if LocalPlayer.PlayerStats.Level.Value == 50 then while true do print("Level 50, Auto pres disabled") task.wait(9999999) end end
+if LocalPlayer.PlayerStats.Level.Value == 50 then while true do print("Level 50, Auto pres disabled") task.wait(3) Teleport() end end
 
 if not LocalPlayer.PlayerGui:FindFirstChild("HUD") then
     print("I FOUND IT")
@@ -169,27 +190,6 @@ local function TPReturner()
              task.wait(4)
           end
        end
-    end
- end
-
- local function Teleport()
-    while task.wait() do
-       pcall(function()
-        if getgenv().lessPing then
-            game:GetService("TeleportService"):Teleport(2809202155, game:GetService("Players").LocalPlayer)
-     
-            game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-                 game:GetService("TeleportService"):Teleport(2809202155, game:GetService("Players").LocalPlayer)
-            end)
-            
-            repeat task.wait() until game.JobId ~= game.JobId
-        end
-
-       TPReturner()
-       if foundAnything ~= "" then
-          TPReturner()
-       end
-       end)
     end
  end
 
