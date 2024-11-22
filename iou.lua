@@ -834,7 +834,7 @@ end
 
 task.spawn(function()
     while task.wait(10) do
-        if checkPrestige(LocalPlayer.PlayerStats.Level.Value, LocalPlayer.PlayerStats.Prestige.Value) then
+        if LocalPlayer.PlayerGui.HUD.Main.Indicators.Level.Text == 50, LocalPlayer.PlayerStats.Prestige.Value) then
             print("Prestiged")
             Teleport()
             task.wait(1)
