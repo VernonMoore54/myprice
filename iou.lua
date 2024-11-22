@@ -833,7 +833,7 @@ local function autoStory()
 end
 
 task.spawn(function()
-    while task.wait(100) do 
+    while task.wait(10) do 
         if checkPrestige(LocalPlayer.PlayerStats.Level.Value, LocalPlayer.PlayerStats.Prestige.Value) then
             print("Prestiged")
             Teleport()
@@ -851,7 +851,7 @@ task.spawn(function()
 end)
 
 game.Workspace.Living.ChildAdded:Connect(function(character)
-    if character.Name == LocalPlayer.Name then wait(4)
+    if character.Name == LocalPlayer.Name then
         if LocalPlayer.PlayerStats.Level.Value == 50 then
             print("didnt reconnect")
         else
