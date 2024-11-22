@@ -581,7 +581,7 @@ local function autoStory()
         
         if not LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat") then
             SendWebhook("Farming `Caesar's Headband` to purchase `Hamon`")
-            task.wait(3)
+            task.wait(15)
             farmItem("Zeppeli's Hat", 1)
         end
 
