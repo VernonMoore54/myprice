@@ -839,7 +839,7 @@ task.spawn(function()
             Teleport()
             task.wait(1)
             Teleport()
-        elseif LocalPlayer.PlayerStats.Level.Value == 50 then
+        elseif LocalPlayer.PlayerGui.HUD.Main.Indicators.Level.Text == 50 then
 		    if not Character:FindFirstChild("FocusCam") then
                 Character.FocusCam:Destroy()
                 break
