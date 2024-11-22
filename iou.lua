@@ -833,7 +833,7 @@ local function autoStory()
 end
 
 task.spawn(function()
-    while task.wait(10) do nil
+    while task.wait(100) do 
         if checkPrestige(LocalPlayer.PlayerStats.Level.Value, LocalPlayer.PlayerStats.Prestige.Value) then
             print("Prestiged")
             Teleport()
