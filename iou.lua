@@ -317,7 +317,7 @@ end
 
 -- Improved function to ensure farming and selling items for Hamon
 local function ensureHamonFunds()
-    while LocalPlayer.PlayerStats.Money.Value < 10000 do
+    while LocalPlayer.PlayerStats.Money.Value <= 10000 do
         print("Insufficient funds for Hamon, farming items...")
         farmItem("Mysterious Arrow", 25)
         farmItem("Rokakaka", 25)
