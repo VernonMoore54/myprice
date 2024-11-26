@@ -51,6 +51,38 @@ end)
 workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_6.Size = Vector3.new(2048, 89, 2048)
 workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_4.Size = Vector3.new(2048, 89, 2048)
 
+local foldersToDelete = {
+    "Park",
+    "ParkingGarage",
+    "IMPORTANT",
+    "Pizzeria",
+    "Plaza",
+    "Prison_Bridge",
+    "Props",
+    "Terrain",
+    "TrainStation",
+    "RegularBuildings",
+    "MerchantKeep",
+    "Halloween_Parts",
+    "Accessories",
+    "Cafe",
+    "City",
+    "Arcade"
+}
+
+for _, folderName in ipairs(foldersToDelete) do
+    local folder = workspace.Map:FindFirstChild(folderName)
+    if folder then
+        folder:Destroy()
+    end
+end
+
+local part = Instance.new("Part")
+part.Anchored = true
+part.Size = Vector3.new(1400, -10, 2500)
+part.Position = Vector3.new(-220, -5, -106)
+part.Parent = workspace
+
 -- data
 local Data = { }
 local File = pcall(function()
