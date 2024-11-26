@@ -97,28 +97,314 @@ end
 
 SendWebhook("Loading Xenon V3 - Auto Prestige 3\nCurrent level: `"..LocalPlayer.PlayerStats.Level.Value.."`\nCurrent prestige: `"..LocalPlayer.PlayerStats.Prestige.Value.."`\nTime since start: `" .. (tick() - Data["Time"])/60 .. " minutes`")
 
-local itemHook;
-itemHook = hookfunction(getrawmetatable(game.Players.LocalPlayer.Character.HumanoidRootPart.Position).__index, function(p,i)
-    if getcallingscript().Name == "ItemSpawn" and i:lower() == "magnitude" then
-        return 0
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1"):Destroy()
+end
+
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen"):Destroy()
+end
+
+task.spawn(function()
+    if game.Lighting:WaitForChild("DepthOfField", 10) then
+        game.Lighting.DepthOfField:Destroy()
     end
-    return itemHook(p,i)
 end)
 
-local Hook;
-Hook = hookmetamethod(game, '__namecall', newcclosure(function(self, ...)
-    local args = {...}
-    local namecallmethod =  getnamecallmethod()
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_6.Size = Vector3.new(2048, 89, 2048)
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_4.Size = Vector3.new(2048, 89, 2048)
 
-    if namecallmethod == "InvokeServer" then
-        if args[1] == "idklolbrah2de" then
-            return "  ___XP DE KEY"
-        end
+-- data
+local Data = { }
+local File = pcall(function()
+    Data = game:GetService('HttpService'):JSONDecode(readfile("AutoPres3_"..LocalPlayer.Name..".txt"))
+end)
+
+if not File and LocalPlayer.PlayerStats.Level.Value ~= 50 then
+    Data = {
+        ["Time"] = tick(),
+        ["Prestige"] = LocalPlayer.PlayerStats.Prestige.Value,
+        ["Level"] = LocalPlayer.PlayerStats.Level.Value
+    }
+    writefile("AutoPres3_"..LocalPlayer.Name..".txt", game:GetService('HttpService'):JSONEncode(Data))
+end
+
+-- start
+local lastTick = tick()
+local function SendWebhook(msg)
+    local url = getgenv().webhook
+
+    local data;
+    data = {
+        ["embeds"] = {
+            {
+                ["title"] = "Xenon V3 - Auto Prestige 3",
+                ["description"] = msg,
+                ["type"] = "rich",
+                ["color"] = tonumber(0x7269ff),
+            }
+        }
+    }
+
+    repeat task.wait() until data
+    local newdata = game:GetService("HttpService"):JSONEncode(data)
+
+
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
+    local request = http_request or request or HttpPost or syn.request or http.request
+    local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+    request(abcdef)
+end
+
+SendWebhook("Loading Xenon V3 - Auto Prestige 3\nCurrent level: `"..LocalPlayer.PlayerStats.Level.Value.."`\nCurrent prestige: `"..LocalPlayer.PlayerStats.Prestige.Value.."`\nTime since start: `" .. (tick() - Data["Time"])/60 .. " minutes`")
+
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1"):Destroy()
+end
+
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen"):Destroy()
+end
+
+task.spawn(function()
+    if game.Lighting:WaitForChild("DepthOfField", 10) then
+        game.Lighting.DepthOfField:Destroy()
     end
+end)
 
-    return Hook(self, ...)
-end))
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_6.Size = Vector3.new(2048, 89, 2048)
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_4.Size = Vector3.new(2048, 89, 2048)
 
+-- data
+local Data = { }
+local File = pcall(function()
+    Data = game:GetService('HttpService'):JSONDecode(readfile("AutoPres3_"..LocalPlayer.Name..".txt"))
+end)
+
+if not File and LocalPlayer.PlayerStats.Level.Value ~= 50 then
+    Data = {
+        ["Time"] = tick(),
+        ["Prestige"] = LocalPlayer.PlayerStats.Prestige.Value,
+        ["Level"] = LocalPlayer.PlayerStats.Level.Value
+    }
+    writefile("AutoPres3_"..LocalPlayer.Name..".txt", game:GetService('HttpService'):JSONEncode(Data))
+end
+
+-- start
+local lastTick = tick()
+local function SendWebhook(msg)
+    local url = getgenv().webhook
+
+    local data;
+    data = {
+        ["embeds"] = {
+            {
+                ["title"] = "Xenon V3 - Auto Prestige 3",
+                ["description"] = msg,
+                ["type"] = "rich",
+                ["color"] = tonumber(0x7269ff),
+            }
+        }
+    }
+
+    repeat task.wait() until data
+    local newdata = game:GetService("HttpService"):JSONEncode(data)
+
+
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
+    local request = http_request or request or HttpPost or syn.request or http.request
+    local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+    request(abcdef)
+end
+
+SendWebhook("Loading Xenon V3 - Auto Prestige 3\nCurrent level: `"..LocalPlayer.PlayerStats.Level.Value.."`\nCurrent prestige: `"..LocalPlayer.PlayerStats.Prestige.Value.."`\nTime since start: `" .. (tick() - Data["Time"])/60 .. " minutes`")
+
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1"):Destroy()
+end
+
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen"):Destroy()
+end
+
+task.spawn(function()
+    if game.Lighting:WaitForChild("DepthOfField", 10) then
+        game.Lighting.DepthOfField:Destroy()
+    end
+end)
+
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_6.Size = Vector3.new(2048, 89, 2048)
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_4.Size = Vector3.new(2048, 89, 2048)
+
+-- data
+local Data = { }
+local File = pcall(function()
+    Data = game:GetService('HttpService'):JSONDecode(readfile("AutoPres3_"..LocalPlayer.Name..".txt"))
+end)
+
+if not File and LocalPlayer.PlayerStats.Level.Value ~= 50 then
+    Data = {
+        ["Time"] = tick(),
+        ["Prestige"] = LocalPlayer.PlayerStats.Prestige.Value,
+        ["Level"] = LocalPlayer.PlayerStats.Level.Value
+    }
+    writefile("AutoPres3_"..LocalPlayer.Name..".txt", game:GetService('HttpService'):JSONEncode(Data))
+end
+
+-- start
+local lastTick = tick()
+local function SendWebhook(msg)
+    local url = getgenv().webhook
+
+    local data;
+    data = {
+        ["embeds"] = {
+            {
+                ["title"] = "Xenon V3 - Auto Prestige 3",
+                ["description"] = msg,
+                ["type"] = "rich",
+                ["color"] = tonumber(0x7269ff),
+            }
+        }
+    }
+
+    repeat task.wait() until data
+    local newdata = game:GetService("HttpService"):JSONEncode(data)
+
+
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
+    local request = http_request or request or HttpPost or syn.request or http.request
+    local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+    request(abcdef)
+end
+
+SendWebhook("Loading Xenon V3 - Auto Prestige 3\nCurrent level: `"..LocalPlayer.PlayerStats.Level.Value.."`\nCurrent prestige: `"..LocalPlayer.PlayerStats.Prestige.Value.."`\nTime since start: `" .. (tick() - Data["Time"])/60 .. " minutes`")
+
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1"):Destroy()
+end
+
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen"):Destroy()
+end
+
+task.spawn(function()
+    if game.Lighting:WaitForChild("DepthOfField", 10) then
+        game.Lighting.DepthOfField:Destroy()
+    end
+end)
+
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_6.Size = Vector3.new(2048, 89, 2048)
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_4.Size = Vector3.new(2048, 89, 2048)
+
+-- data
+local Data = { }
+local File = pcall(function()
+    Data = game:GetService('HttpService'):JSONDecode(readfile("AutoPres3_"..LocalPlayer.Name..".txt"))
+end)
+
+if not File and LocalPlayer.PlayerStats.Level.Value ~= 50 then
+    Data = {
+        ["Time"] = tick(),
+        ["Prestige"] = LocalPlayer.PlayerStats.Prestige.Value,
+        ["Level"] = LocalPlayer.PlayerStats.Level.Value
+    }
+    writefile("AutoPres3_"..LocalPlayer.Name..".txt", game:GetService('HttpService'):JSONEncode(Data))
+end
+
+-- start
+local lastTick = tick()
+local function SendWebhook(msg)
+    local url = getgenv().webhook
+
+    local data;
+    data = {
+        ["embeds"] = {
+            {
+                ["title"] = "Xenon V3 - Auto Prestige 3",
+                ["description"] = msg,
+                ["type"] = "rich",
+                ["color"] = tonumber(0x7269ff),
+            }
+        }
+    }
+
+    repeat task.wait() until data
+    local newdata = game:GetService("HttpService"):JSONEncode(data)
+
+
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
+    local request = http_request or request or HttpPost or syn.request or http.request
+    local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
+    request(abcdef)
+end
+
+SendWebhook("Loading Xenon V3 - Auto Prestige 3\nCurrent level: `"..LocalPlayer.PlayerStats.Level.Value.."`\nCurrent prestige: `"..LocalPlayer.PlayerStats.Prestige.Value.."`\nTime since start: `" .. (tick() - Data["Time"])/60 .. " minutes`")
+
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1"):Destroy()
+end
+
+if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen") then
+    LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen"):Destroy()
+end
+
+task.spawn(function()
+    if game.Lighting:WaitForChild("DepthOfField", 10) then
+        game.Lighting.DepthOfField:Destroy()
+    end
+end)
+
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_6.Size = Vector3.new(2048, 89, 2048)
+workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_4.Size = Vector3.new(2048, 89, 2048)
+
+-- data
+local Data = { }
+local File = pcall(function()
+    Data = game:GetService('HttpService'):JSONDecode(readfile("AutoPres3_"..LocalPlayer.Name..".txt"))
+end)
+
+if not File and LocalPlayer.PlayerStats.Level.Value ~= 50 then
+    Data = {
+        ["Time"] = tick(),
+        ["Prestige"] = LocalPlayer.PlayerStats.Prestige.Value,
+        ["Level"] = LocalPlayer.PlayerStats.Level.Value
+    }
+    writefile("AutoPres3_"..LocalPlayer.Name..".txt", game:GetService('HttpService'):JSONEncode(Data))
+end
+
+-- start
+local lastTick = tick()
+local function SendWebhook(msg)
+    local url = getgenv().webhook
+
+    local data;
+    data = {
+        ["embeds"] = {
+            {
+                ["title"] = "Xenon V3 - Auto Prestige 3",
+                ["description"] = msg,
+                ["type"] = "rich",
+                ["color"] = tonumber(0x7269ff),
+            }
+        }
+    }
+
+    repeat task.wait() until data
+    local newdata = game:GetService("HttpService"):JSONEncode(data)
+
+
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
 --// Hop Func //--
 local PlaceID = game.PlaceId
 local AllIDs = {}
