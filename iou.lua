@@ -16,6 +16,9 @@ end)
 repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 
 local LocalPlayer = game.Players.LocalPlayer
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local player = Players.LocalPlayer
 local Character = LocalPlayer.Character
 repeat task.wait() until Character:FindFirstChild("RemoteEvent") and Character:FindFirstChild("RemoteFunction")
 local RemoteFunction, RemoteEvent = Character.RemoteFunction, Character.RemoteEvent
@@ -33,62 +36,6 @@ end
 
 print("I DID FOUND IT, MAYBE IT WILL WORK?")
 RemoteEvent:FireServer("PressedPlay")
-
-function afkkick()
-local Players = game:GetService("Players")
-local TeleportService = game:GetService("TeleportService")
-
-local player = Players.LocalPlayer
-
-local function monitorIdleTime()
-    -- Задержка только при первом входе
-    task.wait(15)
-    print("HUY ALO ALO")
-
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-    local idleTime = 0
-    local threshold = 15 -- время в секундах для переподключения
-    local lastPosition = humanoidRootPart.Position
-
-    while true do
-        wait(1) -- проверка каждую секунду
-        print("HUY PRIOM PRIOM")
-
-        local currentPosition = humanoidRootPart.Position
-
-        -- Проверяем, изменились ли координаты
-        if (currentPosition - lastPosition).Magnitude < 0.1 then
-            idleTime = idleTime + 1
-        else
-            idleTime = 0 -- сброс времени, если персонаж двигается
-            lastPosition = currentPosition -- обновляем последнюю позицию
-        end
-
-        if idleTime >= threshold then
-            -- Переподключение к текущему месту
-            local placeId = game.PlaceId
-            
-            TeleportService:Teleport(placeId, player)
-            
-            break -- выходим из цикла после переподключения
-        end
-        
-        -- Ожидаем, что персонаж может умереть и снова появиться
-        if not character or not humanoidRootPart:IsDescendantOf(workspace) then
-            break -- выходим из цикла, если персонаж умер
-        end
-    end
-end
-
--- Подписываемся на событие CharacterAdded, чтобы отслеживать смерть персонажа
-player.CharacterAdded:Connect(monitorIdleTime)
-
--- Запускаем мониторинг при первом входе в игру
-monitorIdleTime()
-end
-afkkick()
 
 if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1") then
     LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1"):Destroy()
@@ -276,6 +223,56 @@ local function findItem(itemName)
     end
     return ItemsDict
 end
+
+local function monitorIdleTime()
+    -- Задержка только при первом входе
+    task.wait(15)
+    print("HUY ALO ALO")
+
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+    local idleTime = 0
+    local threshold = 15 -- время в секундах для переподключения
+    local lastPosition = humanoidRootPart.Position
+
+    -- Функция для проверки состояния бездействия
+    local function checkIdle()
+        print("HUY PRIOM PRIOM")
+        
+        local currentPosition = humanoidRootPart.Position
+
+        -- Проверяем, изменились ли координаты
+        if (currentPosition - lastPosition).Magnitude < 0.1 then
+            idleTime = idleTime + 1
+        else
+            idleTime = 0 -- сброс времени, если персонаж двигается
+            lastPosition = currentPosition -- обновляем последнюю позицию
+        end
+
+        if idleTime >= threshold then
+            -- Переподключение к текущему месту
+            local placeId = game.PlaceId
+            
+            TeleportService:Teleport(placeId, player)
+            return -- выходим из функции после переподключения
+        end
+        
+        -- Ожидаем, что персонаж может умереть и снова появиться
+        if not character or not humanoidRootPart:IsDescendantOf(workspace) then
+            return -- выходим из функции, если персонаж умер
+        end
+
+        -- Запускаем проверку снова через 1 секунду
+        task.delay(1, checkIdle)
+    end
+
+    -- Запускаем первую проверку состояния бездействия
+    checkIdle()
+end
+
+-- Подписываемся на событие CharacterAdded, чтобы отслеживать смерть персонажа
+player.CharacterAdded:Connect(monitorIdleTime)
 
 local function UseRoka()
     local Player = game.Players.LocalPlayer
@@ -900,6 +897,7 @@ task.spawn(function()
             end
         else
             print("not able to prestige yet")
+            monitorIdleTime()
         end
     end
 end)
