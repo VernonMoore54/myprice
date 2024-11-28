@@ -51,14 +51,6 @@ end)
 
 workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_6.Size = Vector3.new(2048, 89, 2048)
 workspace.Map.IMPORTANT.OceanFloor.OceanFloor_Sand_4.Size = Vector3.new(2048, 89, 2048)
-local success, err = pcall(function()
-    local afkScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/afk.lua"))()
-    -- Здесь можно добавить дополнительные действия с afkScript, если это необходимо
-end)
-
-if not success then
-    warn("Ошибка при выполнении AFK скрипта: " .. err)
-end
 
 -- data
 local Data = { }
@@ -229,6 +221,26 @@ local function findItem(itemName)
     end
     return ItemsDict
 end
+
+local function runAfkScript()
+    local success, err = pcall(function()
+        -- Создаем новый контекст для выполнения кода
+        local afkScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/afk.lua"))()
+        
+        -- Проверяем, если скрипт был успешно загружен
+        if type(afkScript) == "function" then
+            afkScript() -- Выполняем загруженный скрипт
+        else
+            error("Скрипт не является функцией")
+        end
+    end)
+
+    if not success then
+        warn("Ошибка при выполнении AFK скрипта: " .. err)
+    end
+end
+
+runAfkScript()
 
 local function UseRoka()
     local Player = game.Players.LocalPlayer
