@@ -563,7 +563,7 @@ local function autoStory()
     local repeatCount = 0
     allocateSkills()
 
-    if LocalPlayer.PlayerStats.Level.Value >= 25 and LocalPlayer.PlayerStats.Prestige.Value >= 1 and LocalPlayer.Backpack:FindFirstChild("Requiem Arrow") and (LocalPlayer.PlayerStats.Stand.Value == "King Crimson" or LocalPlayer.PlayerStats.Stand.Value == "Star Platinum" or LocalPlayer.PlayerStats.Stand.Value == "Golden Experience") then
+    if LocalPlayer.PlayerStats.Level.Value >= 25 and LocalPlayer.PlayerStats.Prestige.Value >= 1 and LocalPlayer.Backpack:FindFirstChild("Requiem Arrow") and (LocalPlayer.PlayerStats.Stand.Value == "King Crimson" or LocalPlayer.PlayerStats.Stand.Value == "Star Platinum" or LocalPlayer.PlayerStats.Stand.Value == "Gold Experience") then
         LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(500, 2010, 500)
         local oldStand = LocalPlayer.PlayerStats.Stand.Value
         useItem("Requiem Arrow", "V")
