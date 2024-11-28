@@ -13,7 +13,7 @@ local function monitorIdleTime()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
     local idleTime = 0
-    local threshold = 15 -- время в секундах для переподключения
+    local threshold = 20 -- время в секундах для переподключения
     local lastPosition = humanoidRootPart.Position
     local lastVelocity = humanoidRootPart.Velocity
 
@@ -23,7 +23,7 @@ local function monitorIdleTime()
     end
 
     while true do
-        wait(1) -- проверка каждую секунду
+        task.wait(1) -- проверка каждую секунду
         print("HUY PRIOM PRIOM")
 
         local currentPosition = humanoidRootPart.Position
