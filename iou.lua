@@ -222,26 +222,6 @@ local function findItem(itemName)
     return ItemsDict
 end
 
-local function runAfkScript()
-    local success, err = pcall(function()
-        -- Создаем новый контекст для выполнения кода
-        local afkScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/afk.lua"))()
-        
-        -- Проверяем, если скрипт был успешно загружен
-        if type(afkScript) == "function" then
-            afkScript() -- Выполняем загруженный скрипт
-        else
-            error("Скрипт не является функцией")
-        end
-    end)
-
-    if not success then
-        warn("Ошибка при выполнении AFK скрипта: " .. err)
-    end
-end
-
-runAfkScript()
-
 local function UseRoka()
     local Player = game.Players.LocalPlayer
 
