@@ -33,6 +33,7 @@ end
 
 print("I DID FOUND IT, MAYBE IT WILL WORK?")
 RemoteEvent:FireServer("PressedPlay")
+game.Players.LocalPlayer.PlayerStats.Spec.Value = "Hamon (William Zeppeli)"
 
 if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1") then
     LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1"):Destroy()
