@@ -23,7 +23,7 @@ end
 
 local function monitorIdleTime()
     print("Йоу, я заработал")
-    task.wait(25)  -- Задержка перед началом мониторинга
+    task.wait(20)  -- Задержка перед началом мониторинга
 
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
