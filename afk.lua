@@ -29,7 +29,7 @@ local function monitorIdleTime()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
     local idleTime = 0
-    local threshold = 15  -- Время в секундах для переподключения
+    local threshold = 25  -- Время в секундах для переподключения
     local lastPosition = humanoidRootPart.Position
     local lastConnectionTime = idleData.lastConnectionTime  -- Время последнего подключения
 
@@ -41,7 +41,7 @@ local function monitorIdleTime()
 
     while true do
         wait(1)  -- Проверка каждую секунду
-        print("Йоу, я слежу 15 секунд")
+        print("Йоу, я слежу 25 секунд")
 
         local currentPosition = humanoidRootPart.Position
 
