@@ -1,7 +1,9 @@
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
+local RemoteEvent = ReplicatedStorage:WaitForChild("GetServerList")
 
 local function monitorIdleTime()
     -- Задержка только при первом входе
@@ -9,7 +11,6 @@ local function monitorIdleTime()
     task.wait(15)
 
     local character = player.Character or player.CharacterAdded:Wait()
-    local humanoid = character:WaitForChild("Humanoid")
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
     local idleTime = 0
@@ -40,11 +41,10 @@ local function monitorIdleTime()
         lastVelocity = currentVelocity -- Обновляем последнюю скорость
 
         if idleTime >= threshold then
-            -- Переподключение к текущему месту
-            local placeId = game.PlaceId
-            
-            TeleportService:Teleport(placeId, player)
-            break -- выходим из цикла после переподключения
+            -- Запрос списка серверов с наименьшим количеством игроков
+            RemoteEvent:FireServer()
+
+            break -- выходим из цикла после запроса списка серверов
         end
         
         -- Ожидаем, что персонаж может умереть и снова появиться
@@ -53,6 +53,23 @@ local function monitorIdleTime()
         end
     end
 end
+
+-- Обработка ответа от сервера с информацией о серверах
+RemoteEvent.OnClientEvent:Connect(function(servers)
+    local targetServerId = nil
+    local minPlayersCount = math.huge
+
+    for _, server in ipairs(servers) do
+        if server.PlayerCount < minPlayersCount then
+            minPlayersCount = server.PlayerCount
+            targetServerId = server.Id
+        end
+    end
+
+    if targetServerId then
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, targetServerId, player)
+    end
+end)
 
 -- Подписываемся на событие CharacterAdded, чтобы отслеживать смерть персонажа
 player.CharacterAdded:Connect(monitorIdleTime)
