@@ -52,7 +52,7 @@ local function monitorIdleTime()
 
     while true do
         wait(1)  -- Проверка каждую секунду
-        print("Йоу, я слежу 25 секунд")
+        print("Йоу, я слежу 30 секунд")
 
         local currentPosition = humanoidRootPart.Position
 
@@ -65,7 +65,7 @@ local function monitorIdleTime()
         end
 
         if idleTime >= threshold then
-            print("Персонаж бездействует 25 секунд, проверяю состояние...")
+            print("Персонаж бездействует 30 секунд, проверяю состояние...")
 
             -- Обновляем время последнего бездействия
             idleData.lastIdleTime = os.time()
