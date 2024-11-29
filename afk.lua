@@ -46,7 +46,7 @@ local function monitorIdleTime()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
     local idleTime = 0
-    local threshold = 20  -- Время в секундах для проверки на бездействие
+    local threshold = 30  -- Время в секундах для проверки на бездействие
     local lastPosition = humanoidRootPart.Position
     local lastConnectionTime = idleData.lastConnectionTime  -- Время последнего подключения
 
