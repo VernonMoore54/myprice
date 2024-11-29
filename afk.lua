@@ -33,12 +33,6 @@ local function monitorIdleTime()
     local lastPosition = humanoidRootPart.Position
     local lastConnectionTime = idleData.lastConnectionTime  -- Время последнего подключения
 
-    -- Проверяем прошло ли достаточно времени с последнего подключения
-    if os.time() - lastConnectionTime < 60 then
-        print("Переподключение не требуется, прошло слишком мало времени.")
-        return
-    end
-
     while true do
         wait(1)  -- Проверка каждую секунду
         print("Йоу, я слежу 25 секунд")
