@@ -40,13 +40,13 @@ end
 
 local function monitorIdleTime()
     print("Йоу, я заработал")
-    task.wait(20)  -- Задержка перед началом мониторинга
+    task.wait(10)  -- Задержка перед началом мониторинга
 
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
     local idleTime = 0
-    local threshold = 25  -- Время в секундах для проверки на бездействие
+    local threshold = 20  -- Время в секундах для проверки на бездействие
     local lastPosition = humanoidRootPart.Position
     local lastConnectionTime = idleData.lastConnectionTime  -- Время последнего подключения
 
