@@ -601,45 +601,41 @@ local function autoStory()
             collectAndSell("Caesar's headband", 10)
         end
 
-if LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat") then
-    SendWebhook("Buying `Hamon`")
-    LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat"))
-    game.Players.LocalPlayer.Character.RemoteEvent:FireServer("PromptTriggered", game.ReplicatedStorage.NewDialogue:FindFirstChild("Lisa Lisa"))
-    
-    local dialogueGui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui")
-    if dialogueGui then
-        -- Ждем появления "DialogueGui"
-        repeat
+        if LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat") then
+            SendWebhook("Buying `Hamon`")
+             LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat"))
+            game.Players.LocalPlayer.Character.RemoteEvent:FireServer("PromptTriggered", game.ReplicatedStorage.NewDialogue:FindFirstChild("Lisa Lisa"))
+            repeat
+              game:GetService("VirtualInputManager"):SendMouseButtonEvent(0,8,0, true, nil, 1)
+                 task.wait(0.05)
+            until game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui")
+            if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui") then
+            repeat
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(0,8,0, true, nil, 1)
             task.wait(0.05)
-            dialogueGui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui")
-        until dialogueGui
-
-        -- Ждем появления "Option1"
-        local option1 = dialogueGui.Frame.Options:FindFirstChild("Option1")
-        while not option1 do
+            until game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1")
+            end
+            firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options.Option1.TextButton.MouseButton1Click)
+            repeat
+            firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
             task.wait(0.05)
-            option1 = dialogueGui.Frame.Options:FindFirstChild("Option1")
+            until game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1")
+            if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1") then
+             firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options.Option1.TextButton.MouseButton1Click)
+            end
+            repeat
+            firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
+            task.wait(0.05)
+            until game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1")
+            if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1") then
+            firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options.Option1.TextButton.MouseButton1Click)
+            end
+            task.wait(10)
+            autoStory()
+        else
+            Teleport()
         end
-        
-        -- Нажимаем на "Option1"
-        firesignal(option1.TextButton.MouseButton1Click)
-
-        -- Ждем появления "ClickContinue"
-        local clickContinue = dialogueGui.Frame.ClickContinue
-        while not clickContinue do
-            task.wait(0.05)
-            clickContinue = dialogueGui.Frame.ClickContinue
-        end
-
-        -- Нажимаем на "ClickContinue"
-        firesignal(clickContinue.MouseButton1Click)
-
-        task.wait(10)
-        autoStory()
     end
-else
-    Teleport()
-end
         
     while #questPanel:GetChildren() < 2 and repeatCount < 1000 do
         if not questPanel:FindFirstChild("Take down 3 vampires") then
