@@ -6,10 +6,10 @@ local LOADER_FILE = "LoaderRezerv.json"
 
 -- Список всех скриптов
 local scriptsToCheck = {
-    "AutoGameScript",
-    "AFKScript",
-    "RejoinScript",
-    "AutoLoader" -- сам общий загрузчик
+    "AutoGameScript.lua",
+    "AFKScript.lua",
+    "RejoinScript.lua",
+    "AutoLoader.lua" -- сам общий загрузчик
 }
 
 -- Создание резервного файла, если его нет
