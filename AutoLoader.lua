@@ -101,7 +101,7 @@ recoverMissingScripts()
 
 print("Общий загрузчик завершил проверку и восстановление скриптов.")
 
-for i = 1, 3 do
+for i = 1, 1 do
     task.spawn(function()
         task.wait(5) -- Задержка перед выполнением кода
         pcall(function()
