@@ -127,3 +127,7 @@ for i = 1, 2 do
     end)
     task.wait(3) -- Задержка между выполнениями
 end
+
+pcall(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/afk.lua"))()
+end)
