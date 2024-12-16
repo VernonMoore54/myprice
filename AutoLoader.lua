@@ -101,9 +101,10 @@ recoverMissingScripts()
 
 print("Общий загрузчик завершил проверку и восстановление скриптов.")
 
-for i = 1, 1 do
+task.wait(5)
+for i = 1, 2 do
     task.spawn(function()
-        task.wait(5) -- Задержка перед выполнением кода
+        task.wait(1) -- Задержка перед выполнением кода
         pcall(function()
             getgenv().standList = {
                 ["The World"] = true,
@@ -124,5 +125,5 @@ for i = 1, 1 do
             loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/iou.lua"))()
         end)
     end)
-    task.wait(1) -- Задержка между выполнениями
+    task.wait(3) -- Задержка между выполнениями
 end
