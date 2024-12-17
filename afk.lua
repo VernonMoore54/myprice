@@ -84,7 +84,7 @@ local function monitorIdleTime()
 
             -- Телепортация
             local placeId = game.PlaceId
-            TeleportService:Teleport(placeId, player)
+            TeleportService:Teleport(4111023553, player)
 
             break  -- Выходим из цикла после телепортации
         end
