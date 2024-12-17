@@ -57,7 +57,7 @@ local function monitorIdleTime()
         local currentPosition = humanoidRootPart.Position
 
         -- Проверяем, изменились ли координаты
-        if (currentPosition - lastPosition).Magnitude < 3 then
+        if (currentPosition - lastPosition).Magnitude < 0.1 then
             idleTime = idleTime + 1
         else
             idleTime = 0  -- Сбрасываем время бездействия, если персонаж двигается
