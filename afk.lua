@@ -57,7 +57,7 @@ local function monitorIdleTime()
         local currentPosition = humanoidRootPart.Position
 
         -- Проверяем, изменились ли координаты
-        if (currentPosition - lastPosition).Magnitude < 0.1 then
+        if (currentPosition - lastPosition).Magnitude < 3 then
             idleTime = idleTime + 1
         else
             idleTime = 0  -- Сбрасываем время бездействия, если персонаж двигается
@@ -84,7 +84,7 @@ local function monitorIdleTime()
 
             -- Телепортация
             local placeId = game.PlaceId
-            TeleportService:Teleport(4111023553, player)
+            TeleportService:Teleport(placeId, player)
 
             break  -- Выходим из цикла после телепортации
         end
