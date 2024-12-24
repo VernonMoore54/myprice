@@ -225,37 +225,66 @@ end
 local function UseRoka()
     local Player = game.Players.LocalPlayer
 
+    -- Проверяем наличие предмета "Rokakaka"
     if not Player.Backpack:FindFirstChild("Rokakaka") then
         return
     end
 
+    -- Проверяем, что у игрока есть стенд
     if Player.PlayerStats.Stand.Value == "None" then
         return
     end
 
     local Character = Player.Character or Player.CharacterAdded:Wait()
 
+    -- Экипируем Rokakaka, если он не в персонаже
     if not Character:FindFirstChild("Rokakaka") then
         Character:FindFirstChildWhichIsA("Humanoid"):EquipTool(Player.Backpack:FindFirstChild("Rokakaka"))
     end
-    
+
+    -- Ждем немного, чтобы дать время на экипировку
+    task.wait(0.5)
+
+    -- Имитация клика левой кнопкой мыши по центру экрана для активации Rokakaka
+    VirtualInputManager:SendMouseButtonEvent(
+        workspace.CurrentCamera.ViewportSize.X / 2,
+        workspace.CurrentCamera.ViewportSize.Y / 2,
+        0,
+        true,
+        nil,
+        1
+    )
+
+    task.wait(0.1)  -- Небольшая пауза перед отпусканием кнопки
+
+    VirtualInputManager:SendMouseButtonEvent(
+        workspace.CurrentCamera.ViewportSize.X / 2,
+        workspace.CurrentCamera.ViewportSize.Y / 2,
+        0,
+        false,
+        nil,
+        1
+    )
+
+    -- Ждем появления диалогового окна
     repeat
         game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 8, 0, true, nil, 1)
-        task.wait(0.05)
+        task.wait(0.5)
     until Player.PlayerGui:FindFirstChild("DialogueGui")
-    
+
     if Player.PlayerGui:FindFirstChild("DialogueGui") then
         repeat
             game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 8, 0, true, nil, 1)
-            task.wait(0.05)
+            task.wait(0.5)
         until Player.PlayerGui.DialogueGui.Frame.Options:FindFirstChild("Option1")
-        
+
         local EatOption = Player.PlayerGui.DialogueGui.Frame.Options:FindFirstChild("Option1")
-        repeat task.wait() until EatOption.Visible
+        repeat task.wait(0.5) until EatOption and EatOption.Visible
         
         firesignal(EatOption.TextButton.MouseButton1Click)
-        
-        repeat task.wait() until not Player.PlayerGui.DialogueGui.Frame.Parent
+
+        -- Ждем завершения диалога
+        repeat task.wait(0.5) until not Player.PlayerGui.DialogueGui.Frame.Parent
     end
 end
 
@@ -283,13 +312,41 @@ local function useItem(aItem, amount)
 
     if amount then
         LocalPlayer.Character.Humanoid:EquipTool(item)
-        LocalPlayer.Character:WaitForChild("RemoteFunction"):InvokeServer("LearnSkill",{["Skill"] = "Worthiness ".. amount,["SkillTreeType"] = "Character"})
+        LocalPlayer.Character:WaitForChild("RemoteFunction"):InvokeServer("LearnSkill", {["Skill"] = "Worthiness " .. amount, ["SkillTreeType"] = "Character"})
+        
+        -- Ждем появления диалогового окна после активации предмета
         repeat item:Activate() task.wait(0.5) until LocalPlayer.PlayerGui:FindFirstChild("DialogueGui")
+        
+        -- Клик по кнопке "ClickContinue", когда она появляется
+        repeat 
+            task.wait(0.1)
+            if LocalPlayer.PlayerGui.DialogueGui.Frame:FindFirstChild("ClickContinue") then
+                VirtualInputManager:SendMouseButtonEvent(
+                    workspace.CurrentCamera.ViewportSize.X / 2,
+                    workspace.CurrentCamera.ViewportSize.Y / 2,
+                    0,
+                    true,
+                    nil,
+                    1
+                )
+                task.wait(0.1)
+                VirtualInputManager:SendMouseButtonEvent(
+                    workspace.CurrentCamera.ViewportSize.X / 2,
+                    workspace.CurrentCamera.ViewportSize.Y / 2,
+                    0,
+                    false,
+                    nil,
+                    1
+                )
+                break -- Выходим из цикла после клика
+            end
+        until false
+        
+        firesignal(LocalPlayer.PlayerGui.DialogueGui.Frame.Options:WaitForChild("Option1").TextButton.MouseButton1Click)
+        
+        repeat task.wait(0.5) until LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.DialogueFrame.Frame.Line001.Container.Group001.Text == "You"
+        
         firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
-        firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.Options:WaitForChild("Option1").TextButton.MouseButton1Click)
-        firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
-	repeat task.wait(0.5) until LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.DialogueFrame.Frame.Line001.Container.Group001.Text == "You"
-	firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
     end
 end
 
