@@ -284,11 +284,11 @@ local function useItem(aItem, amount)
     if amount then
         LocalPlayer.Character.Humanoid:EquipTool(item)
         LocalPlayer.Character:WaitForChild("RemoteFunction"):InvokeServer("LearnSkill",{["Skill"] = "Worthiness ".. amount,["SkillTreeType"] = "Character"})
-        repeat item:Activate() task.wait() until LocalPlayer.PlayerGui:FindFirstChild("DialogueGui")
+        repeat item:Activate() task.wait(0.5) until LocalPlayer.PlayerGui:FindFirstChild("DialogueGui")
         firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
         firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.Options:WaitForChild("Option1").TextButton.MouseButton1Click)
         firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
-	repeat task.wait() until LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.DialogueFrame.Frame.Line001.Container.Group001.Text == "You"
+	repeat task.wait(0.5) until LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.DialogueFrame.Frame.Line001.Container.Group001.Text == "You"
 	firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
     end
 end
@@ -300,7 +300,7 @@ local function attemptStandFarm()
     if LocalPlayer.PlayerStats.Stand.Value == "None" then
         print("DEBUG CHECK, USING MYSTERIOUS ARROW")
         useItem("Mysterious Arrow", "II")
-        repeat task.wait() until LocalPlayer.PlayerStats.Stand.Value ~= "None"
+        repeat task.wait(0.5) until LocalPlayer.PlayerStats.Stand.Value ~= "None"
 
         if not getgenv().standList[LocalPlayer.PlayerStats.Stand.Value] then
             print("DEBUG CHECK, USING ROKAKAKA")
