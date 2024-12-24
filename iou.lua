@@ -347,7 +347,7 @@ local function useItem(aItem, amount)
         firesignal(LocalPlayer.PlayerGui.DialogueGui.Frame.Options:WaitForChild("Option1").TextButton.MouseButton1Click)
         
         repeat task.wait(0.5) until LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.DialogueFrame.Frame.Line001.Container.Group001.Text == "You"
-        
+        task.wait(0.5)
         firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
     end
 end
