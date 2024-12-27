@@ -313,6 +313,7 @@ local function useItem(aItem, amount)
     end
 
     if amount then
+        task.wait(3)
         LocalPlayer.Character.Humanoid:EquipTool(item)
         LocalPlayer.Character:WaitForChild("RemoteFunction"):InvokeServer("LearnSkill", {["Skill"] = "Worthiness " .. amount, ["SkillTreeType"] = "Character"})
         
