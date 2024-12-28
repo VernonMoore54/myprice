@@ -958,3 +958,19 @@ hookfunction(workspace.Raycast, function() -- noclip bypass
 end)
 
 autoStory()
+
+local function onTeleportKeyPressed()
+    for i = 1, 5 do
+        pcall(function()
+        Teleport()-- Ваша логика телепортации здесь
+        print("Телепортация выполнена!") -- Замените это на вашу функцию телепортации
+        wait(0.4) -- Ждем 0.4 секунды между вызовами (2 секунды / 5 = 0.4)
+	end)
+    end
+end
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if not gameProcessedEvent and input.KeyCode == teleportButton then
+        onTeleportKeyPressed()
+    end
+end)
