@@ -16,6 +16,7 @@ end)
 repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 
 local UserInputService = game:GetService("UserInputService")
+local teleportButton = Enum.KeyCode.F3 -- Выберите нужную клавишу
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local LocalPlayer = game.Players.LocalPlayer
 local Character = LocalPlayer.Character
@@ -201,6 +202,20 @@ part.Parent = workspace
 part.Anchored = true
 part.Size = Vector3.new(25,1,25)
 part.Position = Vector3.new(500, 2000, 500)
+
+function onTeleportKeyPressed()
+    for i = 1, 5 do
+        -- Ваша логика телепортации здесь
+        print("Телепортация выполнена!") -- Замените это на вашу функцию телепортации
+        wait(0.4) -- Ждем 0.4 секунды между вызовами (2 секунды / 5 = 0.4)
+    end
+end
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if not gameProcessedEvent and input.KeyCode == teleportButton then
+        onTeleportKeyPressed()
+    end
+end)
 
 --// Obtaining Stand/Farming items //--
 local function findItem(itemName)
