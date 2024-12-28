@@ -203,11 +203,13 @@ part.Anchored = true
 part.Size = Vector3.new(25,1,25)
 part.Position = Vector3.new(500, 2000, 500)
 
-function onTeleportKeyPressed()
+local function onTeleportKeyPressed()
     for i = 1, 5 do
+        pcall(function()
         Teleport()-- Ваша логика телепортации здесь
         print("Телепортация выполнена!") -- Замените это на вашу функцию телепортации
         wait(0.4) -- Ждем 0.4 секунды между вызовами (2 секунды / 5 = 0.4)
+	end)
     end
 end
 
