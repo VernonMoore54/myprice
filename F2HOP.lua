@@ -12,38 +12,37 @@ function ListServers(cursor)
     return Http:JSONDecode(Raw)
 end
 
--- Функция для поиска сервера с меньшей задержкой и выполнения перехода
-local function teleportToLowPingServer()
-    while task.wait() do
-        pcall(function()
-            local Server, Next; repeat
-                local Servers = ListServers(Next)
-                for _, s in ipairs(Servers.data) do
-                    if s.playing < s.maxPlayers and s.id ~= game.JobId then -- Проверяем, что это другой сервер
-                        Server = s
-                        break
-                    end
+-- Функция для поиска сервера с меньшим количеством игроков и выполнения перехода
+local function teleportToServerWithFewestPlayers()
+    local visitedServers = {}
+    local foundServer = false
+
+    while not foundServer do
+        local Next;
+        repeat
+            local Servers = ListServers(Next)
+            for _, s in ipairs(Servers.data) do
+                if s.playing < s.maxPlayers and not visitedServers[s.id] then -- Проверяем, что сервер не посещался
+                    visitedServers[s.id] = true
+                    TPS:TeleportToPlaceInstance(_place, s.id, game.Players.LocalPlayer)
+                    foundServer = true
+                    break
                 end
-                Next = Servers.nextPageCursor
-            until Server
-
-            if Server then
-                TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
-
-                -- Если телепортация не удалась, пробуем снова
-                TPS.TeleportInitFailed:Connect(function()
-                    TPS:TeleportToPlaceInstance(_place, Server.id, game.Players.LocalPlayer)
-                end)
-
-                repeat task.wait() until game.JobId ~= game.JobId
             end
-        end)
+            Next = Servers.nextPageCursor
+        until not Next or foundServer
+
+        if not foundServer then
+            warn("Не удалось найти подходящий сервер. Повторная попытка...")
+            task.wait(1)
+        end
     end
 end
 
 -- Подключение к событию нажатия клавиши
 UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.F2 then
-        teleportToLowPingServer() -- Запускаем сервер-хоп при нажатии F2
+        print("Инициализация сервер-хопа...")
+        teleportToServerWithFewestPlayers() -- Запускаем сервер-хоп при нажатии F2
     end
 end)
