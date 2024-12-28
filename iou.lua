@@ -612,9 +612,9 @@ local function allocateSkills() --this should allocate the destructive shit stuf
         RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Destructive Power I",["SkillTreeType"] = "Stand"})
         
         if LocalPlayer.PlayerStats.Spec.Value == "Hamon (William Zeppeli)" then
-            RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Hamon Punch V",["SkillTreeType"] = "Spec"})
-            RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Lung Capacity V", ["SkillTreeType"] = "Spec"})
-            RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Breathing Technique V",["SkillTreeType"] = "Spec"})
+            RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Hamon Punch IV",["SkillTreeType"] = "Spec"})
+            RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Lung Capacity IV", ["SkillTreeType"] = "Spec"})
+            RemoteFunction:InvokeServer("LearnSkill", {["Skill"] = "Breathing Technique IV",["SkillTreeType"] = "Spec"})
         end
     end)
 end
@@ -627,7 +627,7 @@ local function autoStory()
     if LocalPlayer.PlayerStats.Level.Value >= 25 and LocalPlayer.PlayerStats.Prestige.Value >= 1 and LocalPlayer.Backpack:FindFirstChild("Requiem Arrow") and (LocalPlayer.PlayerStats.Stand.Value == "King Crimson" or LocalPlayer.PlayerStats.Stand.Value == "Star Platinum" or LocalPlayer.PlayerStats.Stand.Value == "Gold Experience") then
         LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(500, 2010, 500)
         local oldStand = LocalPlayer.PlayerStats.Stand.Value
-        useItem("Requiem Arrow", "II")
+        useItem("Requiem Arrow", "V")
         repeat task.wait(0.5) until LocalPlayer.PlayerStats.Stand.Value ~= oldStand
         autoStory()
     end
