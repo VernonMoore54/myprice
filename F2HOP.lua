@@ -8,8 +8,23 @@ local _servers = Api.._place.."/servers/Public?sortOrder=Asc&limit=100"
 
 -- Функция для получения списка серверов
 function ListServers(cursor)
-    local Raw = game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
-    return Http:JSONDecode(Raw)
+    local success, result
+    repeat
+        success, result = pcall(function()
+            return game:HttpGet(_servers .. ((cursor and "&cursor="..cursor) or ""))
+        end)
+
+        if not success then
+            if string.find(result, "429") then
+                warn("Превышен лимит запросов. Ожидание...")
+                task.wait(5) -- Ожидание перед повторной попыткой
+            else
+                error("Ошибка при получении серверов: " .. result)
+            end
+        end
+    until success
+
+    return Http:JSONDecode(result)
 end
 
 -- Функция для поиска сервера с меньшим количеством игроков и выполнения перехода
@@ -30,6 +45,7 @@ local function teleportToServerWithFewestPlayers()
                 end
             end
             Next = Servers.nextPageCursor
+            task.wait(0.5) -- Задержка между запросами для снижения нагрузки
         until not Next or foundServer
 
         if not foundServer then
