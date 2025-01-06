@@ -61,7 +61,7 @@ local function createTeleportButton()
     teleportButton.MouseButton1Click:Connect(function()
         print("Телепортация по кнопке")
         local placeId = game.PlaceId
-        TeleportService:Teleport(placeId, player)
+        TeleportService:Teleport(placeId)
     end)
 
     -- Адаптация к изменению размеров окна
