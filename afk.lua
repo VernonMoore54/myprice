@@ -46,6 +46,7 @@ local function createTeleportButton()
 
     screenGui.Parent = player:WaitForChild("PlayerGui")
     screenGui.Name = "TeleportUI"
+    screenGui.ResetOnSpawn = false
 
     teleportButton.Name = "TeleportButton"
     teleportButton.Parent = screenGui
