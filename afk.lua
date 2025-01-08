@@ -62,7 +62,7 @@ local function createTeleportAndAnchorButtons()
 
     teleportButton.MouseButton1Click:Connect(function()
         print("Телепортация по кнопке")
-        idleTime = 30
+        idleTime = 31
     end)
 
     anchorButton.Name = "AnchorButton"
