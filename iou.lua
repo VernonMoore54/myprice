@@ -24,7 +24,7 @@ repeat task.wait() until Character:FindFirstChild("RemoteEvent") and Character:F
 local RemoteFunction, RemoteEvent = Character.RemoteFunction, Character.RemoteEvent
 local HRP = Character.PrimaryPart
 local part
-local dontTPOnDeath = false
+local dontTPOnDeath = true
 
 if LocalPlayer.PlayerStats.Level.Value == 50 then while true do print("Level 50, Auto pres disabled") task.wait(9999999) end end
 
