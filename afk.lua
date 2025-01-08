@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
+local idleTime = 0
 
 local player = Players.LocalPlayer
 local fileName = "IdleTimeData.json"  -- Имя файла для хранения данных
@@ -55,14 +56,13 @@ local function createTeleportAndAnchorButtons()
     teleportButton.Size = UDim2.new(0, 120, 0, 40)
     teleportButton.Position = UDim2.new(0, 10, 1, -50)
     teleportButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-    teleportButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    teleportButton.TextColor3 = Color3.fromRGB(0, 255, 255)
     teleportButton.TextScaled = true
     teleportButton.BorderSizePixel = 0
 
     teleportButton.MouseButton1Click:Connect(function()
         print("Телепортация по кнопке")
-        local placeId = game.PlaceId
-        TeleportService:Teleport(placeId)
+        idleTime = 30
     end)
 
     anchorButton.Name = "AnchorButton"
@@ -96,14 +96,13 @@ end
 createTeleportAndAnchorButtons()
 
 -- Функция мониторинга времени бездействия
-local function monitorIdleTime()
+function monitorIdleTime()
     print("Йоу, я заработал")
     task.wait(10)  -- Задержка перед началом мониторинга
 
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
-    local idleTime = 0
     local threshold = 30  -- Время в секундах для проверки на бездействие
     local lastPosition = humanoidRootPart.Position
 
