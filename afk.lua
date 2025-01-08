@@ -39,10 +39,11 @@ if not idleData then
     safeWriteFile(idleData)  -- Запись данных в файл
 end
 
--- Функция для создания UI элемента
-local function createTeleportButton()
+-- Функция для создания UI элементов
+local function createTeleportAndAnchorButtons()
     local screenGui = Instance.new("ScreenGui")
     local teleportButton = Instance.new("TextButton")
+    local anchorButton = Instance.new("TextButton")
 
     screenGui.Parent = player:WaitForChild("PlayerGui")
     screenGui.Name = "TeleportUI"
@@ -64,14 +65,35 @@ local function createTeleportButton()
         TeleportService:Teleport(placeId)
     end)
 
+    anchorButton.Name = "AnchorButton"
+    anchorButton.Parent = screenGui
+    anchorButton.Text = "Anchor Parts"
+    anchorButton.Size = UDim2.new(0, 120, 0, 40)
+    anchorButton.Position = UDim2.new(0, 10, 1, -100)
+    anchorButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+    anchorButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    anchorButton.TextScaled = true
+    anchorButton.BorderSizePixel = 0
+
+    anchorButton.MouseButton1Click:Connect(function()
+        print("Все части тела персонажа стали зафиксированными.")
+        local character = player.Character or player.CharacterAdded:Wait()
+        for _, part in ipairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.Anchored = true
+            end
+        end
+    end)
+
     -- Адаптация к изменению размеров окна
     game:GetService("RunService").RenderStepped:Connect(function()
         teleportButton.Position = UDim2.new(0, 10, 1, -50)
+        anchorButton.Position = UDim2.new(0, 10, 1, -100)
     end)
 end
 
--- Запуск создания UI элемента
-createTeleportButton()
+-- Запуск создания UI элементов
+createTeleportAndAnchorButtons()
 
 -- Функция мониторинга времени бездействия
 local function monitorIdleTime()
