@@ -1,30 +1,34 @@
--- Укажите ссылку на скрипт, который нужно загружать
-local scriptURL = "https://raw.githubusercontent.com/DarkNetworks/Infinite-Yield/main/latest.lua"
+if IY_LOADED and not _G.IY_DEBUG == true then
+    return
+end
 
--- Функция для загрузки скрипта
-local function loadScript()
-    local success, err = pcall(function()
-        loadstring(game:HttpGet(scriptURL))()
-    end)
-    if not success then
-        warn("Ошибка при загрузке скрипта: " .. err)
+pcall(function() getgenv().IY_LOADED = true end)
+
+-- Основная функция авто-загрузки
+local function AutoReload()
+    local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
+    if queueteleport then
+        queueteleport([[
+            wait(1)
+            print("hello zalupa") 
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+        ]])
     end
 end
 
--- Проверяем, поддерживает ли эксплойт queue_on_teleport
-if syn and syn.queue_on_teleport then
-    -- Используем queue_on_teleport для авто-загрузки на новом сервере
-    syn.queue_on_teleport([[
-        loadstring(game:HttpGet("]] .. scriptURL .. [["))()
-    ]])
-elseif queue_on_teleport then
-    -- Альтернативный вариант для эксплойтов с queue_on_teleport
-    queue_on_teleport([[
-        loadstring(game:HttpGet("]] .. scriptURL .. [["))()
-    ]])
-else
-    warn("Ваш эксплойт не поддерживает queue_on_teleport. Авто-загрузка невозможна.")
+-- Ваше кастомное сообщение
+print("hello zalupa")
+
+-- Инициализация авто-загрузки
+AutoReload()
+
+-- Дополнительные проверки как в оригинале
+if not game:IsLoaded() then
+    local notLoaded = Instance.new("Message")
+    notLoaded.Parent = game:GetService("CoreGui")
+    notLoaded.Text = 'Script is waiting for game to load'
+    game.Loaded:Wait()
+    notLoaded:Destroy()
 end
 
--- Первоначальная загрузка скрипта
-loadScript()
+-- Здесь продолжается остальной код...
