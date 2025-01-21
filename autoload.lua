@@ -12,12 +12,16 @@ local function AutoReload()
             wait(1)
             print("hello zalupa")
             loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/autoload.lua"))()
+            goto continue
         ]])
+    else
     end
 end
 
+goto continue
 -- Ваше кастомное сообщение
 print("hello zalupa")
+::continue::
 
 -- Инициализация авто-загрузки
 AutoReload()
