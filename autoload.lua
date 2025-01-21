@@ -9,9 +9,8 @@ local function AutoReload()
     local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
     if queueteleport then
         queueteleport([[
-            wait(1)
-            print("hello zalupa") 
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+            wait(1) 
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/autoload.lua"))()
         ]])
     end
 end
