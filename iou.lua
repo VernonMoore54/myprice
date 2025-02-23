@@ -37,6 +37,7 @@ end
 print("I DID FOUND IT, MAYBE IT WILL WORK?")
 RemoteEvent:FireServer("PressedPlay")
 
+
 if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1") then
     LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen1"):Destroy()
 end
@@ -88,6 +89,7 @@ local function SendWebhook(msg)
 
     repeat task.wait() until data
     local newdata = game:GetService("HttpService"):JSONEncode(data)
+
 
     local headers = {
         ["Content-Type"] = "application/json"
@@ -392,6 +394,7 @@ local function attemptStandFarm()
     end
 end
 
+
 --teleport not to get caught
 local function getitem(item, itemIndex)
     local gotItem = false
@@ -451,6 +454,7 @@ local function getitem(item, itemIndex)
             return
         end
     end)
+
 
     while not gotItem do
         task.wait()
@@ -597,6 +601,7 @@ local function killNPC(npcName, playerDistance, dontDestroyOnKill, extraParamete
         task.spawn(BlockBreaker)
     end
     
+    
     print(doneKilled)
     return doneKilled
 end 
@@ -630,97 +635,6 @@ local function allocateSkills() --this should allocate the destructive shit stuf
         end
     end)
 end
-
--- Новая функция для координации вампиров между альтами (без привязки к JobId)
-local function getAvailableVampire()
-    local vampires = {}
-    for _, vamp in pairs(workspace.Living:GetChildren()) do
-        if vamp.Name == "Vampire" and vamp:FindFirstChild("HumanoidRootPart") and vamp.Humanoid.Health > 0 then
-            table.insert(vampires, vamp)
-        end
-    end
-
-    if #vampires == 0 then return nil end
-
-    local vampireFile = "vampire_assignments.json"
-    local assignments = {}
-    
-    -- Читаем текущие назначения
-    if isfile(vampireFile) then
-        local success, result = pcall(function()
-            return game:GetService("HttpService"):JSONDecode(readfile(vampireFile))
-        end)
-        if success then
-            assignments = result
-        end
-    end
-
-    -- Проверяем доступных вампиров
-    for i, vamp in ipairs(vampires) do
-        local vampId = tostring(i) -- Индекс вампира как идентификатор
-        local isTaken = false
-        for player, data in pairs(assignments) do
-            if player ~= LocalPlayer.Name and data.vampId == vampId and (tick() - data.timestamp) < 10 then -- Бронь актуальна 10 секунд
-                isTaken = true
-                break
-            end
-        end
-        if not isTaken then
-            -- Бронируем этого вампира
-            assignments[LocalPlayer.Name] = {vampId = vampId, timestamp = tick()}
-            pcall(function()
-                writefile(vampireFile, game:GetService("HttpService"):JSONEncode(assignments))
-            end)
-            return vamp
-        end
-    end
-
-    return nil -- Все вампиры заняты или нет доступных
-end
-
--- Задача для проверки и очистки устаревших назначений каждую секунду
-task.spawn(function()
-    while task.wait(1) do
-        local vampireFile = "vampire_assignments.json"
-        if isfile(vampireFile) then
-            local assignments = {}
-            local success, result = pcall(function()
-                return game:GetService("HttpService"):JSONDecode(readfile(vampireFile))
-            end)
-            if success then
-                assignments = result
-                local updated = false
-                -- Удаляем устаревшие брони (старше 10 секунд)
-                for player, data in pairs(assignments) do
-                    if (tick() - data.timestamp) > 10 then
-                        assignments[player] = nil
-                        updated = true
-                    end
-                end
-                -- Если наш вампир забрали, обновляем файл
-                if assignments[LocalPlayer.Name] then
-                    local myVampId = assignments[LocalPlayer.Name].vampId
-                    local stillMine = true
-                    for player, data in pairs(assignments) do
-                        if player ~= LocalPlayer.Name and data.vampId == myVampId and (tick() - data.timestamp) < 10 then
-                            stillMine = false
-                            break
-                        end
-                    end
-                    if not stillMine then
-                        assignments[LocalPlayer.Name] = nil
-                        updated = true
-                    end
-                end
-                if updated then
-                    pcall(function()
-                        writefile(vampireFile, game:GetService("HttpService"):JSONEncode(assignments))
-                    end)
-                end
-            end
-        end
-    end
-end)
 
 local function autoStory()
     local questPanel = LocalPlayer.PlayerGui.HUD.Main.Frames.Quest.Quests
@@ -960,39 +874,22 @@ local function autoStory()
             end)
 		end
 
+
+
     elseif questPanel:FindFirstChild("Take down 3 vampires") and LocalPlayer.PlayerStats.Spec.Value ~= "None" and LocalPlayer.PlayerStats.Level.Value >= 25 and LocalPlayer.PlayerStats.Level.Value ~= 50 then
         getgenv().HamonCharge = 10
         local function vampire()
-            local targetVampire = getAvailableVampire()
-            if targetVampire then
-                LocalPlayer.Character.PrimaryPart.CFrame = targetVampire.HumanoidRootPart.CFrame - Vector3.new(0, 15, 0)
-                if not questPanel:FindFirstChild("Take down 3 vampires") then
-                    if (tick() - lastTick) >= 5 then
-                        SendWebhook("Account: `" .. LocalPlayer.Name .. "`\nTook around: `".. (tick() - lastTick).. " seconds` to complete `Vampire Quest`")
-                        lastTick = tick()
-                    end
-                    endDialogue("William Zeppeli", "Dialogue4", "Option1")
-                    -- Очистка брони после завершения
-                    local vampireFile = "vampire_assignments.json"
-                    if isfile(vampireFile) then
-                        local assignments = game:GetService("HttpService"):JSONDecode(readfile(vampireFile))
-                        assignments[LocalPlayer.Name] = nil
-                        pcall(function()
-                            writefile(vampireFile, game:GetService("HttpService"):JSONEncode(assignments))
-                        end)
-                    end
+            LocalPlayer.Character.PrimaryPart.CFrame = workspace.Living:FindFirstChild("Vampire").HumanoidRootPart.CFrame - Vector3.new(0, 15, 0)
+            if not questPanel:FindFirstChild("Take down 3 vampires") then
+                if (tick() - lastTick) >= 5 then
+                    SendWebhook("Account: `" .. LocalPlayer.Name .. "`\nTook around: `".. (tick() - lastTick).. " seconds` to complete `Vampire Quest`")
+                    lastTick = tick()
                 end
-            else
-                print("No available vampires, waiting...")
+                endDialogue("William Zeppeli", "Dialogue4", "Option1")
             end
         end
 
-        local targetVampire = getAvailableVampire()
-        if targetVampire then
-            killNPC("Vampire", 15, false, vampire)
-        else
-            task.wait(1) -- Ждем, если нет свободных вампиров
-        end
+        killNPC("Vampire", 15, false, vampire)
         autoStory()
 
     elseif LocalPlayer.PlayerStats.Level.Value == 50 then
