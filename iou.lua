@@ -631,7 +631,7 @@ local function allocateSkills() --this should allocate the destructive shit stuf
     end)
 end
 
--- Новая функция для координации вампиров между альтами
+-- Новая функция для координации вампиров между альтами (без привязки к JobId)
 local function getAvailableVampire()
     local vampires = {}
     for _, vamp in pairs(workspace.Living:GetChildren()) do
@@ -642,13 +642,13 @@ local function getAvailableVampire()
 
     if #vampires == 0 then return nil end
 
-    local serverFile = "vampire_assignments_" .. game.JobId .. ".json"
+    local vampireFile = "vampire_assignments.json"
     local assignments = {}
     
     -- Читаем текущие назначения
-    if isfile(serverFile) then
+    if isfile(vampireFile) then
         local success, result = pcall(function()
-            return game:GetService("HttpService"):JSONDecode(readfile(serverFile))
+            return game:GetService("HttpService"):JSONDecode(readfile(vampireFile))
         end)
         if success then
             assignments = result
@@ -657,54 +657,65 @@ local function getAvailableVampire()
 
     -- Проверяем доступных вампиров
     for i, vamp in ipairs(vampires) do
-        local vampId = tostring(i)
+        local vampId = tostring(i) -- Индекс вампира как идентификатор
         local isTaken = false
-        for player, assignedVamp in pairs(assignments) do
-            if player ~= LocalPlayer.Name and assignedVamp == vampId then
+        for player, data in pairs(assignments) do
+            if player ~= LocalPlayer.Name and data.vampId == vampId and (tick() - data.timestamp) < 10 then -- Бронь актуальна 10 секунд
                 isTaken = true
                 break
             end
         end
         if not isTaken then
             -- Бронируем этого вампира
-            assignments[LocalPlayer.Name] = vampId
+            assignments[LocalPlayer.Name] = {vampId = vampId, timestamp = tick()}
             pcall(function()
-                writefile(serverFile, game:GetService("HttpService"):JSONEncode(assignments))
+                writefile(vampireFile, game:GetService("HttpService"):JSONEncode(assignments))
             end)
             return vamp
         end
     end
 
-    return nil -- Все вампиры заняты
+    return nil -- Все вампиры заняты или нет доступных
 end
 
--- Задача для проверки назначений каждую секунду
+-- Задача для проверки и очистки устаревших назначений каждую секунду
 task.spawn(function()
     while task.wait(1) do
-        local serverFile = "vampire_assignments_" .. game.JobId .. ".json"
-        if isfile(serverFile) then
+        local vampireFile = "vampire_assignments.json"
+        if isfile(vampireFile) then
             local assignments = {}
             local success, result = pcall(function()
-                return game:GetService("HttpService"):JSONDecode(readfile(serverFile))
+                return game:GetService("HttpService"):JSONDecode(readfile(vampireFile))
             end)
             if success then
                 assignments = result
-                -- Если наш вампир забрали, удаляем бронь
+                local updated = false
+                -- Удаляем устаревшие брони (старше 10 секунд)
+                for player, data in pairs(assignments) do
+                    if (tick() - data.timestamp) > 10 then
+                        assignments[player] = nil
+                        updated = true
+                    end
+                end
+                -- Если наш вампир забрали, обновляем файл
                 if assignments[LocalPlayer.Name] then
-                    local myVampId = assignments[LocalPlayer.Name]
+                    local myVampId = assignments[LocalPlayer.Name].vampId
                     local stillMine = true
-                    for player, vampId in pairs(assignments) do
-                        if player ~= LocalPlayer.Name and vampId == myVampId then
+                    for player, data in pairs(assignments) do
+                        if player ~= LocalPlayer.Name and data.vampId == myVampId and (tick() - data.timestamp) < 10 then
                             stillMine = false
                             break
                         end
                     end
                     if not stillMine then
                         assignments[LocalPlayer.Name] = nil
-                        pcall(function()
-                            writefile(serverFile, game:GetService("HttpService"):JSONEncode(assignments))
-                        end)
+                        updated = true
                     end
+                end
+                if updated then
+                    pcall(function()
+                        writefile(vampireFile, game:GetService("HttpService"):JSONEncode(assignments))
+                    end)
                 end
             end
         end
@@ -962,12 +973,12 @@ local function autoStory()
                     end
                     endDialogue("William Zeppeli", "Dialogue4", "Option1")
                     -- Очистка брони после завершения
-                    local serverFile = "vampire_assignments_" .. game.JobId .. ".json"
-                    if isfile(serverFile) then
-                        local assignments = game:GetService("HttpService"):JSONDecode(readfile(serverFile))
+                    local vampireFile = "vampire_assignments.json"
+                    if isfile(vampireFile) then
+                        local assignments = game:GetService("HttpService"):JSONDecode(readfile(vampireFile))
                         assignments[LocalPlayer.Name] = nil
                         pcall(function()
-                            writefile(serverFile, game:GetService("HttpService"):JSONEncode(assignments))
+                            writefile(vampireFile, game:GetService("HttpService"):JSONEncode(assignments))
                         end)
                     end
                 end
