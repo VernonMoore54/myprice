@@ -243,6 +243,7 @@ end
 
 local function UseRoka()
     local Player = game.Players.LocalPlayer
+    local VirtualInputManager = game:GetService("VirtualInputManager")
 
     -- Проверяем наличие предмета "Rokakaka"
     if not Player.Backpack:FindFirstChild("Rokakaka") then
@@ -296,9 +297,41 @@ local function UseRoka()
     wait(0.1) -- Небольшая задержка между нажатием и отпусканием
     VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
 
+    VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+    wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+    VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+    VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+    wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+    VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
     -- Ждем появления диалогового окна
     repeat
         game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 8, 0, true, nil, 1)
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
         VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
         wait(0.1) -- Небольшая задержка между нажатием и отпусканием
         VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
@@ -319,10 +352,58 @@ local function UseRoka()
             VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
             wait(0.1) -- Небольшая задержка между нажатием и отпусканием
             VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+ 
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
             task.wait(0.5)
         until Player.PlayerGui.DialogueGui.Frame.Options:FindFirstChild("Option1")
 
         local EatOption = Player.PlayerGui.DialogueGui.Frame.Options:FindFirstChild("Option1")
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
             VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
             wait(0.1) -- Небольшая задержка между нажатием и отпусканием
             VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
@@ -336,6 +417,38 @@ local function UseRoka()
 
         task.wait(0.2)
   
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
         VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
         wait(0.1) -- Небольшая задержка между нажатием и отпусканием
         VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
@@ -374,6 +487,7 @@ end
 --uses item, use amount to specify what worthiness
 local function useItem(aItem, amount)
     local item = LocalPlayer.Backpack:WaitForChild(aItem, 5)
+    local VirtualInputManager = game:GetService("VirtualInputManager")
 
     if not item then
         Teleport()
@@ -424,6 +538,22 @@ local function useItem(aItem, amount)
                 VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
                 wait(0.1) -- Небольшая задержка между нажатием и отпусканием
                 VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+   
+                VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+                wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+                VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+                VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+                wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+                VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+                VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+                wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+                VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+                VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+                wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+                VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
                 break -- Выходим из цикла после клика
             end
         until false
@@ -445,10 +575,42 @@ local function useItem(aItem, amount)
         VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
         wait(0.1) -- Небольшая задержка между нажатием и отпусканием
         VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
         
         repeat task.wait(0.5) until LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.DialogueFrame.Frame.Line001.Container.Group001.Text == "You"
         task.wait(0.5)
         firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
 
         VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
         wait(0.1) -- Небольшая задержка между нажатием и отпусканием
