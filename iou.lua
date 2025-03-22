@@ -274,7 +274,7 @@ local function UseRoka()
     task.wait(0.1)
     VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, false, nil, 1)
 
-    task.wait(0.1)
+    task.wait(0.3)
 
     VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, true, nil, 1)
     task.wait(0.1)
