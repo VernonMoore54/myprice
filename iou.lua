@@ -293,6 +293,12 @@ local function UseRoka()
         task.wait(0.5)
     until dialogueGui
 
+    task.wait(0.2)
+
+    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, true, nil, 1)
+    task.wait(0.1)
+    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, false, nil, 1)
+
     -- Ждём появления "Option1" в диалоговом окне
     local optionsFrame = dialogueGui:WaitForChild("Frame"):WaitForChild("Options")
     local EatOption
