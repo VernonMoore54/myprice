@@ -241,16 +241,20 @@ local function findItem(itemName)
     return ItemsDict
 end
 
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
 local function UseRoka()
     local Player = game.Players.LocalPlayer
 
     -- Проверяем наличие предмета "Rokakaka"
     if not Player.Backpack:FindFirstChild("Rokakaka") then
+        warn("Rokakaka не найден в рюкзаке")
         return
     end
 
     -- Проверяем, что у игрока есть стенд
     if Player.PlayerStats.Stand.Value == "None" then
+        warn("У игрока нет стенда")
         return
     end
 
@@ -261,101 +265,51 @@ local function UseRoka()
         Character:FindFirstChildWhichIsA("Humanoid"):EquipTool(Player.Backpack:FindFirstChild("Rokakaka"))
     end
 
-    -- Ждем немного, чтобы дать время на экипировку
+    -- Ждём экипировку
     task.wait(0.5)
 
-    -- Имитация клика левой кнопкой мыши по центру экрана для активации Rokakaka
+    -- Активируем Rokakaka кликом по центру экрана
     local viewportSize = workspace.CurrentCamera.ViewportSize
-    VirtualInputManager:SendMouseButtonEvent(
-        viewportSize.X / 2,
-        viewportSize.Y / 2,
-        0,
-        true,
-        nil,
-        1
-    )
+    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, true, nil, 1)
     task.wait(0.1)
-    VirtualInputManager:SendMouseButtonEvent(
-        viewportSize.X / 2,
-        viewportSize.Y / 2,
-        0,
-        false,
-        nil,
-        1
-    )
+    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, false, nil, 1)
 
-    -- Ждем появления диалогового окна
-    if not Player.PlayerGui:FindFirstChild("DialogueGui") then
-        repeat
-            task.wait(0.5)
-        until Player.PlayerGui:FindFirstChild("DialogueGui")
-    end
-
-    VirtualInputManager:SendMouseButtonEvent(
-        viewportSize.X / 2,
-        viewportSize.Y / 2,
-        0,
-        true,
-        nil,
-        1
-    )
     task.wait(0.1)
-    VirtualInputManager:SendMouseButtonEvent(
-        viewportSize.X / 2,
-        viewportSize.Y / 2,
-        0,
-        false,
-        nil,
-        1
-    )
+
+    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, true, nil, 1)
+    task.wait(0.1)
+    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, false, nil, 1)
 
     task.wait(0.5)
 
-    VirtualInputManager:SendMouseButtonEvent(
-        viewportSize.X / 2,
-        viewportSize.Y / 2,
-        0,
-        true,
-        nil,
-        1
-    )
+    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, true, nil, 1)
     task.wait(0.1)
-    VirtualInputManager:SendMouseButtonEvent(
-        viewportSize.X / 2,
-        viewportSize.Y / 2,
-        0,
-        false,
-        nil,
-        1
-    )
+    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, false, nil, 1)
 
-    -- Ждем появления опции "Option1" в диалоговом окне
-    local dialogueGui = Player.PlayerGui:FindFirstChild("DialogueGui")
-    if dialogueGui then
-        local optionsFrame = dialogueGui.Frame.Options
-        local EatOption = optionsFrame:FindFirstChild("Option1")
-        
-        if not EatOption then
-            repeat
-                task.wait(0.5)
-                EatOption = optionsFrame:FindFirstChild("Option1")
-            until EatOption
-        end
+    -- Ждём появления диалогового окна
+    local dialogueGui
+    repeat
+        dialogueGui = Player.PlayerGui:FindFirstChild("DialogueGui")
+        task.wait(0.5)
+    until dialogueGui
 
-        -- Ждем, пока опция станет видимой
-        repeat
-            task.wait(0.5)
-        until EatOption and EatOption.Visible
+    -- Ждём появления "Option1" в диалоговом окне
+    local optionsFrame = dialogueGui:WaitForChild("Frame"):WaitForChild("Options")
+    local EatOption
+    repeat
+        EatOption = optionsFrame:FindFirstChild("Option1")
+        task.wait(0.5)
+    until EatOption and EatOption.Visible
 
-        -- Симулируем клик по кнопке "Option1" через VirtualInputManager
-        ClickUIElement(EatOption.TextButton)
+    -- Симулируем клик по "Option1"
+    firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.Option1.MouseButton1Click) -- Предполагаем, что "Option1" сам является кнопкой
 
-        -- Ждем завершения диалога
-        repeat
-            task.wait(0.5)
-        until not Player.PlayerGui:FindFirstChild("DialogueGui")
-    end
+    -- Ждём завершения диалога
+    repeat
+        task.wait(0.5)
+    until not Player.PlayerGui:FindFirstChild("DialogueGui")
 end
+
 
 --count amount of items for checking if full of item
 local function countItems(itemName)
