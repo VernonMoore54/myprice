@@ -245,20 +245,14 @@ local VirtualInputManager = game:GetService("VirtualInputManager")
 
 local function UseRoka()
     local Player = game.Players.LocalPlayer
-    local dialogueGui = Player.PlayerGui:WaitForChild("DialogueGui")
-    local frame = dialogueGui:WaitForChild("Frame")
-    local option1 = frame:WaitForChild("Option1")
-    local textButton = option1:WaitForChild("TextButton")
 
     -- Проверяем наличие предмета "Rokakaka"
     if not Player.Backpack:FindFirstChild("Rokakaka") then
-        warn("Rokakaka не найден в рюкзаке")
         return
     end
 
     -- Проверяем, что у игрока есть стенд
     if Player.PlayerStats.Stand.Value == "None" then
-        warn("У игрока нет стенда")
         return
     end
 
@@ -269,65 +263,50 @@ local function UseRoka()
         Character:FindFirstChildWhichIsA("Humanoid"):EquipTool(Player.Backpack:FindFirstChild("Rokakaka"))
     end
 
-    -- Ждём экипировку
+    -- Ждем немного, чтобы дать время на экипировку
     task.wait(0.5)
 
-    -- Активируем Rokakaka кликом по центру экрана
-    local viewportSize = workspace.CurrentCamera.ViewportSize
-    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, true, nil, 1)
-    task.wait(0.1)
-    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, false, nil, 1)
+    -- Имитация клика левой кнопкой мыши по центру экрана для активации Rokakaka
+    VirtualInputManager:SendMouseButtonEvent(
+        workspace.CurrentCamera.ViewportSize.X / 2,
+        workspace.CurrentCamera.ViewportSize.Y / 2,
+        0,
+        true,
+        nil,
+        1
+    )
 
-    task.wait(0.3)
+    task.wait(0.1)  -- Небольшая пауза перед отпусканием кнопки
 
-    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, true, nil, 1)
-    task.wait(0.1)
-    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, false, nil, 1)
+    VirtualInputManager:SendMouseButtonEvent(
+        workspace.CurrentCamera.ViewportSize.X / 2,
+        workspace.CurrentCamera.ViewportSize.Y / 2,
+        0,
+        false,
+        nil,
+        1
+    )
 
-    task.wait(0.5)
-
-    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, true, nil, 1)
-    task.wait(0.1)
-    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, false, nil, 1)
-
-    -- Ждём появления диалогового окна
-    local dialogueGui
+    -- Ждем появления диалогового окна
     repeat
-        dialogueGui = Player.PlayerGui:FindFirstChild("DialogueGui")
+        game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 8, 0, true, nil, 1)
         task.wait(0.5)
-    until dialogueGui
+    until Player.PlayerGui:FindFirstChild("DialogueGui")
 
-    task.wait(0.2)
+    if Player.PlayerGui:FindFirstChild("DialogueGui") then
+        repeat
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 8, 0, true, nil, 1)
+            task.wait(0.5)
+        until Player.PlayerGui.DialogueGui.Frame.Options:FindFirstChild("Option1")
 
-    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, true, nil, 1)
-    task.wait(0.1)
-    VirtualInputManager:SendMouseButtonEvent(viewportSize.X / 2, viewportSize.Y / 2, 0, false, nil, 1)
+        local EatOption = Player.PlayerGui.DialogueGui.Frame.Options:FindFirstChild("Option1")
+        repeat task.wait(0.5) until EatOption and EatOption.Visible
+        
+        firesignal(EatOption.TextButton.MouseButton1Click)
 
-    -- Ждём появления "Option1" в диалоговом окне
-    local optionsFrame = dialogueGui:WaitForChild("Frame"):WaitForChild("Options")
-    local EatOption
-    repeat
-        EatOption = optionsFrame:FindFirstChild("Option1")
-        task.wait(0.5)
-    until EatOption and EatOption.Visible
-
-    -- Получаем абсолютную позицию и размер кнопки
-    local absPos = textButton.AbsolutePosition
-    local absSize = textButton.AbsoluteSize
-
-    -- Вычисляем центр кнопки
-    local centerX = absPos.X + absSize.X / 2
-    local centerY = absPos.Y + absSize.Y / 2
-
-    -- Симулируем нажатие левой кнопки мыши
-    VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, true, nil, 1)
-    task.wait(0.1) -- Небольшая задержка для регистрации клика
-    VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, false, nil, 1)
-
-    -- Ждём завершения диалога
-    repeat
-        task.wait(0.5)
-    until not Player.PlayerGui:FindFirstChild("DialogueGui")
+        -- Ждем завершения диалога
+        repeat task.wait(0.5) until not Player.PlayerGui.DialogueGui.Frame.Parent
+    end
 end
 
 
