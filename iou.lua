@@ -241,8 +241,6 @@ local function findItem(itemName)
     return ItemsDict
 end
 
-local VirtualInputManager = game:GetService("VirtualInputManager")
-
 local function UseRoka()
     local Player = game.Players.LocalPlayer
 
@@ -309,7 +307,6 @@ local function UseRoka()
     end
 end
 
-
 --count amount of items for checking if full of item
 local function countItems(itemName)
     local itemAmount = 0
@@ -342,7 +339,7 @@ local function useItem(aItem, amount)
         
         -- Клик по кнопке "ClickContinue", когда она появляется
         repeat 
-            task.wait(0.35)
+            task.wait(0.25)
             if LocalPlayer.PlayerGui.DialogueGui.Frame:FindFirstChild("ClickContinue") then
                 VirtualInputManager:SendMouseButtonEvent(
                     workspace.CurrentCamera.ViewportSize.X / 2,
@@ -352,7 +349,7 @@ local function useItem(aItem, amount)
                     nil,
                     1
                 )
-                task.wait(0.35)
+                task.wait(0.25)
                 VirtualInputManager:SendMouseButtonEvent(
                     workspace.CurrentCamera.ViewportSize.X / 2,
                     workspace.CurrentCamera.ViewportSize.Y / 2,
