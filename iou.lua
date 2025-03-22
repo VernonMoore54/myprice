@@ -245,6 +245,10 @@ local VirtualInputManager = game:GetService("VirtualInputManager")
 
 local function UseRoka()
     local Player = game.Players.LocalPlayer
+    local dialogueGui = Player.PlayerGui:WaitForChild("DialogueGui")
+    local frame = dialogueGui:WaitForChild("Frame")
+    local option1 = frame:WaitForChild("Option1")
+    local textButton = option1:WaitForChild("TextButton")
 
     -- Проверяем наличие предмета "Rokakaka"
     if not Player.Backpack:FindFirstChild("Rokakaka") then
@@ -307,8 +311,18 @@ local function UseRoka()
         task.wait(0.5)
     until EatOption and EatOption.Visible
 
-    -- Симулируем клик по "Option1"
-    firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.Option1.MouseButton1Click) -- Предполагаем, что "Option1" сам является кнопкой
+    -- Получаем абсолютную позицию и размер кнопки
+    local absPos = textButton.AbsolutePosition
+    local absSize = textButton.AbsoluteSize
+
+    -- Вычисляем центр кнопки
+    local centerX = absPos.X + absSize.X / 2
+    local centerY = absPos.Y + absSize.Y / 2
+
+    -- Симулируем нажатие левой кнопки мыши
+    VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, true, nil, 1)
+    task.wait(0.1) -- Небольшая задержка для регистрации клика
+    VirtualInputManager:SendMouseButtonEvent(centerX, centerY, 0, false, nil, 1)
 
     -- Ждём завершения диалога
     repeat
