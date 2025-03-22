@@ -320,7 +320,7 @@ local function UseRoka()
             task.wait(0.1) -- Задержка между нажатием и отпусканием
             VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
             task.wait(0.1) -- Задержка между кликами (можно настроить)
-        until not Player.PlayerGui.DialogueGui.Frame.Parent
+        until not LocalPlayer.PlayerGui.DialogueGui.Frame.Parent
     end
 end
 
@@ -378,7 +378,7 @@ local function useItem(aItem, amount)
                 )
 
                 
-                end
+                
                 break -- Выходим из цикла после клика
             end
         until false
@@ -401,9 +401,7 @@ local function useItem(aItem, amount)
             task.wait(0.1) -- Задержка между нажатием и отпусканием
             VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
             task.wait(0.1) -- Задержка между кликами (можно настроить)
-	until not Player.PlayerGui.DialogueGui.Frame.Parent
-
-        end
+	    until not LocalPlayer.PlayerGui.DialogueGui.Frame.Parent
     end
 end
 
