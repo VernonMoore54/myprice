@@ -718,29 +718,55 @@ local function autoStory()
              LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat"))
             game.Players.LocalPlayer.Character.RemoteEvent:FireServer("PromptTriggered", game.ReplicatedStorage.NewDialogue:FindFirstChild("Lisa Lisa"))
             repeat
-              game:GetService("VirtualInputManager"):SendMouseButtonEvent(0,8,0, true, nil, 1)
-                 task.wait(0.5)
+              -- Эмуляция нажатия левой кнопки мыши
+              VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+              wait(0.1) -- Задержка между нажатием и отпусканием
+              VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+              wait(0.1)
             until game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui")
             if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui") then
             repeat
-            game:GetService("VirtualInputManager"):SendMouseButtonEvent(0,8,0, true, nil, 1)
-            task.wait(0.5)
+            -- Эмуляция нажатия левой кнопки мыши
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+            wait(0.1)
             until game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1")
             end
-            firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options.Option1.TextButton.MouseButton1Click)
+            -- Эмуляция нажатия левой кнопки мыши
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+            wait(0.1)
             repeat
-            firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
+            -- Эмуляция нажатия левой кнопки мыши
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+            wait(0.1)
             task.wait(0.5)
             until game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1")
             if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1") then
-             firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options.Option1.TextButton.MouseButton1Click)
+             -- Эмуляция нажатия левой кнопки мыши
+             VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+             wait(0.1) -- Задержка между нажатием и отпусканием
+             VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+             wait(0.1)
             end
             repeat
-            firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
+            -- Эмуляция нажатия левой кнопки мыши
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+            wait(0.1) -- Задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+            wait(0.1)
             task.wait(0.5)
             until game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1")
             if game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options:FindFirstChild("Option1") then
-            firesignal(game.Players.LocalPlayer.PlayerGui:FindFirstChild("DialogueGui").Frame.Options.Option1.TextButton.MouseButton1Click)
+            -- Эмуляция нажатия левой кнопки мыши
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 3)
+            wait(0.1) -- Задержка между нажатием и отпусканием
+            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 3)
+            wait(0.1)
             end
             task.wait(10)
             autoStory()
