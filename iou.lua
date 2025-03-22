@@ -285,6 +285,10 @@ local function UseRoka()
         1
     )
 
+    VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+    wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+    VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
     -- Ждем появления диалогового окна
     repeat
         game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 8, 0, true, nil, 1)
@@ -301,6 +305,16 @@ local function UseRoka()
         repeat task.wait(0.5) until EatOption and EatOption.Visible
         
         firesignal(EatOption.TextButton.MouseButton1Click)
+
+        task.wait(0.2)
+  
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
+
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
+        wait(0.1) -- Небольшая задержка между нажатием и отпусканием
+        VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
 
         -- Ждем завершения диалога
         repeat task.wait(0.5) until not Player.PlayerGui.DialogueGui.Frame.Parent
