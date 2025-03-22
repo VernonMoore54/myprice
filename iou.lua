@@ -309,6 +309,26 @@ local function UseRoka()
         1
     )
 
+    task.wait(0.5)
+
+    VirtualInputManager:SendMouseButtonEvent(
+        viewportSize.X / 2,
+        viewportSize.Y / 2,
+        0,
+        true,
+        nil,
+        1
+    )
+    task.wait(0.1)
+    VirtualInputManager:SendMouseButtonEvent(
+        viewportSize.X / 2,
+        viewportSize.Y / 2,
+        0,
+        false,
+        nil,
+        1
+    )
+
     -- Ждем появления опции "Option1" в диалоговом окне
     local dialogueGui = Player.PlayerGui:FindFirstChild("DialogueGui")
     if dialogueGui then
