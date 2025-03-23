@@ -401,7 +401,9 @@ local function useItem(aItem, amount)
             task.wait(0.1) -- Задержка между нажатием и отпусканием
             VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
             task.wait(0.1) -- Задержка между кликами (можно настроить)
-	    until not LocalPlayer.PlayerGui.DialogueGui.Frame.Parent
+	until not LocalPlayer.PlayerGui.DialogueGui.Frame.Parent
+        task.wait(10)
+        LocalPlayer.Character.Humanoid.Health = 0
     end
 end
 
