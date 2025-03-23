@@ -394,16 +394,6 @@ local function useItem(aItem, amount)
         until LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.DialogueFrame.Frame.Line001.Container.Group001.Text == "You"
         task.wait(0.5)
         firesignal(LocalPlayer.PlayerGui:WaitForChild("DialogueGui").Frame.ClickContinue.MouseButton1Click)
-
-        repeat
-            -- Эмуляция нажатия левой кнопки мыши
-            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
-            task.wait(0.1) -- Задержка между нажатием и отпусканием
-            VirtualInputManager:SendMouseButtonEvent(518, 384, 0, false, game, 0)
-            task.wait(0.1) -- Задержка между кликами (можно настроить)
-	until not LocalPlayer.PlayerGui.DialogueGui.Frame.Parent
-        task.wait(10)
-        LocalPlayer.Character.Humanoid.Health = 0
     end
 end
 
