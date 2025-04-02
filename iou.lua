@@ -72,34 +72,8 @@ end
 
 -- start
 local lastTick = tick()
-local function SendWebhook(msg)
-    local url = getgenv().webhook
-
-    local data;
-    data = {
-        ["embeds"] = {
-            {
-                ["title"] = "Xenon V3 - Auto Prestige 3",
-                ["description"] = msg,
-                ["type"] = "rich",
-                ["color"] = tonumber(0x7269ff),
-            }
-        }
-    }
-
-    repeat task.wait() until data
-    local newdata = game:GetService("HttpService"):JSONEncode(data)
 
 
-    local headers = {
-        ["Content-Type"] = "application/json"
-    }
-    local request = http_request or request or HttpPost or syn.request or http.request
-    local abcdef = {Url = url, Body = newdata, Method = "POST", Headers = headers}
-    request(abcdef)
-end
-
-SendWebhook("Loading Xenon V3 - Auto Prestige 3\nCurrent level: `"..LocalPlayer.PlayerStats.Level.Value.."`\nCurrent prestige: `"..LocalPlayer.PlayerStats.Prestige.Value.."`\nTime since start: `" .. (tick() - Data["Time"])/60 .. " minutes`")
 
 local itemHook;
 itemHook = hookfunction(getrawmetatable(game.Players.LocalPlayer.Character.HumanoidRootPart.Position).__index, function(p,i)
@@ -410,7 +384,6 @@ local function attemptStandFarm()
             print("DEBUG CHECK, USING ROKAKAKA")
             UseRoka()
         elseif getgenv().standList[LocalPlayer.PlayerStats.Stand.Value] then
-            SendWebhook("Got `".. LocalPlayer.PlayerStats.Stand.Value .. "` stand")
             dontTPOnDeath = true
             Teleport()
         end
@@ -635,11 +608,6 @@ end
 
 local function checkPrestige(level, prestige)
     if (level == 35 and prestige == 0) or (level == 40 and prestige == 1) or (level == 45 and prestige == 2) then
-        SendWebhook("@everyone Congratulations you have prestiged!\nTook around `" ..
-        (tick() - Data["Time"]) / 60 .. " minutes` or `" .. (tick() - Data["Time"]) / 3600 ..
-        " hours` to go from `Prestige " .. Data["Prestige"] .. ", Level " .. Data["Level"] ..
-        "`, to `Prestige " .. tostring(prestige + 1) .. ", Level 1!`"
-        )
         endDialogue("Prestige", "Dialogue2", "Option1")
         return true
     else
@@ -685,14 +653,12 @@ local function autoStory()
         end
         
         if not LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat") then
-            SendWebhook("Farming `Zeppeli's Hat` to purchase `Hamon`")
             task.wait(10)
             farmItem("Zeppeli's Hat", 1)
         end
 
         if LocalPlayer.PlayerStats.Money.Value <= 10000 then
             print("WHERE DID THE MONEY GO FOR HAMON?")
-            SendWebhook("Collecting `$10000` for `Hamon`")
             collectAndSell("Mysterious Arrow", 25)
             collectAndSell("Rokakaka", 25)
 	    collectAndSell("Diamond", 10)
@@ -706,7 +672,6 @@ local function autoStory()
         end
 
         if LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat") then
-            SendWebhook("Buying `Hamon`")
              LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat"))
             game.Players.LocalPlayer.Character.RemoteEvent:FireServer("PromptTriggered", game.ReplicatedStorage.NewDialogue:FindFirstChild("Lisa Lisa"))
             repeat
@@ -769,7 +734,6 @@ local function autoStory()
         
     while #questPanel:GetChildren() < 2 and repeatCount < 1000 do
         if not questPanel:FindFirstChild("Take down 3 vampires") then
-            SendWebhook("Account: `" .. LocalPlayer.Name .. "`\nTook around: `".. (tick() - lastTick).. " seconds` to complete a quest")
             lastTick = tick()
             endDialogue("William Zeppeli", "Dialogue4", "Option1")
         end
@@ -787,7 +751,6 @@ local function autoStory()
 
     if questPanel:FindFirstChild("Help Giorno by Defeating Security Guards") then
         print('SECURITY GUARD')
-        SendWebhook("Killing Security Guard `" .. LocalPlayer.PlayerStats.QuestProgress.Value.."/"..LocalPlayer.PlayerStats.QuestMaxProgress.Value .."`")
         if killNPC("Security Guard", 15) then
             task.wait(1)
             storyDialogue()
@@ -815,7 +778,6 @@ local function autoStory()
     
     elseif questPanel:FindFirstChild("Defeat Leaky Eye Luca") and getgenv().standList[LocalPlayer.PlayerStats.Stand.Value] then
         print("LEAKY EYE LUCA")
-        SendWebhook("Killing `Leaky Eye Luca`")
         if killNPC("Leaky Eye Luca", 15) then
             task.wait(1)
             storyDialogue()
@@ -826,7 +788,6 @@ local function autoStory()
 
     elseif questPanel:FindFirstChild("Defeat Bucciarati") then
         print("BUCCIARATI")
-        SendWebhook("Killing `Bucciarati`")
 
         if killNPC("Bucciarati", 15) then
             task.wait(1)
@@ -839,7 +800,6 @@ local function autoStory()
     elseif questPanel:FindFirstChild("Collect $5,000 To Cover For Popo's Real Fortune") then
         print("WAH WAH I DONT HAVE ENOUGH MONEY")
         if LocalPlayer.PlayerStats.Money.Value < 5000 then
-            SendWebhook("Collecting `$5000`")
             local function collectAndSell(toolName, amount)
                 if countItems(toolName) <= amount then
                     farmItem(toolName, amount)
@@ -870,7 +830,6 @@ local function autoStory()
 
     elseif questPanel:FindFirstChild("Defeat Fugo And His Purple Haze") then
         print("FUGO")
-        SendWebhook("Killing `Fugo`")
         if killNPC("Fugo", 15) then
             task.wait(1)
             storyDialogue()
@@ -881,7 +840,6 @@ local function autoStory()
 
     elseif questPanel:FindFirstChild("Defeat Pesci") then
         print("PESCI")
-        SendWebhook("Killing `Pesci`")
         if killNPC("Pesci", 15) then
             task.wait(1)
             storyDialogue()
@@ -892,7 +850,6 @@ local function autoStory()
 
     elseif questPanel:FindFirstChild("Defeat Ghiaccio") then
         print("GHIACCIO")
-        SendWebhook("Killing `Ghiaccio`")
         if killNPC("Ghiaccio", 15) then
             task.wait(1)
             storyDialogue()
@@ -902,7 +859,6 @@ local function autoStory()
         end
 
     elseif questPanel:FindFirstChild("Defeat Diavolo") then
-        SendWebhook("Killing `Diavolo`")
         killNPC("Diavolo", 15)
         endDialogue("Storyline #14", "Dialogue7", "Option1")
         if Character:WaitForChild("Requiem Arrow", 5) then
@@ -914,14 +870,6 @@ local function autoStory()
     elseif LocalPlayer.PlayerStats.Level.Value == 50 then
         if Character:FindFirstChild("FocusCam") then
             Character.FocusCam:Destroy()
-			SendWebhook(
-            "**Prestige 3, Level 50 reached!**" ..
-            "\nTime: `" .. (tick() - Data["Time"])/60 .. " minutes or " .. (tick() - Data["Time"])/3600 .. " hours`" ..
-            "\nFrom: `Prestige: ".. Data["Prestige"]  .. ", Level " .. Data["Level"] .. "`" ..
-            "\nStand: `" .. LocalPlayer.PlayerStats.Stand.Value .. "`" ..
-            "\nSpec: `" .. LocalPlayer.PlayerStats.Spec.Value .. "`" ..
-            "\nAccount: `" .. LocalPlayer.Name .. "`"
-        )
            pcall(function()
                delfile("AutoPres3_"..LocalPlayer.Name..".txt")
             end)
@@ -935,7 +883,6 @@ local function autoStory()
             LocalPlayer.Character.PrimaryPart.CFrame = workspace.Living:FindFirstChild("Vampire").HumanoidRootPart.CFrame - Vector3.new(0, 15, 0)
             if not questPanel:FindFirstChild("Take down 3 vampires") then
                 if (tick() - lastTick) >= 5 then
-                    SendWebhook("Account: `" .. LocalPlayer.Name .. "`\nTook around: `".. (tick() - lastTick).. " seconds` to complete `Vampire Quest`")
                     lastTick = tick()
                 end
                 endDialogue("William Zeppeli", "Dialogue4", "Option1")
@@ -948,14 +895,6 @@ local function autoStory()
     elseif LocalPlayer.PlayerStats.Level.Value == 50 then
         if Character:FindFirstChild("FocusCam") then
             Character.FocusCam:Destroy()
-			SendWebhook(
-            "**Prestige 3, Level 50 reached!**" ..
-            "\nTime: `" .. (tick() - Data["Time"])/60 .. " minutes or " .. (tick() - Data["Time"])/3600 .. " hours`" ..
-            "\nFrom: `Prestige: ".. Data["Prestige"]  .. ", Level " .. Data["Level"] .. "`" ..
-            "\nStand: `" .. LocalPlayer.PlayerStats.Stand.Value .. "`" ..
-            "\nSpec: `" .. LocalPlayer.PlayerStats.Spec.Value .. "`" ..
-            "\nAccount: `" .. LocalPlayer.Name .. "`"
-        )
            pcall(function()
                delfile("AutoPres3_"..LocalPlayer.Name..".txt")
             end)
@@ -994,7 +933,6 @@ game.Workspace.Living.ChildAdded:Connect(function(character)
 end)
 
 LocalPlayer.PlayerStats.Level:GetPropertyChangedSignal("Value"):Connect(function()
-    SendWebhook("Account: `" .. LocalPlayer.Name .. "`\nNew level: `" .. LocalPlayer.PlayerStats.Level.Value .. "`\nCurrent prestige: `" .. LocalPlayer.PlayerStats.Prestige.Value .. "`")
 end)
 
 LocalPlayer.CharacterAdded:Connect(function()
