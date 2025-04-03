@@ -26,7 +26,7 @@ local HRP = Character.PrimaryPart
 local part
 local dontTPOnDeath = true
 
-if LocalPlayer.PlayerStats.Level.Value == 50 then while true do print("Level 50, Auto pres disabled") task.wait(9999999) end end
+if LocalPlayer.PlayerStats.Level.Value == 50 then while true do print("Level 50, Auto pres disabled") task.wait(5) end else end
 
 if not LocalPlayer.PlayerGui:FindFirstChild("HUD") then
     print("I FOUND IT")
