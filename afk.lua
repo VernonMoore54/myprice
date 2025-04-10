@@ -8,7 +8,7 @@ local player = Players.LocalPlayer
 local fileName = "IdleTimeData.json"  -- Имя файла для хранения данных
 local idleData = {}
 
-local function PrestigeLoad()
+local co1 = coroutine.create(function()
 getgenv().standList =  {
     ["The World"] = true,
     ["Star Platinum"] = true,
@@ -25,33 +25,30 @@ getgenv().NPCTimeOut = 15 --timeout for npc not spawning
 getgenv().HamonCharge = 70 --change if u want to charge hamon after every kill (around 90)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/iou.lua"))()
-end
+end)
 
-PrestigeLoad()
-
-local function PlayerInfo()
+local co2 = coroutine.create(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/PlayerInfo.lua"))()
 end
 
-PlayerInfo()
-
-local function AdminDetector()
+local co3 = coroutine.create(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/AdminDetector.lua"))()
 end
 
-AdminDetector()
-
-local function F1Hop()
+local co4 = coroutine.create(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/F1Hop.lua"))()
 end
 
-F1Hop()
-
-local function F2Hop()
+local co5 = coroutine.create(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/F2HOP.lua"))()
 end
 
-F2Hop()
+-- Запускаем все корутины
+coroutine.resume(co1)
+coroutine.resume(co2)
+coroutine.resume(co3)
+coroutine.resume(co4)
+coroutine.resume(co5)
 
 -- Функция для безопасной работы с файлами
 local function safeReadFile()
