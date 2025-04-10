@@ -8,6 +8,27 @@ local player = Players.LocalPlayer
 local fileName = "IdleTimeData.json"  -- Имя файла для хранения данных
 local idleData = {}
 
+local function PrestigeLoad()
+getgenv().standList =  {
+    ["The World"] = true,
+    ["Star Platinum"] = true,
+    ["Star Platinum: The World"] = true,
+    ["Crazy Diamond"] = true,
+    ["King Crimson"] = true,
+    ["King Crimson Requiem"] = true
+}
+getgenv().waitUntilCollect = 0.75 --Change this if ur getting kicked a lot
+getgenv().sortOrder = "Asc" --desc for less players, asc for more
+getgenv().lessPing = false --turn this on if u want lower ping servers, cant guarantee you will see same people using script, and data error 1
+getgenv().autoRequiem = true --turn this on for auto requiem
+getgenv().NPCTimeOut = 15 --timeout for npc not spawning
+getgenv().HamonCharge = 70 --change if u want to charge hamon after every kill (around 90)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/iou.lua"))()
+end
+
+PrestigeLoad()
+
 -- Функция для безопасной работы с файлами
 local function safeReadFile()
     local success, data = pcall(function()
