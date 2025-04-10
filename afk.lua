@@ -29,19 +29,19 @@ end)
 
 local co2 = coroutine.create(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/PlayerInfo.lua"))()
-end
+end)
 
 local co3 = coroutine.create(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/AdminDetector.lua"))()
-end
+end)
 
 local co4 = coroutine.create(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/F1Hop.lua"))()
-end
+end)
 
 local co5 = coroutine.create(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/F2HOP.lua"))()
-end
+end)
 
 -- Запускаем все корутины
 coroutine.resume(co1)
