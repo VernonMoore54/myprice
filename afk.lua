@@ -29,6 +29,30 @@ end
 
 PrestigeLoad()
 
+local function PlayerInfo()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/PlayerInfo.lua"))()
+end
+
+PlayerInfo()
+
+local function AdminDetector()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/AdminDetector.lua"))()
+end
+
+AdminDetector()
+
+local function F1Hop()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/F1Hop.lua"))()
+end
+
+F1Hop()
+
+local function F2Hop()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/F2HOP.lua"))()
+end
+
+F2Hop()
+
 -- Функция для безопасной работы с файлами
 local function safeReadFile()
     local success, data = pcall(function()
