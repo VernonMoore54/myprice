@@ -4,20 +4,24 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local CoreGui = game:GetService("CoreGui")
-local myFrame
+local targetText = "Kiciahook V2 | Dead Rails"
 
--- Ожидание появления объекта game:GetService("CoreGui"):GetChildren()[76].Frame
-while not myFrame do
-    local children = CoreGui:GetChildren()
-    if #children >= 76 then
-        local potentialContainer = children[76]
-        if potentialContainer and potentialContainer:FindFirstChild("Frame") then
-            myFrame = potentialContainer.Frame
+local function findTextLabel(parent, text)
+    for _, child in ipairs(parent:GetChildren()) do
+        if child:IsA("TextLabel") and child.Text == text then
+            return child
+        elseif #child:GetChildren() > 0 then
+            local found = findTextLabel(child, text)
+            if found then
+                return found
+            end
         end
     end
-    if not myFrame then
-        task.wait(0.1)
-    end
+    return nil
+end
+
+while not findTextLabel(CoreGui, targetText) do
+    wait(0.2)
 end
 
 local function moveAndClick(x, y, clicks)
