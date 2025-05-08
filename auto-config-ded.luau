@@ -16,33 +16,33 @@ while not myFrame do
         end
     end
     if not myFrame then
-        wait(0.1)
+        task.wait(0.1)
     end
 end
 
 local function moveAndClick(x, y, clicks)
     VirtualInputManager:SendMouseMoveEvent(x, y, game)
-    wait(0.1)
+    task.wait(0.1)
     for i = 1, clicks do
         VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 0)
-        wait(0.1)
+        task.wait(0.1)
         VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 0)
-        wait(0.1)
+        task.wait(0.1)
     end
 end
 
 local function performActions()
     moveAndClick(616, 112, 3)
-    wait(0.1)
+    task.wait(0.1)
     moveAndClick(534, 210, 3)
-    wait(0.1)
+    task.wait(0.1)
     moveAndClick(536, 326, 3)
 end
 
 while true do
     local initialPosition = humanoidRootPart.Position
     performActions()
-    wait(4)
+    task.wait(4)
 
     local currentPosition = humanoidRootPart.Position
     local distance = (currentPosition - initialPosition).Magnitude
