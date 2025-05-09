@@ -46,7 +46,7 @@ end
 while true do
     local initialPosition = humanoidRootPart.Position
     performActions()
-    task.wait(4)
+    task.wait(8)
 
     local currentPosition = humanoidRootPart.Position
     local distance = (currentPosition - initialPosition).Magnitude
