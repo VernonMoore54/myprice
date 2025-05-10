@@ -4,7 +4,7 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local CoreGui = game:GetService("CoreGui")
-local targetText = "Kiciahook V2 | Dead Rails"
+local targetText = "Keybinds"
 
 local function findTextLabel(parent, text)
     for _, child in ipairs(parent:GetChildren()) do
