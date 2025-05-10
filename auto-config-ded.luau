@@ -36,11 +36,11 @@ local function moveAndClick(x, y, clicks)
 end
 
 local function performActions()
-    moveAndClick(616, 112, 3)
+    moveAndClick(721, 224, 5)
     task.wait(0.1)
-    moveAndClick(534, 210, 3)
+    moveAndClick(643, 320, 5)
     task.wait(0.1)
-    moveAndClick(536, 326, 3)
+    moveAndClick(643, 436, 3)
 end
 
 while true do
