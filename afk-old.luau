@@ -62,7 +62,7 @@ local function createTeleportAndAnchorButtons()
 
     teleportButton.MouseButton1Click:Connect(function()
         print("Телепортация по кнопке")
-        idleTime = 10
+        idleTime = 31
     end)
 
     anchorButton.Name = "AnchorButton"
@@ -103,7 +103,7 @@ function monitorIdleTime()
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
-    local threshold = 30  -- Время в секундах для проверки на бездействие
+    local threshold = 15  -- Время в секундах для проверки на бездействие
     local lastPosition = humanoidRootPart.Position
 
     while true do
