@@ -36,22 +36,27 @@ end
 
 local function getRandomServer()
     local servers = {}
-    local req = syn.request or http_request
+    local req = request -- Убедись, что request() доступен в твоём эксплойте
+
     local url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Asc&limit=100", game.PlaceId)
     local response = req({ Url = url, Method = "GET" })
+    
     if response.Success then
-        local data = HttpService:JSONDecode(response.Body)
+        local data = game:GetService("HttpService"):JSONDecode(response.Body)
         for _, server in ipairs(data.data) do
             if server.playing < server.maxPlayers then
                 table.insert(servers, server.id)
             end
         end
     end
+
     if #servers > 0 then
         return servers[math.random(1, #servers)]
     end
+
     return nil
 end
+
 
 local function teleportToRandomServer()
     local randomServerId = getRandomServer()
