@@ -152,7 +152,10 @@ local function monitorIdleTime()
         if idleTime >= threshold then
             idleData.lastIdleTime = os.time()
             while not safeWriteFile(idleData) do task.wait(1) end
+            while true do
+            task.wait(0.3)
             teleportToEmptiestServer()
+            end
             break
         end
     end
