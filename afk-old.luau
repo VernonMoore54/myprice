@@ -1,167 +1,158 @@
+--[[
+Enhanced Idle Serverhop GUI Script
+- Buttons always on top using DisplayOrder
+- Live countdown timer displayed above buttons
+]]
+
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
-local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 local fileName = "IdleTimeData.json"
 local idleData = {}
 local idleTime = 0
+local threshold = 15 -- seconds until auto-serverhop
 
+-- Safe file read/write
 local function safeReadFile()
-    local success, data = pcall(function()
-        return readfile(fileName)
+    local ok, data = pcall(readfile, fileName)
+    if ok then return HttpService:JSONDecode(data) end
+    return nil
+end
+
+local function safeWriteFile(tbl)
+    local ok, err = pcall(function()
+        writefile(fileName, HttpService:JSONEncode(tbl))
     end)
-    if success then
-        return HttpService:JSONDecode(data)
-    else
-        return nil
-    end
+    return ok, err
 end
 
-local function safeWriteFile(data)
-    local success, err = pcall(function()
-        writefile(fileName, HttpService:JSONEncode(data))
-    end)
-    return success, err
-end
+-- Initialize or load idle data
+idleData = safeReadFile() or { lastIdleTime = 0, lastConnectionTime = os.time() }
+safeWriteFile(idleData)
 
-idleData = safeReadFile()
-if not idleData then
-    idleData = {
-        lastIdleTime = 0,
-        lastConnectionTime = os.time(),
-    }
-    safeWriteFile(idleData)
-end
-
+-- Find emptiest server
 local function getEmptiestServer()
-    local bestServer = nil
-    local minPlayers = math.huge
+    local best, minPlayers = nil, math.huge
     local cursor = ""
-    local pagesChecked = 0
-
+    local pages = 0
     repeat
-        local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100&sortOrder=Asc"
-        if cursor ~= "" then
-            url = url .. "&cursor=" .. cursor
-        end
-
-        local response = request({
-            Url = url,
-            Method = "GET"
-        })
-
-        if response.Success then
-            local data = HttpService:JSONDecode(response.Body)
-            for _, server in ipairs(data.data) do
-                if server.playing < minPlayers and server.playing > 0 then
-                    minPlayers = server.playing
-                    bestServer = server.id
-                end
+        local url = string.format(
+            "https://games.roblox.com/v1/games/%d/servers/Public?limit=100&sortOrder=Asc%s",
+            game.PlaceId,
+            cursor ~= "" and "&cursor="..cursor or ""
+        )
+        local res = request({ Url = url, Method = "GET" })
+        if not res.Success then break end
+        local data = HttpService:JSONDecode(res.Body)
+        for _, server in ipairs(data.data) do
+            if server.playing > 0 and server.playing < minPlayers then
+                minPlayers, best = server.playing, server.id
             end
-            cursor = data.nextPageCursor or ""
-        else
-            break
         end
-
-        pagesChecked += 1
+        cursor = data.nextPageCursor or ""
+        pages = pages + 1
         task.wait(0.3)
-    until cursor == "" or pagesChecked >= 5
-
-    return bestServer
+    until cursor == "" or pages >= 5
+    return best
 end
 
 local function teleportToEmptiestServer()
-    local serverId = getEmptiestServer()
-    if serverId then
-        TeleportService:TeleportToPlaceInstance(game.PlaceId, serverId, player)
+    local sid = getEmptiestServer()
+    if sid then
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, sid, player)
     else
-        warn("Не удалось найти пустой сервер.")
+        warn("Failed to find empty server.")
     end
 end
 
-local function createTeleportAndAnchorButtons()
-    local screenGui = Instance.new("ScreenGui")
-    local teleportButton = Instance.new("TextButton")
-    local anchorButton = Instance.new("TextButton")
+-- Create UI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TeleportUI"
+screenGui.ResetOnSpawn = false
+screenGui.DisplayOrder = 999 -- ensure on top
+screenGui.Parent = player:WaitForChild("PlayerGui")
 
-    screenGui.Parent = player:WaitForChild("PlayerGui")
-    screenGui.Name = "TeleportUI"
-    screenGui.ResetOnSpawn = false
+-- Countdown timer label
+local timerLabel = Instance.new("TextLabel")
+timerLabel.Name = "IdleTimer"
+timerLabel.Parent = screenGui
+timerLabel.Size = UDim2.new(0, 150, 0, 30)
+timerLabel.Position = UDim2.new(0, 10, 1, -145)
+timerLabel.BackgroundTransparency = 0.5
+timerLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+timerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+timerLabel.TextScaled = true
+timerLabel.BorderSizePixel = 0
+timerLabel.Text = "Hop in: " .. threshold .. "s"
 
-    teleportButton.Name = "TeleportButton"
-    teleportButton.Parent = screenGui
-    teleportButton.Text = "Teleport"
-    teleportButton.Size = UDim2.new(0, 120, 0, 40)
-    teleportButton.Position = UDim2.new(0, 10, 1, -50)
-    teleportButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-    teleportButton.TextColor3 = Color3.fromRGB(0, 255, 255)
-    teleportButton.TextScaled = true
-    teleportButton.BorderSizePixel = 0
+-- Teleport button
+local teleportButton = Instance.new("TextButton")
+teleportButton.Name = "TeleportButton"
+teleportButton.Parent = screenGui
+teleportButton.Size = UDim2.new(0, 120, 0, 40)
+teleportButton.Position = UDim2.new(0, 10, 1, -100)
+teleportButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+teleportButton.TextColor3 = Color3.fromRGB(0, 255, 255)
+teleportButton.TextScaled = true
+teleportButton.BorderSizePixel = 0
+teleportButton.Text = "Teleport"
 
-    teleportButton.MouseButton1Click:Connect(function()
-        idleTime = 31
-        teleportToEmptiestServer()
-    end)
+teleportButton.MouseButton1Click:Connect(function()
+    idleTime = threshold + 1
+    teleportToEmptiestServer()
+end)
 
-    anchorButton.Name = "AnchorButton"
-    anchorButton.Parent = screenGui
-    anchorButton.Text = "Anchor Parts"
-    anchorButton.Size = UDim2.new(0, 120, 0, 40)
-    anchorButton.Position = UDim2.new(0, 10, 1, -100)
-    anchorButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
-    anchorButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    anchorButton.TextScaled = true
-    anchorButton.BorderSizePixel = 0
+-- Anchor button
+local anchorButton = Instance.new("TextButton")
+anchorButton.Name = "AnchorButton"
+anchorButton.Parent = screenGui
+anchorButton.Size = UDim2.new(0, 120, 0, 40)
+anchorButton.Position = UDim2.new(0, 10, 1, -50)
+anchorButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+anchorButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+anchorButton.TextScaled = true
+anchorButton.BorderSizePixel = 0
+anchorButton.Text = "Anchor Parts"
 
-    anchorButton.MouseButton1Click:Connect(function()
-        local character = player.Character or player.CharacterAdded:Wait()
-        for _, part in ipairs(character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.Anchored = true
-            end
-        end
-    end)
+anchorButton.MouseButton1Click:Connect(function()
+    local char = player.Character or player.CharacterAdded:Wait()
+    for _, part in ipairs(char:GetDescendants()) do
+        if part:IsA("BasePart") then part.Anchored = true end
+    end
+end)
 
-    game:GetService("RunService").RenderStepped:Connect(function()
-        teleportButton.Position = UDim2.new(0, 10, 1, -50)
-        anchorButton.Position = UDim2.new(0, 10, 1, -100)
-    end)
-end
+-- Reposition UI each frame
+RunService.RenderStepped:Connect(function()
+    timerLabel.Position = UDim2.new(0, 10, 1, -145)
+    teleportButton.Position = UDim2.new(0, 10, 1, -100)
+    anchorButton.Position = UDim2.new(0, 10, 1, -50)
+end)
 
-createTeleportAndAnchorButtons()
-
-function monitorIdleTime()
+-- Monitor idle and update timer
+local function monitorIdleTime()
     task.wait(5)
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    local char = player.Character or player.CharacterAdded:Wait()
+    local hrp = char:WaitForChild("HumanoidRootPart")
+    local lastPos = hrp.Position
 
-    local threshold = 15
-    local lastPosition = humanoidRootPart.Position
-
-    while true do
-        wait(1)
-        local currentPosition = humanoidRootPart.Position
-
-        if (currentPosition - lastPosition).Magnitude < 0.1 then
+    while char and hrp:IsDescendantOf(workspace) do
+        task.wait(1)
+        local currPos = hrp.Position
+        if (currPos - lastPos).Magnitude < 0.1 then
             idleTime = idleTime + 1
         else
             idleTime = 0
-            lastPosition = currentPosition
+            lastPos = currPos
         end
-
+        -- update timer display
+        local timeLeft = math.max(threshold - idleTime, 0)
+        timerLabel.Text = string.format("Hop in: %ds", timeLeft)
         if idleTime >= threshold then
             idleData.lastIdleTime = os.time()
-            local success, err
-            repeat
-                success, err = safeWriteFile(idleData)
-                if not success then wait(1) end
-            until success
+            while not safeWriteFile(idleData) do task.wait(1) end
             teleportToEmptiestServer()
-            break
-        end
-
-        if not character or not humanoidRootPart:IsDescendantOf(workspace) then
             break
         end
     end
