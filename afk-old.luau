@@ -61,7 +61,7 @@ end
 local function teleportToEmptiestServer()
     local sid = getEmptiestServer()
     if sid then
-        TeleportService:TeleportToPlaceInstance(game.PlaceId, sid, player)
+        TeleportService:TeleportToPlaceInstance(116495829188952, sid, player)
     else
         warn("Failed to find empty server.")
     end
