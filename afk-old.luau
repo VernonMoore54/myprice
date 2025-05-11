@@ -10,8 +10,7 @@ print("idi")
 else 
 repeat
 task.wait(1)
-until
-game.PlaceId == 116495829188953
+until game.PlaceId == 116495829188953
 end
 
 
