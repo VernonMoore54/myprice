@@ -34,36 +34,49 @@ if not idleData then
     safeWriteFile(idleData)
 end
 
-local function getRandomServer()
-    local servers = {}
-    local req = request -- Убедись, что request() доступен в твоём эксплойте
+local function getEmptiestServer()
+    local bestServer = nil
+    local minPlayers = math.huge
+    local cursor = ""
+    local pagesChecked = 0
 
-    local url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Asc&limit=100", game.PlaceId)
-    local response = req({ Url = url, Method = "GET" })
-    
-    if response.Success then
-        local data = game:GetService("HttpService"):JSONDecode(response.Body)
-        for _, server in ipairs(data.data) do
-            if server.playing < server.maxPlayers then
-                table.insert(servers, server.id)
-            end
+    repeat
+        local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100&sortOrder=Asc"
+        if cursor ~= "" then
+            url = url .. "&cursor=" .. cursor
         end
-    end
 
-    if #servers > 0 then
-        return servers[math.random(1, #servers)]
-    end
+        local response = request({
+            Url = url,
+            Method = "GET"
+        })
 
-    return nil
+        if response.Success then
+            local data = HttpService:JSONDecode(response.Body)
+            for _, server in ipairs(data.data) do
+                if server.playing < minPlayers and server.playing > 0 then
+                    minPlayers = server.playing
+                    bestServer = server.id
+                end
+            end
+            cursor = data.nextPageCursor or ""
+        else
+            break
+        end
+
+        pagesChecked += 1
+        task.wait(0.3)
+    until cursor == "" or pagesChecked >= 5
+
+    return bestServer
 end
 
-
-local function teleportToRandomServer()
-    local randomServerId = getRandomServer()
-    if randomServerId then
-        TeleportService:TeleportToPlaceInstance(game.PlaceId, randomServerId, player)
+local function teleportToEmptiestServer()
+    local serverId = getEmptiestServer()
+    if serverId then
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, serverId, player)
     else
-        warn("Не удалось найти свободный сервер.")
+        warn("Не удалось найти пустой сервер.")
     end
 end
 
@@ -88,7 +101,7 @@ local function createTeleportAndAnchorButtons()
 
     teleportButton.MouseButton1Click:Connect(function()
         idleTime = 31
-        teleportToRandomServer()
+        teleportToEmptiestServer()
     end)
 
     anchorButton.Name = "AnchorButton"
@@ -144,7 +157,7 @@ function monitorIdleTime()
                 success, err = safeWriteFile(idleData)
                 if not success then wait(1) end
             until success
-            teleportToRandomServer()
+            teleportToEmptiestServer()
             break
         end
 
