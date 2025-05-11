@@ -4,6 +4,15 @@ Enhanced Idle Serverhop GUI Script
 - Live countdown timer displayed above buttons
 ]]
 
+if game.PlaceId == 116495829188952 then
+print("idi")
+else 
+While true do
+task.wait(1)
+end
+
+
+
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
@@ -12,7 +21,7 @@ local player = Players.LocalPlayer
 local fileName = "IdleTimeData.json"
 local idleData = {}
 local idleTime = 0
-local threshold = 15 -- seconds until auto-serverhop
+local threshold = 25 -- seconds until auto-serverhop
 
 -- Safe file read/write
 local function safeReadFile()
