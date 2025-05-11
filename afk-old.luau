@@ -2,13 +2,11 @@ local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+local fileName = "IdleTimeData.json"
+local idleData = {}
 local idleTime = 0
 
-local player = Players.LocalPlayer
-local fileName = "IdleTimeData.json"  -- Имя файла для хранения данных
-local idleData = {}
-
--- Функция для безопасной работы с файлами
 local function safeReadFile()
     local success, data = pcall(function()
         return readfile(fileName)
@@ -27,20 +25,43 @@ local function safeWriteFile(data)
     return success, err
 end
 
--- Попытка загрузить данные из файла
 idleData = safeReadFile()
-
--- Если файл не был загружен, создаем новый с текущими данными
 if not idleData then
-    print("Не удалось загрузить файл, создаем новый...")
     idleData = {
-        lastIdleTime = 0,  -- Последнее время бездействия
-        lastConnectionTime = os.time(),  -- Время последнего подключения
+        lastIdleTime = 0,
+        lastConnectionTime = os.time(),
     }
-    safeWriteFile(idleData)  -- Запись данных в файл
+    safeWriteFile(idleData)
 end
 
--- Функция для создания UI элементов
+local function getRandomServer()
+    local servers = {}
+    local req = syn.request or http_request
+    local url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Asc&limit=100", game.PlaceId)
+    local response = req({ Url = url, Method = "GET" })
+    if response.Success then
+        local data = HttpService:JSONDecode(response.Body)
+        for _, server in ipairs(data.data) do
+            if server.playing < server.maxPlayers then
+                table.insert(servers, server.id)
+            end
+        end
+    end
+    if #servers > 0 then
+        return servers[math.random(1, #servers)]
+    end
+    return nil
+end
+
+local function teleportToRandomServer()
+    local randomServerId = getRandomServer()
+    if randomServerId then
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, randomServerId, player)
+    else
+        warn("Не удалось найти свободный сервер.")
+    end
+end
+
 local function createTeleportAndAnchorButtons()
     local screenGui = Instance.new("ScreenGui")
     local teleportButton = Instance.new("TextButton")
@@ -61,9 +82,8 @@ local function createTeleportAndAnchorButtons()
     teleportButton.BorderSizePixel = 0
 
     teleportButton.MouseButton1Click:Connect(function()
-        print("Телепортация по кнопке")
         idleTime = 31
-        TeleportService:Teleport(game.PlaceId, player)
+        teleportToRandomServer()
     end)
 
     anchorButton.Name = "AnchorButton"
@@ -77,7 +97,6 @@ local function createTeleportAndAnchorButtons()
     anchorButton.BorderSizePixel = 0
 
     anchorButton.MouseButton1Click:Connect(function()
-        print("Все части тела персонажа стали зафиксированными.")
         local character = player.Character or player.CharacterAdded:Wait()
         for _, part in ipairs(character:GetDescendants()) do
             if part:IsA("BasePart") then
@@ -86,75 +105,49 @@ local function createTeleportAndAnchorButtons()
         end
     end)
 
-    -- Адаптация к изменению размеров окна
     game:GetService("RunService").RenderStepped:Connect(function()
         teleportButton.Position = UDim2.new(0, 10, 1, -50)
         anchorButton.Position = UDim2.new(0, 10, 1, -100)
     end)
 end
 
--- Запуск создания UI элементов
 createTeleportAndAnchorButtons()
 
--- Функция мониторинга времени бездействия
 function monitorIdleTime()
-    print("Йоу, я заработал")
-    task.wait(5)  -- Задержка перед началом мониторинга
-
+    task.wait(5)
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
-    local threshold = 15  -- Время в секундах для проверки на бездействие
+    local threshold = 15
     local lastPosition = humanoidRootPart.Position
 
     while true do
-        wait(1)  -- Проверка каждую секунду
-        print("Йоу, я слежу 30 секунд")
-
+        wait(1)
         local currentPosition = humanoidRootPart.Position
 
-        -- Проверяем, изменились ли координаты
         if (currentPosition - lastPosition).Magnitude < 0.1 then
             idleTime = idleTime + 1
         else
-            idleTime = 0  -- Сбрасываем время бездействия, если персонаж двигается
-            lastPosition = currentPosition  -- Обновляем последнюю позицию
+            idleTime = 0
+            lastPosition = currentPosition
         end
 
         if idleTime >= threshold then
-            print("Персонаж бездействует 30 секунд, проверяю состояние...")
-
-            -- Обновляем время последнего бездействия
             idleData.lastIdleTime = os.time()
-
-            -- Пробуем обновить данные в файле, пока не удастся
             local success, err
             repeat
                 success, err = safeWriteFile(idleData)
-                if not success then
-                    print("Ошибка записи в файл: " .. err .. ", повторная попытка...")
-                    wait(1)  -- Задержка перед повторной попыткой записи
-                end
+                if not success then wait(1) end
             until success
-
-            print("Данные обновлены в файле.")
-
-            -- Телепортация
-            local placeId = game.PlaceId
-            TeleportService:Teleport(placeId, player)
-
-            break  -- Выходим из цикла после телепортации
+            teleportToRandomServer()
+            break
         end
 
-        -- Ожидаем, что персонаж может умереть и снова появиться
         if not character or not humanoidRootPart:IsDescendantOf(workspace) then
-            break  -- Выходим из цикла, если персонаж умер
+            break
         end
     end
 end
 
--- Подписка на событие CharacterAdded, чтобы отслеживать смерть персонажа
 player.CharacterAdded:Connect(monitorIdleTime)
-
--- Запуск мониторинга при первом входе в игру
 monitorIdleTime()
