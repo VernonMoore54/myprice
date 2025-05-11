@@ -4,11 +4,13 @@ Enhanced Idle Serverhop GUI Script
 - Live countdown timer displayed above buttons
 ]]
 
+
 if game.PlaceId == 116495829188952 then
 print("idi")
 else 
-While true do
+repeat
 task.wait(1)
+until
 end
 
 
