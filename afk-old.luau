@@ -24,6 +24,11 @@ local fileName = "IdleTimeData.json"
 local idleData = {}
 local idleTime = 0
 local threshold = 25 -- seconds until auto-serverhop
+if game.PlaceId == 70876832253163 then
+threshold = 10
+else
+threshold = 25
+end
 
 -- Safe file read/write
 local function safeReadFile()
@@ -113,6 +118,11 @@ teleportButton.Text = "Teleport"
 teleportButton.MouseButton1Click:Connect(function()
     idleTime = threshold + 1
     teleportToEmptiestServer()
+    if game.PlaceId == 70876832253163 then
+    game.Players.LocalPlayer.Character.Humanoid.Health = 0
+    else
+    teleportToEmptiestServer()
+    end
 end)
 
 -- Anchor button
@@ -165,7 +175,11 @@ local function monitorIdleTime()
             while not safeWriteFile(idleData) do task.wait(1) end
             while true do
             task.wait(0.3)
+            if game.PlaceId == 70876832253163 then
+            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+            else
             teleportToEmptiestServer()
+            end
             end
             break
         end
