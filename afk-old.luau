@@ -5,15 +5,6 @@ Enhanced Idle Serverhop GUI Script
 ]]
 
 
-if game.PlaceId == 116495829188952 then
-print("idi")
-else 
-repeat
-task.wait(1)
-until game.PlaceId == 116495829188953
-end
-
-
 
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
