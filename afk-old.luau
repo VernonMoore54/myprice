@@ -111,8 +111,6 @@ teleportButton.Text = "Teleport"
 teleportButton.MouseButton1Click:Connect(function()
     idleTime = threshold + 1
     teleportToEmptiestServer()
-    teleportToEmptiestServer()
-    end
 end)
 
 -- Anchor button
