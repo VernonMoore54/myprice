@@ -97,10 +97,15 @@ local function getEmptiestServer()
 end
 
 local function teleportToEmptiestServer()
+    local sid = getEmptiestServer()
+    if sid then
         while true do
-        TeleportService:TeleportToPlaceInstance(2809202155, player)
-        task.wait(1)
+        TeleportService:TeleportToPlaceInstance(2809202155, sid, player)
+        task.wait(2)
         end
+    else
+        warn("Failed to find empty server.")
+    end
 end
 
 -- Create UI
