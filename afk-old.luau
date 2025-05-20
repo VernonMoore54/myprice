@@ -14,7 +14,7 @@ local player = Players.LocalPlayer
 local fileName = "IdleTimeData.json"
 local idleData = {}
 local idleTime = 0
-local threshold = 25 -- seconds until auto-serverhop
+local threshold = 10 -- seconds until auto-serverhop
 if game.PlaceId == 70876832253163 then
 while true do
 task.wait()
@@ -70,6 +70,11 @@ end
 local function teleportToEmptiestServer()
     local sid = getEmptiestServer()
     if sid then
+        if game.PlaceId == 70876832253163 then
+        while true do
+        game.Players.LocalPlayer.Character.Humanoid.Health = 0
+        end
+        else
         TeleportService:TeleportToPlaceInstance(116495829188952, sid, player)
     else
         warn("Failed to find empty server.")
