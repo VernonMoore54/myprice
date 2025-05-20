@@ -165,7 +165,6 @@ local function monitorIdleTime()
             task.wait(0.3)
             teleportToEmptiestServer()
             end
-            end
             break
         end
     end
