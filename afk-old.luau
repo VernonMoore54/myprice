@@ -5,9 +5,7 @@ Enhanced Idle Serverhop GUI Script
 ]]
 
 if game.PlaceId == 116495829188952 then
-while true do
-task.wait(1)
-end
+print("idi")
 else
 while true do
 task.wait(1)
