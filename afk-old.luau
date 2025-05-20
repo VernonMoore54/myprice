@@ -73,9 +73,11 @@ local function teleportToEmptiestServer()
         if game.PlaceId == 70876832253163 then
         while true do
         game.Players.LocalPlayer.Character.Humanoid.Health = 0
+        task.wait(0.2)
         end
         else
         TeleportService:TeleportToPlaceInstance(116495829188952, sid, player)
+        end
     else
         warn("Failed to find empty server.")
     end
