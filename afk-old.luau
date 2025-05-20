@@ -4,6 +4,14 @@ Enhanced Idle Serverhop GUI Script
 - Live countdown timer displayed above buttons
 ]]
 
+if game.PlaceId == 70876832253163 then
+print("idi")
+else
+while true do
+task.wait(1)
+end
+end
+
 
 
 local Players = game:GetService("Players")
