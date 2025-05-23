@@ -15,13 +15,8 @@ local player = Players.LocalPlayer
 local fileName = "IdleTimeData.json"
 local idleData = {}
 local idleTime = 0
-local threshold = 25 -- seconds until auto-serverhop
+local threshold = 135 -- seconds until auto-serverhop
 
-if game.PlaceId == 116495829188952 then
-threshold = 33
-else
-threshold = 145
-end
 
 
 -- Safe file read/write
