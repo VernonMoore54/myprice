@@ -67,7 +67,7 @@ local function teleportToEmptiestServer()
     local sid = getEmptiestServer()
     if sid then
         while true do
-        TeleportService:TeleportToPlaceInstance(116495829188952, sid, player)
+        TeleportService:Teleport(116495829188952, sid, player)
         task.wait(2)
         end
     else
