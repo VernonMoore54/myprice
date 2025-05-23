@@ -18,9 +18,9 @@ local idleTime = 0
 local threshold = 25 -- seconds until auto-serverhop
 
 if game.PlaceId == 116495829188952 then
-local threshold = 33
+threshold = 33
 else
-local threshold = 145
+threshold = 145
 end
 
 
