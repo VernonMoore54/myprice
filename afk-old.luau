@@ -4,13 +4,6 @@ Enhanced Idle Serverhop GUI Script
 - Live countdown timer displayed above buttons
 ]]
 
-if game.PlaceId == 116495829188952 then
-print("idi")
-else
-while true do
-task.wait(1)
-end
-end
 
 
 
@@ -23,6 +16,12 @@ local fileName = "IdleTimeData.json"
 local idleData = {}
 local idleTime = 0
 local threshold = 25 -- seconds until auto-serverhop
+
+if game.PlaceId == 116495829188952 then
+local threshold = 33
+else
+local threshold = 145
+end
 
 
 -- Safe file read/write
