@@ -672,9 +672,12 @@ local function autoStory()
         end
 
         if LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat") then
+             task.wait(0.3)
              LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild("Zeppeli's Hat"))
+             task.wait(0.3)
             game.Players.LocalPlayer.Character.RemoteEvent:FireServer("PromptTriggered", game.ReplicatedStorage.NewDialogue:FindFirstChild("Lisa Lisa"))
             repeat
+              game.Players.LocalPlayer.Character.RemoteEvent:FireServer("PromptTriggered", game.ReplicatedStorage.NewDialogue:FindFirstChild("Lisa Lisa"))
               -- Эмуляция нажатия левой кнопки мыши
               VirtualInputManager:SendMouseButtonEvent(518, 384, 0, true, game, 0)
               wait(0.1) -- Задержка между нажатием и отпусканием
