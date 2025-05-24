@@ -1,163 +1,159 @@
-
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
-local RunService = game:GetService("RunService")
-local player = Players.LocalPlayer
-local fileName = "IdleTimeData.json"
-local idleData = {}
+local UserInputService = game:GetService("UserInputService")
 local idleTime = 0
-local threshold = 25 -- seconds until auto-serverhop
 
+local player = Players.LocalPlayer
+local fileName = "IdleTimeData.json"  -- Имя файла для хранения данных
+local idleData = {}
 
-
--- Safe file read/write
+-- Функция для безопасной работы с файлами
 local function safeReadFile()
-    local ok, data = pcall(readfile, fileName)
-    if ok then return HttpService:JSONDecode(data) end
-    return nil
-end
-
-local function safeWriteFile(tbl)
-    local ok, err = pcall(function()
-        writefile(fileName, HttpService:JSONEncode(tbl))
+    local success, data = pcall(function()
+        return readfile(fileName)
     end)
-    return ok, err
+    if success then
+        return HttpService:JSONDecode(data)
+    else
+        return nil
+    end
 end
 
--- Initialize or load idle data
-idleData = safeReadFile() or { lastIdleTime = 0, lastConnectionTime = os.time() }
-safeWriteFile(idleData)
+local function safeWriteFile(data)
+    local success, err = pcall(function()
+        writefile(fileName, HttpService:JSONEncode(data))
+    end)
+    return success, err
+end
 
--- Find emptiest server
-local function getEmptiestServer()
-    local best, minPlayers = nil, math.huge
-    local cursor = ""
-    local pages = 0
-    repeat
-        local url = string.format(
-            "https://games.roblox.com/v1/games/%d/servers/Public?limit=100&sortOrder=Asc%s",
-            game.PlaceId,
-            cursor ~= "" and "&cursor="..cursor or ""
-        )
-        local res = request({ Url = url, Method = "GET" })
-        if not res.Success then break end
-        local data = HttpService:JSONDecode(res.Body)
-        for _, server in ipairs(data.data) do
-            if server.playing > 0 and server.playing < minPlayers then
-                minPlayers, best = server.playing, server.id
+-- Попытка загрузить данные из файла
+idleData = safeReadFile()
+
+-- Если файл не был загружен, создаем новый с текущими данными
+if not idleData then
+    print("Не удалось загрузить файл, создаем новый...")
+    idleData = {
+        lastIdleTime = 0,  -- Последнее время бездействия
+        lastConnectionTime = os.time(),  -- Время последнего подключения
+    }
+    safeWriteFile(idleData)  -- Запись данных в файл
+end
+
+-- Функция для создания UI элементов
+local function createTeleportAndAnchorButtons()
+    local screenGui = Instance.new("ScreenGui")
+    local teleportButton = Instance.new("TextButton")
+    local anchorButton = Instance.new("TextButton")
+
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+    screenGui.Name = "TeleportUI"
+    screenGui.ResetOnSpawn = false
+
+    teleportButton.Name = "TeleportButton"
+    teleportButton.Parent = screenGui
+    teleportButton.Text = "Teleport"
+    teleportButton.Size = UDim2.new(0, 120, 0, 40)
+    teleportButton.Position = UDim2.new(0, 10, 1, -50)
+    teleportButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+    teleportButton.TextColor3 = Color3.fromRGB(0, 255, 255)
+    teleportButton.TextScaled = true
+    teleportButton.BorderSizePixel = 0
+
+    teleportButton.MouseButton1Click:Connect(function()
+        print("Телепортация по кнопке")
+        idleTime = 31
+    end)
+
+    anchorButton.Name = "AnchorButton"
+    anchorButton.Parent = screenGui
+    anchorButton.Text = "Anchor Parts"
+    anchorButton.Size = UDim2.new(0, 120, 0, 40)
+    anchorButton.Position = UDim2.new(0, 10, 1, -100)
+    anchorButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+    anchorButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    anchorButton.TextScaled = true
+    anchorButton.BorderSizePixel = 0
+
+    anchorButton.MouseButton1Click:Connect(function()
+        print("Все части тела персонажа стали зафиксированными.")
+        local character = player.Character or player.CharacterAdded:Wait()
+        for _, part in ipairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.Anchored = true
             end
         end
-        cursor = data.nextPageCursor or ""
-        pages = pages + 1
-        task.wait(0.3)
-    until cursor == "" or pages >= 5
-    return best
+    end)
+
+    -- Адаптация к изменению размеров окна
+    game:GetService("RunService").RenderStepped:Connect(function()
+        teleportButton.Position = UDim2.new(0, 10, 1, -50)
+        anchorButton.Position = UDim2.new(0, 10, 1, -100)
+    end)
 end
 
-local function teleportToEmptiestServer()
-    local sid = getEmptiestServer()
-    if sid then
-        while true do
-        TeleportService:TeleportToPlaceInstance(2809202155, sid, player)
-        task.wait(2)
-        end
-    else
-        warn("Failed to find empty server.")
-    end
-end
+-- Запуск создания UI элементов
+createTeleportAndAnchorButtons()
 
--- Create UI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "TeleportUI"
-screenGui.ResetOnSpawn = false
-screenGui.DisplayOrder = 999 -- ensure on top
-screenGui.Parent = player:WaitForChild("PlayerGui")
+-- Функция мониторинга времени бездействия
+function monitorIdleTime()
+    print("Йоу, я заработал")
+    task.wait(10)  -- Задержка перед началом мониторинга
 
--- Countdown timer label
-local timerLabel = Instance.new("TextLabel")
-timerLabel.Name = "IdleTimer"
-timerLabel.Parent = screenGui
-timerLabel.Size = UDim2.new(0, 150, 0, 30)
-timerLabel.Position = UDim2.new(0, 10, 1, -145)
-timerLabel.BackgroundTransparency = 0.5
-timerLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-timerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-timerLabel.TextScaled = true
-timerLabel.BorderSizePixel = 0
-timerLabel.Text = "Hop in: " .. threshold .. "s"
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
--- Teleport button
-local teleportButton = Instance.new("TextButton")
-teleportButton.Name = "TeleportButton"
-teleportButton.Parent = screenGui
-teleportButton.Size = UDim2.new(0, 120, 0, 40)
-teleportButton.Position = UDim2.new(0, 10, 1, -100)
-teleportButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-teleportButton.TextColor3 = Color3.fromRGB(0, 255, 255)
-teleportButton.TextScaled = true
-teleportButton.BorderSizePixel = 0
-teleportButton.Text = "Teleport"
+    local threshold = 30  -- Время в секундах для проверки на бездействие
+    local lastPosition = humanoidRootPart.Position
 
-teleportButton.MouseButton1Click:Connect(function()
-    idleTime = threshold + 1
-    teleportToEmptiestServer()
-end)
+    while true do
+        wait(1)  -- Проверка каждую секунду
+        print("Йоу, я слежу 30 секунд")
 
--- Anchor button
-local anchorButton = Instance.new("TextButton")
-anchorButton.Name = "AnchorButton"
-anchorButton.Parent = screenGui
-anchorButton.Size = UDim2.new(0, 120, 0, 40)
-anchorButton.Position = UDim2.new(0, 10, 1, -50)
-anchorButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
-anchorButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-anchorButton.TextScaled = true
-anchorButton.BorderSizePixel = 0
-anchorButton.Text = "Anchor Parts"
+        local currentPosition = humanoidRootPart.Position
 
-anchorButton.MouseButton1Click:Connect(function()
-    local char = player.Character or player.CharacterAdded:Wait()
-    for _, part in ipairs(char:GetDescendants()) do
-        if part:IsA("BasePart") then part.Anchored = true end
-    end
-end)
-
--- Reposition UI each frame
-RunService.RenderStepped:Connect(function()
-    timerLabel.Position = UDim2.new(0, 10, 1, -145)
-    teleportButton.Position = UDim2.new(0, 10, 1, -100)
-    anchorButton.Position = UDim2.new(0, 10, 1, -50)
-end)
-
--- Monitor idle and update timer
-local function monitorIdleTime()
-    task.wait(5)
-    local char = player.Character or player.CharacterAdded:Wait()
-    local hrp = char:WaitForChild("HumanoidRootPart")
-    local lastPos = hrp.Position
-
-    while char and hrp:IsDescendantOf(workspace) do
-        task.wait(1)
-        local currPos = hrp.Position
-        if (currPos - lastPos).Magnitude < 0.1 then
+        -- Проверяем, изменились ли координаты
+        if (currentPosition - lastPosition).Magnitude < 0.1 then
             idleTime = idleTime + 1
         else
-            idleTime = 0
-            lastPos = currPos
+            idleTime = 0  -- Сбрасываем время бездействия, если персонаж двигается
+            lastPosition = currentPosition  -- Обновляем последнюю позицию
         end
-        -- update timer display
-        local timeLeft = math.max(threshold - idleTime, 0)
-        timerLabel.Text = string.format("Hop in: %ds", timeLeft)
+
         if idleTime >= threshold then
+            print("Персонаж бездействует 30 секунд, проверяю состояние...")
+
+            -- Обновляем время последнего бездействия
             idleData.lastIdleTime = os.time()
-            while not safeWriteFile(idleData) do task.wait(1) end
-            teleportToEmptiestServer()
-            break
+
+            -- Пробуем обновить данные в файле, пока не удастся
+            local success, err
+            repeat
+                success, err = safeWriteFile(idleData)
+                if not success then
+                    print("Ошибка записи в файл: " .. err .. ", повторная попытка...")
+                    wait(1)  -- Задержка перед повторной попыткой записи
+                end
+            until success
+
+            print("Данные обновлены в файле.")
+
+            -- Телепортация
+            local placeId = game.PlaceId
+            TeleportService:Teleport(placeId, player)
+
+            break  -- Выходим из цикла после телепортации
+        end
+
+        -- Ожидаем, что персонаж может умереть и снова появиться
+        if not character or not humanoidRootPart:IsDescendantOf(workspace) then
+            break  -- Выходим из цикла, если персонаж умер
         end
     end
 end
 
+-- Подписка на событие CharacterAdded, чтобы отслеживать смерть персонажа
 player.CharacterAdded:Connect(monitorIdleTime)
-monitorIdleTime()
 
+-- Запуск мониторинга при первом входе в игру
+monitorIdleTime()
