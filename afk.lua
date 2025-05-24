@@ -10,47 +10,6 @@ local idleTime = 0
 local threshold = 25 -- seconds until auto-serverhop
 
 
-local co1 = coroutine.create(function()
-getgenv().standList =  {
-    ["The World"] = true,
-    ["Star Platinum"] = true,
-    ["Star Platinum: The World"] = true,
-    ["Crazy Diamond"] = true,
-    ["King Crimson"] = true,
-    ["King Crimson Requiem"] = true
-}
-getgenv().waitUntilCollect = 0.75 --Change this if ur getting kicked a lot
-getgenv().sortOrder = "Asc" --desc for less players, asc for more
-getgenv().lessPing = false --turn this on if u want lower ping servers, cant guarantee you will see same people using script, and data error 1
-getgenv().autoRequiem = true --turn this on for auto requiem
-getgenv().NPCTimeOut = 15 --timeout for npc not spawning
-getgenv().HamonCharge = 70 --change if u want to charge hamon after every kill (around 90)
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/iou.lua"))()
-end)
-
-local co2 = coroutine.create(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/PlayerInfo.lua"))()
-end)
-
-local co3 = coroutine.create(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/AdminDetector.lua"))()
-end)
-
-local co4 = coroutine.create(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/F1Hop.lua"))()
-end)
-
-local co5 = coroutine.create(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/F2HOP.lua"))()
-end)
-
--- Запускаем все корутины
-coroutine.resume(co1)
-coroutine.resume(co2)
-coroutine.resume(co3)
-coroutine.resume(co4)
-coroutine.resume(co5)
 
 -- Safe file read/write
 local function safeReadFile()
