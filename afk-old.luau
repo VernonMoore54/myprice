@@ -4,6 +4,13 @@ Enhanced Idle Serverhop GUI Script
 - Live countdown timer displayed above buttons
 ]]
 
+if game.PlaceId == 116495829188952 then
+print("idi")
+else
+while true do
+task.wait(1)
+end
+end
 
 
 
@@ -15,8 +22,7 @@ local player = Players.LocalPlayer
 local fileName = "IdleTimeData.json"
 local idleData = {}
 local idleTime = 0
-getgenv().threshold = 35 -- seconds until auto-serverhop
-
+local threshold = 25 -- seconds until auto-serverhop
 
 
 -- Safe file read/write
@@ -67,7 +73,7 @@ local function teleportToEmptiestServer()
     local sid = getEmptiestServer()
     if sid then
         while true do
-        TeleportService:Teleport(116495829188952, sid, player)
+        TeleportService:TeleportToPlaceInstance(116495829188952, sid, player)
         task.wait(2)
         end
     else
@@ -93,7 +99,7 @@ timerLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 timerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 timerLabel.TextScaled = true
 timerLabel.BorderSizePixel = 0
-timerLabel.Text = "Hop in: " .. getgenv().threshold .. "s"
+timerLabel.Text = "Hop in: " .. threshold .. "s"
 
 -- Teleport button
 local teleportButton = Instance.new("TextButton")
@@ -108,7 +114,7 @@ teleportButton.BorderSizePixel = 0
 teleportButton.Text = "Teleport"
 
 teleportButton.MouseButton1Click:Connect(function()
-    idleTime = getgenv().threshold + 1
+    idleTime = threshold + 1
     teleportToEmptiestServer()
 end)
 
@@ -155,9 +161,9 @@ local function monitorIdleTime()
             lastPos = currPos
         end
         -- update timer display
-        local timeLeft = math.max(getgenv().threshold - idleTime, 0)
+        local timeLeft = math.max(threshold - idleTime, 0)
         timerLabel.Text = string.format("Hop in: %ds", timeLeft)
-        if idleTime >= getgenv().threshold then
+        if idleTime >= threshold then
             idleData.lastIdleTime = os.time()
             while not safeWriteFile(idleData) do task.wait(1) end
             teleportToEmptiestServer()
