@@ -1,10 +1,13 @@
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players.LocalPlayer
+repeat task.wait() until game.Players.LocalPlayer.Character
 
 task.wait()
 
 setfpscap(15)
 
 
-task.wait(360)
+task.wait(180)
 
 while true do
     
