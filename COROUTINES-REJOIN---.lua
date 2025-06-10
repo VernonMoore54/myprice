@@ -15,7 +15,7 @@ if not loadingGui then
 end
 
 -- Дождаться 20 секунд после появления GUI
-task.wait(10)
+task.wait(20)
 
 -- Проверяем, всё ещё ли GUI активен
 if loadingGui.Enabled then
