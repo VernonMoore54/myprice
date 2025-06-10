@@ -3,9 +3,9 @@ local P = game:GetService("Players")
 local player = P.LocalPlayer
 
 local function waitForLoadingAndCheck()
-    local loadingGui = player:WaitForChild("PlayerGui"):WaitForChild("LoadingScreenPrefab", 10) 
+    local loadingGui = player:WaitForChild("PlayerGui"):WaitForChild("LoadingScreenPrefab", 20) 
     if loadingGui then
-        task.wait(10) 
+        task.wait(1) 
         if loadingGui.Enabled then
             while loadingGui.Enabled do
                 TS:Teleport(116495829188952, player)
