@@ -1,5 +1,5 @@
 --// Настройки
-local PLACE_ID = 116495829188952
+local PLACE_ID = 126884695634066
 local KEYWORDS = {
     "You","you","Kicked","kicked","Disconnected","disconnected",
     "conn","Error","error","Code","code","message",
