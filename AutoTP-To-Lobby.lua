@@ -7,7 +7,7 @@ task.wait()
 setfpscap(15)
 
 
-task.wait(180)
+task.wait(200)
 
 while true do
     
