@@ -3,7 +3,7 @@ local PLACE_ID = 116495829188952
 local KEYWORDS = {
     "You","you","Kicked","kicked","Disconnected","disconnected",
     "conn","Error","error","Code","code","message",
-    "ID=17","id=17","ID","id"
+    "ID=17","id=17","ID","id","Failed","Teleport"
 }
 
 --// Сервисы
