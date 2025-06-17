@@ -92,10 +92,7 @@ end
 
 if moneyOK and hasShovel and itemCount == 1 then
 	task.wait(1)
-	local seedShop = player.PlayerGui:FindFirstChild("Seed_Shop")
-	if seedShop then
-		seedShop.Enabled = true
-	end
+	player.PlayerGui.Seed_Shop.Enabled = true
 end
 
 print(123)
