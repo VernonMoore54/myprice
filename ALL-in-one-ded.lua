@@ -90,11 +90,6 @@ if backpack then
 	end
 end
 
-if moneyOK and hasShovel and itemCount == 1 then
-	task.wait(1)
-	player.PlayerGui.Seed_Shop.Enabled = true
-else
-player.PlayerGui.Seed_Shop.Enabled = true
-end
+game.Players.LocalPlayer.PlayerGui.Seed_Shop.Enabled = true
 
 print(123)
