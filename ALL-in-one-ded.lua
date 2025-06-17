@@ -14,7 +14,7 @@ end
 local character = player.Character
 
 -- Нажимаем Space 30 раз с задержкой 0.5 секунды между нажатиями (в течение ~5 секунд)
-for i = 1, 6 do
+for i = 1, 30 do
     VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Space, false, nil)
     task.wait(0.01) -- Короткая задержка для эмуляции нажатия
     VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Space, false, nil)
@@ -90,6 +90,11 @@ if backpack then
 	end
 end
 
-game.Players.LocalPlayer.PlayerGui.Seed_Shop.Enabled = true
+for i = 1, 2 do
+local args = {
+	"Carrot"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuySeedStock"):FireServer(unpack(args))
+end
 
 print(123)
