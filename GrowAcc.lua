@@ -69,33 +69,11 @@ end
 
 -- === 3. Проверяем баланс денег и наличие только лопаты ===
 task.wait(1)
-
 local sheklesUI = player.PlayerGui:FindFirstChild("Sheckles_UI")
 local sheklesTextLabel = sheklesUI:FindFirstChild("TextLabel")
 local moneyOK = false
 if sheklesTextLabel.Text == "20¢" then
-	moneyOK = true
-end
-
-local backpack = player:FindFirstChild("Backpack")
-local itemCount = 0
-local hasShovel = false
-
-if backpack then
-	for _, item in ipairs(backpack:GetChildren()) do
-		if item.Name == "Shovel [Destroy Plants]" then
-			hasShovel = true
-		end
-		itemCount = itemCount + 1
-	end
-end
-
--- Покупка двух морковок
-for i = 1, 2 do
-local args = {
-	"Carrot"
-}
-game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuySeedStock"):FireServer(unpack(args))
+	
 end
 
 print(123)
