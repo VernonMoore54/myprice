@@ -14,7 +14,7 @@ end
 local character = player.Character
 
 -- Нажимаем Space 30 раз с задержкой 0.5 секунды между нажатиями (в течение ~5 секунд)
-for i = 1, 30 do
+for i = 1, 6 do
     VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Space, false, nil)
     task.wait(0.01) -- Короткая задержка для эмуляции нажатия
     VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Space, false, nil)
