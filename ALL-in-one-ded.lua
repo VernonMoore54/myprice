@@ -1,29 +1,48 @@
---// Список URL’ов для загрузки
-local urls = {
-    "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/COROUTINES-REJOIN.lua",
-    "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/bondi.lua",
-    "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/COROUTINES-REJOIN---.lua",
-    "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/AutoTP-To-Lobby.lua",
-    "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/AutoKill-To-Lobby.lua",
-    "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/Auto-start.lua",
-    "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/Auto-renew.lua",
-}
+--[[
+    Скрипт для автоматического запуска игры и имитации кликов
+    Подробные комментарии для начинающих разработчиков
+]]
 
---// Асинхронная загрузка каждого скрипта
-for _, url in ipairs(urls) do
-    task.spawn(function()
-        local ok, err = pcall(function()
-            -- Получаем код по HTTP
-            local response = game:HttpGet(url, true)
-            -- Превращаем в функцию и выполняем
-            local func, loadErr = loadstring(response)
-            assert(func, "Loadstring error: "..tostring(loadErr))
-            func()
-        end)
-        if not ok then
-            warn(("[Loader] Ошибка при загрузке %s:\n%s"):format(url, err))
-        else
-            print(("[Loader] Успешно загрузили %s"):format(url))
-        end
-    end)
+-- Ожидаем полной загрузки игры
+repeat
+    task.wait(1) -- Ждём 1 секунду перед повторной проверкой
+until game:IsLoaded() -- Проверяем статус загрузки игры
+
+-- Ожидаем завершения прогресс-бара в интерфейсе
+local interfacePath = game.Players.LocalPlayer.PlayerGui.Intro_SCREEN.Frame
+repeat
+    task.wait(1) -- Проверяем значение каждую секунду
+until interfacePath.Loaded.Value == 2500 -- Ждём нужного значения
+
+-- Получаем сервис для управления виртуальным вводом
+local VirtualInput = game:GetService("VirtualInputManager")
+
+-- Вычисляем центр экрана (ширина и высота экрана Roblox)
+local screenCenterX = game:GetService("GuiService"):GetScreenResolution().X / 2
+local screenCenterY = game:GetService("GuiService"):GetScreenResolution().Y / 2
+
+-- Совершаем 3 клика с интервалом 0.05 секунды
+for i = 1, 3 do
+    -- Имитируем нажатие левой кнопки мыши
+    VirtualInput:SendMouseButtonEvent(
+        screenCenterX,   -- X-координата
+        screenCenterY,   -- Y-координата
+        0,               -- Номер кнопки (0 - левая)
+        true,            -- Состояние: нажатие
+        nil              -- Игнорируемый параметр
+    )
+    
+    -- Имитируем отпускание кнопки (обязательно для корректной работы)
+    VirtualInput:SendMouseButtonEvent(
+        screenCenterX,
+        screenCenterY,
+        0,
+        false,
+        nil
+    )
+    
+    -- Пауза между кликами (0.05 секунды)
+    if i < 3 then  -- Не ждём после последнего клика
+        task.wait(0.05)
+    end
 end
