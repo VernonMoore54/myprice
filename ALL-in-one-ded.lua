@@ -1,30 +1,35 @@
--- Подключаем необходимые сервисы
 local VirtualInputManager = game:GetService("VirtualInputManager")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = game.Players.LocalPlayer
 
--- Получаем RemoteEvent "Finish_Loading"
-local GameEvents = ReplicatedStorage:WaitForChild("GameEvents")
-local FinishLoadingEvent = GameEvents:WaitForChild("Finish_Loading")
+-- Ждём загрузки игры
+repeat
+    task.wait(1)
+until game:IsLoaded()
 
--- Создаем флаг для отслеживания завершения загрузки
-local finishedLoading = false
+-- Ждём появления персонажа
+while not player.Character do
+    task.wait()
+end
+local character = player.Character
 
--- Сохраняем оригинальный метод FireServer
-local originalFireServer = FinishLoadingEvent.FireServer
-
--- Переопределяем FireServer, чтобы отследить вызов
-FinishLoadingEvent.FireServer = function(...)
-    finishedLoading = true
-    originalFireServer(...) -- Вызываем оригинальный метод
+-- Нажимаем Space 10 раз с задержкой 0.5 секунды между нажатиями
+for i = 1, 10 do
+    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Space, false)
+    task.wait(0.01) -- Короткая задержка для эмуляции нажатия
+    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Space, false)
+    task.wait(0.5) -- Задержка между нажатиями
 end
 
--- Цикл нажатий Space до завершения загрузки
-while not finishedLoading do
-    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Space, false, game)  -- Нажатие Space
-    task.wait(0.01)  -- Короткая задержка для имитации нажатия
-    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Space, false, game) -- Отпускание Space
-    task.wait(0.05)  -- Задержка между нажатиями
+-- Убиваем персонажа
+local humanoid = character:FindFirstChildOfClass("Humanoid")
+if humanoid then
+    humanoid.Health = 0
 end
 
--- Сообщение об остановке
-print("Запрос Finish_Loading выполнен, нажатия Space остановлены!")
+-- Ждём возрождения персонажа
+player.CharacterAdded:Wait()
+
+-- Зажимаем W на 2 секунды
+VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.W, false)
+task.wait(2)
+VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.W, false)
