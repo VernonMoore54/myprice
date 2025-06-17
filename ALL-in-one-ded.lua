@@ -70,23 +70,32 @@ end
 -- === 3. Проверяем баланс денег и наличие только лопаты ===
 task.wait(1)
 
-
-if game.Players.LocalPlayer.leaderstats.Sheckles.Value == 20 then
+local sheklesUI = player.PlayerGui:FindFirstChild("Sheckles_UI")
+local sheklesTextLabel = sheklesUI:FindFirstChild("TextLabel")
+local moneyOK = false
+if sheklesTextLabel.Text == "20¢" then
+	moneyOK = true
+end
 
 local backpack = player:FindFirstChild("Backpack")
 local itemCount = 0
+local hasShovel = false
 
 if backpack then
 	for _, item in ipairs(backpack:GetChildren()) do
-		if item:IsA("Tool") then -- учитываем только инструменты
-			itemCount = itemCount + 1
-			if item.Name == "Shovel [Destroy Plants]" then
-				
-			end
+		if item.Name == "Shovel [Destroy Plants]" then
+			hasShovel = true
 		end
+		itemCount = itemCount + 1
 	end
 end
 
+if moneyOK and hasShovel and itemCount == 1 then
+	task.wait(1)
+	local seedShop = player.PlayerGui:FindFirstChild("Seed_Shop")
+	if seedShop then
+		seedShop.Enabled = true
+	end
 end
 
 print(123)
