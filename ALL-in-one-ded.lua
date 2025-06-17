@@ -1,75 +1,58 @@
---[[
-  Скрипт для автоматического клика после загрузки игры и интерфейса
-  Последовательность действий:
-  1. Ждём полной загрузки игры
-  2. Ждём завершения загрузки интерфейса (когда значение достигнет 2500)
-  3. Совершаем 3 клика в центре экрана с маленькой задержкой
-]]
+--[[ 
+    Основной скрипт для автоматизации действий в GUI
+    Автор: [Ваше имя]
+    Версия: 1.0
+--]]
 
--- Получаем сервисы которые будем использовать
-local VirtualInputManager = game:GetService("VirtualInputManager")
-local Players = game:GetService("Players")
-
--- Функция для безопасного ожидания условия
-local function waitUntilCondition(condition)
-    repeat
-        task.wait(1) -- Ждём 1 секунду перед следующей проверкой
-    until condition()
+-- 1. Ожидание появления целевого GUI элемента
+while not game.Players.LocalPlayer.PlayerGui.Intro_SCREEN.Frame.Side_Frame_3.Visible do
+    task.wait(1) -- Проверка каждую секунду для оптимизации производительности
 end
 
--- Функция для имитации клика мышью
-local function simulateClick()
-    -- Получаем размеры экрана (координаты от 0 до 1)
-    local screenCenter = Vector2.new(0.5, 0.5)
-    
-    -- Имитируем нажатие левой кнопки мыши
-    VirtualInputManager:SendMouseButtonEvent(
-        screenCenter.X,  -- X координата (50% ширины экрана)
-        screenCenter.Y,  -- Y координата (50% высоты экрана)
-        0,               -- Код левой кнопки мыши (0 = левая, 1 = правая)
-        true,            -- Состояние кнопки (нажата)
-        game            -- Игровый объект
-    )
-    
-    -- Имитируем отпускание кнопки через 0.01 секунды
-    task.wait(0.01)
-    VirtualInputManager:SendMouseButtonEvent(
-        screenCenter.X,
-        screenCenter.Y,
-        0,
-        false,
-        game
-    )
-end
+-- 2. Настройка параметров кликов
+local clickPosition = Vector2.new(
+    workspace.CurrentCamera.ViewportSize.X / 2,  -- Центр экрана по X
+    workspace.CurrentCamera.ViewportSize.Y / 2   -- Центр экран по Y
+)
 
--- Основная логика скрипта
-local function main()
-    -- Шаг 1: Ждём полной загрузки игры
-    waitUntilCondition(function()
-        return game:IsLoaded()
-    end)
+local clickParameters = {
+    Position = clickPosition,
+    Button = Enum.UserInputType.MouseButton1,    -- Левая кнопка мыши
+    UserInputType = Enum.UserInputType.MouseButton1
+}
+
+-- 3. Выполнение серии кликов
+for i = 1, 3 do  -- Повторить 3 раза
+    -- Имитация нажатия кнопки мыши
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(
+        clickPosition.X,
+        clickPosition.Y,
+        clickParameters.Button,
+        true,   -- Состояние: нажата
+        nil,    -- Используемый игровой объект (не требуется)
+        1       | Force для корректной работы
+    )
     
-    -- Шаг 2: Ждём когда значение Loaded станет 2500
-    local player = Players.LocalPlayer
-    waitUntilCondition(function()
-        -- Проверяем существование объекта перед доступом
-        if player and player:FindFirstChild("PlayerGui") then
-            local gui = player.PlayerGui:FindFirstChild("Intro_SCREEN")
-            if gui and gui:FindFirstChild("Frame") then
-                return gui.Frame.Loaded.Value == 2500
-            end
-        end
-        return false
-    end)
+    -- Имитация отпускания кнопки мыши
+    task.wait(0.05)  -- Задержка между нажатием и отпусканием
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(
+        clickPosition.X,
+        clickPosition.Y,
+        clickParameters.Button,
+        false,  -- Состояние: отпущена
+        nil,
+        1
+    )
     
-    -- Шаг 3: Выполняем 3 клика с задержкой 0.05 секунд между ними
-    for i = 1, 3 do
-        simulateClick()
-        if i < 3 then -- Не ждём после последнего клика
-            task.wait(0.05)
-        end
+    if i < 3 then  -- Не делать задержку после последнего клика
+        task.wait(0.05)  -- Пауза между кликами
     end
 end
 
--- Запускаем основную функцию
-main()
+--[[ 
+    Примечания для разработчика:
+    1. Для изменения количества кликов измените значение в цикле for
+    2. Для регулировки скорости кликов измените параметры в task.wait()
+    3. Все координаты считаются от верхнего левого угла экрана
+    4. Для безопасности добавьте проверку на существование объектов
+--]]
