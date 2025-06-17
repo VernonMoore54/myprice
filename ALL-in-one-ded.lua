@@ -1,48 +1,75 @@
 --[[
-    Скрипт для автоматического запуска игры и имитации кликов
-    Подробные комментарии для начинающих разработчиков
+  Скрипт для автоматического клика после загрузки игры и интерфейса
+  Последовательность действий:
+  1. Ждём полной загрузки игры
+  2. Ждём завершения загрузки интерфейса (когда значение достигнет 2500)
+  3. Совершаем 3 клика в центре экрана с маленькой задержкой
 ]]
 
--- Ожидаем полной загрузки игры
-repeat
-    task.wait(1) -- Ждём 1 секунду перед повторной проверкой
-until game:IsLoaded() -- Проверяем статус загрузки игры
+-- Получаем сервисы которые будем использовать
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local Players = game:GetService("Players")
 
--- Ожидаем завершения прогресс-бара в интерфейсе
-local interfacePath = game.Players.LocalPlayer.PlayerGui.Intro_SCREEN.Frame
-repeat
-    task.wait(1) -- Проверяем значение каждую секунду
-until interfacePath.Loaded.Value == 2500 -- Ждём нужного значения
+-- Функция для безопасного ожидания условия
+local function waitUntilCondition(condition)
+    repeat
+        task.wait(1) -- Ждём 1 секунду перед следующей проверкой
+    until condition()
+end
 
--- Получаем сервис для управления виртуальным вводом
-local VirtualInput = game:GetService("VirtualInputManager")
-
--- Вычисляем центр экрана (ширина и высота экрана Roblox)
-local screenCenterX = game:GetService("GuiService"):GetScreenResolution().X / 2
-local screenCenterY = game:GetService("GuiService"):GetScreenResolution().Y / 2
-
--- Совершаем 3 клика с интервалом 0.05 секунды
-for i = 1, 3 do
+-- Функция для имитации клика мышью
+local function simulateClick()
+    -- Получаем размеры экрана (координаты от 0 до 1)
+    local screenCenter = Vector2.new(0.5, 0.5)
+    
     -- Имитируем нажатие левой кнопки мыши
-    VirtualInput:SendMouseButtonEvent(
-        screenCenterX,   -- X-координата
-        screenCenterY,   -- Y-координата
-        0,               -- Номер кнопки (0 - левая)
-        true,            -- Состояние: нажатие
-        nil              -- Игнорируемый параметр
+    VirtualInputManager:SendMouseButtonEvent(
+        screenCenter.X,  -- X координата (50% ширины экрана)
+        screenCenter.Y,  -- Y координата (50% высоты экрана)
+        0,               -- Код левой кнопки мыши (0 = левая, 1 = правая)
+        true,            -- Состояние кнопки (нажата)
+        game            -- Игровый объект
     )
     
-    -- Имитируем отпускание кнопки (обязательно для корректной работы)
-    VirtualInput:SendMouseButtonEvent(
-        screenCenterX,
-        screenCenterY,
+    -- Имитируем отпускание кнопки через 0.01 секунды
+    task.wait(0.01)
+    VirtualInputManager:SendMouseButtonEvent(
+        screenCenter.X,
+        screenCenter.Y,
         0,
         false,
-        nil
+        game
     )
+end
+
+-- Основная логика скрипта
+local function main()
+    -- Шаг 1: Ждём полной загрузки игры
+    waitUntilCondition(function()
+        return game:IsLoaded()
+    end)
     
-    -- Пауза между кликами (0.05 секунды)
-    if i < 3 then  -- Не ждём после последнего клика
-        task.wait(0.05)
+    -- Шаг 2: Ждём когда значение Loaded станет 2500
+    local player = Players.LocalPlayer
+    waitUntilCondition(function()
+        -- Проверяем существование объекта перед доступом
+        if player and player:FindFirstChild("PlayerGui") then
+            local gui = player.PlayerGui:FindFirstChild("Intro_SCREEN")
+            if gui and gui:FindFirstChild("Frame") then
+                return gui.Frame.Loaded.Value == 2500
+            end
+        end
+        return false
+    end)
+    
+    -- Шаг 3: Выполняем 3 клика с задержкой 0.05 секунд между ними
+    for i = 1, 3 do
+        simulateClick()
+        if i < 3 then -- Не ждём после последнего клика
+            task.wait(0.05)
+        end
     end
 end
+
+-- Запускаем основную функцию
+main()
