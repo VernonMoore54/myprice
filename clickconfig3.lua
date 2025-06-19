@@ -112,7 +112,7 @@ end
 -- Начните с первого, так как он самый надёжный.
 
 -- ЗАПУСК МЕТОДА 1 (Рекомендуется)
-triggerWithActivatedEvent()
+triggerWithSelectedProperty()
 
 -- ЗАПУСК МЕТОДА 2
 -- triggerWithSelectedProperty()
