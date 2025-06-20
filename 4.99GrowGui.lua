@@ -7,6 +7,7 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 local GameEvents = ReplicatedStorage:WaitForChild("GameEvents")
 local SeedDataModule = ReplicatedStorage:WaitForChild("Data"):WaitForChild("SeedData")
+local Backpack = LocalPlayer:WaitForChild("Backpack")
 
 -- Получение данных семян
 local SeedData = require(SeedDataModule)
@@ -33,6 +34,69 @@ local MyFarm = (function()
 	end
 end)()
 assert(MyFarm, "Ферма не найдена")
+
+--// Функции для работы с семенами (адаптировано из autofarm.lua)
+local OwnedSeeds = {}
+
+local function GetSeedInfo(Seed: Tool)
+	local PlantName = Seed:FindFirstChild("Plant_Name")
+	local Count = Seed:FindFirstChild("Numbers")
+	if not PlantName then return end
+	return PlantName.Value, Count.Value
+end
+
+local function CollectSeedsFromParent(Parent, Seeds: table)
+	for _, Tool in next, Parent:GetChildren() do
+		local Name, Count = GetSeedInfo(Tool)
+		if not Name then continue end
+		Seeds[Name] = {
+			Count = Count,
+			Tool = Tool
+		}
+	end
+end
+
+local function GetOwnedSeeds(): table
+	OwnedSeeds = {}
+	local Character = LocalPlayer.Character
+	if Character then
+		CollectSeedsFromParent(Backpack, OwnedSeeds)
+		CollectSeedsFromParent(Character, OwnedSeeds)
+	end
+	return OwnedSeeds
+end
+
+local function GetArea(Base: BasePart)
+	local Center = Base:GetPivot()
+	local Size = Base.Size
+	local X1 = math.ceil(Center.X - (Size.X/2))
+	local Z1 = math.ceil(Center.Z - (Size.Z/2))
+	local X2 = math.floor(Center.X + (Size.X/2))
+	local Z2 = math.floor(Center.Z + (Size.Z/2))
+	return X1, Z1, X2, Z2
+end
+
+local function EquipCheck(Tool)
+	local Character = LocalPlayer.Character
+	if not Character then return false end
+	local Humanoid = Character:FindFirstChildOfClass("Humanoid")
+	if not Humanoid then return false end
+	if Tool.Parent ~= Backpack then return true end
+	Humanoid:EquipTool(Tool)
+	return true
+end
+
+local MyImportant = MyFarm:FindFirstChild("Important")
+local PlantLocations = MyImportant and MyImportant:FindFirstChild("Plant_Locations")
+local Dirt = PlantLocations and PlantLocations:FindFirstChildOfClass("Part")
+local X1, Z1, X2, Z2 = Dirt and GetArea(Dirt) or nil, nil, nil, nil
+
+local function GetRandomFarmPoint(): Vector3?
+	if not Dirt then return nil end
+	local X = math.random(X1, X2)
+	local Z = math.random(Z1, Z2)
+	return Vector3.new(X, 4, Z)
+end
 
 --// GUI
 local ScreenGui = Instance.new("ScreenGui", PlayerGui)
@@ -457,82 +521,4 @@ clearBtnBuy.MouseButton1Click:Connect(function()
 	updateSelectedBuyText()
 end)
 
--- Очистка выбранных семян для AutoPlant
-clearBtnPlant.MouseButton1Click:Connect(function()
-	for name in pairs(selectedPlant) do
-		selectedPlant[name] = false
-	end
-	for _, child in ipairs(scrollPlant:GetChildren()) do
-		if child:IsA("TextButton") then
-			child.BackgroundColor3 = Color3.fromRGB(35,35,55)
-		end
-	end
-	updateSelectedPlantText()
-end)
-
--- Логика AutoBuy
-local enabledBuy = false
-toggleBuy.MouseButton1Click:Connect(function()
-	enabledBuy = not enabledBuy
-	toggleBuy.Text = enabledBuy and "👍" or "?"
-end)
-
-spawn(function()
-	while true do
-		wait(1)
-		if not enabledBuy then continue end
-		for seed in pairs(selectedBuy) do
-			if selectedBuy[seed] then
-				GameEvents.BuySeedStock:FireServer(seed)
-			end
-		end
-	end
-end)
-
--- Логика AutoPlant
-local enabledPlant = false
-togglePlant.MouseButton1Click:Connect(function()
-	enabledPlant = not enabledPlant
-	togglePlant.Text = enabledPlant and "👍" or "?"
-end)
-
--- Функция посадки семян (взято из autofarm.lua)
-local function plantSeed(seedName)
-	local plots = MyFarm.Plots:GetChildren()
-	for _, v in ipairs(plots) do
-		if v.Important.Data.Occupied.Value == false then
-			local cf = v:GetPivot()
-			local pos = cf.Position
-			local tool = LocalPlayer.Backpack:FindFirstChild(seedName)
-			if tool then
-				tool.Parent = LocalPlayer.Character
-				task.wait(0.1)
-				GameEvents.PlantSeed:FireServer(seedName, pos)
-				task.wait(0.1)
-				tool.Parent = LocalPlayer.Backpack
-			end
-		end
-	end
-end
-
-spawn(function()
-	while true do
-		wait(0.5)
-		if not enabledPlant then continue end
-		for seed in pairs(selectedPlant) do
-			if selectedPlant[seed] then
-				plantSeed(seed)
-			end
-		end
-	end
-end)
-
-autoBuyBtn.MouseButton1Click:Connect(function()
-	switchPage("buy")
-end)
-
-autoPlantBtn.MouseButton1Click:Connect(function()
-	switchPage("plant")
-end)
-
-switchPage("home")
+-- Очистка выбранных семян для
