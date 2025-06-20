@@ -163,98 +163,24 @@ scroll.ClipsDescendants = true
 local layout = Instance.new("UIListLayout", scroll)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
-local sorted = {}
-for name in pairs(SeedStock) do
-	table.insert(sorted, name)
-end
-table.sort(sorted)
-
-
--- Кнопки сортировки
-local sortMode = "name" -- name or price
-
-local azBtn = Instance.new("TextButton", buy)
-azBtn.Size = UDim2.new(0, 50, 0, 28)
-azBtn.Position = UDim2.new(0, 250 - 50, 0, 30)
-azBtn.Text = "A-Z"
-azBtn.Font = Enum.Font.Code
-azBtn.TextSize = 14
-azBtn.TextColor3 = Color3.new(1,1,1)
-azBtn.BackgroundColor3 = Color3.fromRGB(40,40,60)
-
-local priceBtn = Instance.new("TextButton", buy)
-priceBtn.Size = UDim2.new(0, 70, 0, 28)
-priceBtn.Position = UDim2.new(0, 170, 0, 30)
-priceBtn.Text = "Price ↓"
-priceBtn.Font = Enum.Font.Code
-priceBtn.TextSize = 14
-priceBtn.TextColor3 = Color3.new(1,1,1)
-priceBtn.BackgroundColor3 = Color3.fromRGB(40,40,60)
-
-local function refreshSeedButtons()
-	for _, child in ipairs(scroll:GetChildren()) do
-		if child:IsA("TextButton") then
-			child:Destroy()
-		end
-	end
-
-	local seeds = {}
-	for name in pairs(SeedStock) do
-		table.insert(seeds, name)
-	end
-
-	if sortMode == "price" then
-		table.sort(seeds, function(a, b)
-			local ad = SeedData[a]
-			local bd = SeedData[b]
-			return (ad and ad.Price or math.huge) < (bd and bd.Price or math.huge)
-		end)
-	else
-		table.sort(seeds)
-	end
-
-	for _, name in ipairs(seeds) do
-		local b = Instance.new("TextButton", scroll)
-		b.Size = UDim2.new(1,0,0,30)
-		b.Text = name
-		b.BackgroundColor3 = selected[name] and Color3.fromRGB(60,100,60) or Color3.fromRGB(35,35,55)
-		b.TextColor3 = Color3.new(1,1,1)
-		b.Font = Enum.Font.Code
-		b.TextSize = 16
-		b.MouseButton1Click:Connect(function()
-			selected[name] = not selected[name]
-			b.BackgroundColor3 = selected[name] and Color3.fromRGB(60,100,60) or Color3.fromRGB(35,35,55)
-			updateSelectedText()
-		end)
-	end
-	scroll.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
-end
-
-azBtn.MouseButton1Click:Connect(function()
-	sortMode = "name"
-	refreshSeedButtons()
-end)
-
-priceBtn.MouseButton1Click:Connect(function()
-	sortMode = "price"
-	refreshSeedButtons()
-end)
-
--- Первичная отрисовка
-refreshSeedButtons()
-
-local label = Instance.new("TextLabel", buy)
-label.Size = UDim2.new(0, 280, 0, 40)
-label.Position = UDim2.new(0, 20, 0, 165)
-label.Text = "Выбрано: "
-label.TextColor3 = Color3.new(1,1,1)
-label.Font = Enum.Font.Code
-label.TextSize = 14
-label.TextWrapped = true
-label.TextXAlignment = Enum.TextXAlignment.Left
 label.BackgroundTransparency = 1
 
-refreshSeedButtons()
+for _, name in ipairs(sorted) do
+	local b = Instance.new("TextButton", scroll)
+	b.Size = UDim2.new(1,0,0,30)
+	b.Text = name
+	b.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
+	b.TextColor3 = Color3.new(1,1,1)
+	b.Font = Enum.Font.Code
+	b.TextSize = 16
+	b.MouseButton1Click:Connect(function()
+		selected[name] = not selected[name]
+		b.BackgroundColor3 = selected[name] and Color3.fromRGB(60,100,60) or Color3.fromRGB(35,35,55)
+		local s = {}; for k,v in pairs(selected) do if v then table.insert(s, k) end end
+		label.Text = "Выбрано: " .. table.concat(s, ", ")
+	end)
+end
+scroll.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
 
 -- Переключатель AutoBuy
 local toggleFrame = Instance.new("Frame", buy)
@@ -349,3 +275,69 @@ autoBuyBtn.MouseButton1Click:Connect(function()
 	switchPage("buy")
 end)
 switchPage("home")
+-- Кнопка переключения сортировки (одна общая)
+local sortMode = "price"
+
+local sortBtn = Instance.new("TextButton", buy)
+sortBtn.Size = UDim2.new(0, 120, 0, 28)
+sortBtn.Position = UDim2.new(0, 150, 0, 30)
+sortBtn.Text = "Price ↓"
+sortBtn.Font = Enum.Font.Code
+sortBtn.TextSize = 14
+sortBtn.TextColor3 = Color3.new(1,1,1)
+sortBtn.BackgroundColor3 = Color3.fromRGB(40,40,60)
+
+local function refreshSeedButtons()
+	for _, child in ipairs(scroll:GetChildren()) do
+		if child:IsA("TextButton") then
+			child:Destroy()
+		end
+	end
+
+	local seeds = {}
+	for name in pairs(SeedStock) do
+		table.insert(seeds, name)
+	end
+
+	if sortMode == "price" then
+		table.sort(seeds, function(a, b)
+			local ad = SeedData[a]
+			local bd = SeedData[b]
+			return (ad and ad.Price or math.huge) < (bd and bd.Price or math.huge)
+		end)
+	else
+		table.sort(seeds)
+	end
+
+	for _, name in ipairs(seeds) do
+		local b = Instance.new("TextButton", scroll)
+		b.Size = UDim2.new(1,0,0,30)
+		b.Text = name
+		b.BackgroundColor3 = selected[name] and Color3.fromRGB(60,100,60) or Color3.fromRGB(35,35,55)
+		b.TextColor3 = Color3.new(1,1,1)
+		b.Font = Enum.Font.Code
+		b.TextSize = 16
+		b.MouseButton1Click:Connect(function()
+			selected[name] = not selected[name]
+			b.BackgroundColor3 = selected[name] and Color3.fromRGB(60,100,60) or Color3.fromRGB(35,35,55)
+			updateSelectedText()
+		end)
+	end
+	scroll.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
+end
+
+sortBtn.MouseButton1Click:Connect(function()
+	if sortMode == "price" then
+		sortMode = "name"
+		sortBtn.Text = "A-Z"
+	else
+		sortMode = "price"
+		sortBtn.Text = "Price ↓"
+	end
+	refreshSeedButtons()
+end)
+
+-- Первичная отрисовка
+refreshSeedButtons()
+
+
