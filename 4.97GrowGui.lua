@@ -120,7 +120,7 @@ home.BackgroundTransparency = 1
 pages["home"] = home
 
 local autoBuyBtn = Instance.new("TextButton", home)
-autoBuyBtn.Size = UDim2.new(0,280 calendar,0,50)
+autoBuyBtn.Size = UDim2.new(0,280,0,50)
 autoBuyBtn.Position = UDim2.new(0,20,0,20)
 autoBuyBtn.Text = "AutoBuySeeds 🌱"
 autoBuyBtn.Font = Enum.Font.Code
@@ -169,16 +169,27 @@ for name in pairs(SeedStock) do
 end
 table.sort(sorted)
 
--- Кнопка сортировки (Price/A-Z)
-local sortMode = "price" -- начальная сортировка по цене
-local sortBtn = Instance.new("TextButton", buy)
-sortBtn.Size = UDim2.new(0, 70, 0, 28)
-sortBtn.Position = UDim2.new(0, 230, 0, 30)
-sortBtn.Text = "Price ↓"
-sortBtn.Font = Enum.Font.Code
-sortBtn.TextSize = 14
-sortBtn.TextColor3 = Color3.new(1,1,1)
-sortBtn.BackgroundColor3 = Color3.fromRGB(40,40,60)
+
+-- Кнопки сортировки
+local sortMode = "name" -- name or price
+
+local azBtn = Instance.new("TextButton", buy)
+azBtn.Size = UDim2.new(0, 50, 0, 28)
+azBtn.Position = UDim2.new(0, 250, 0, 30)
+azBtn.Text = "A-Z"
+azBtn.Font = Enum.Font.Code
+azBtn.TextSize = 14
+azBtn.TextColor3 = Color3.new(1,1,1)
+azBtn.BackgroundColor3 = Color3.fromRGB(40,40,60)
+
+local priceBtn = Instance.new("TextButton", buy)
+priceBtn.Size = UDim2.new(0, 70, 0, 28)
+priceBtn.Position = UDim2.new(0, 170, 0, 30)
+priceBtn.Text = "Price ↓"
+priceBtn.Font = Enum.Font.Code
+priceBtn.TextSize = 14
+priceBtn.TextColor3 = Color3.new(1,1,1)
+priceBtn.BackgroundColor3 = Color3.fromRGB(40,40,60)
 
 local function refreshSeedButtons()
 	for _, child in ipairs(scroll:GetChildren()) do
@@ -219,14 +230,13 @@ local function refreshSeedButtons()
 	scroll.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
 end
 
-sortBtn.MouseButton1Click:Connect(function()
-	if sortMode == "price" then
-		sortMode = "name"
-		sortBtn.Text = "A-Z"
-	else
-		sortMode = "price"
-		sortBtn.Text = "Price ↓"
-	end
+azBtn.MouseButton1Click:Connect(function()
+	sortMode = "name"
+	refreshSeedButtons()
+end)
+
+priceBtn.MouseButton1Click:Connect(function()
+	sortMode = "price"
 	refreshSeedButtons()
 end)
 
@@ -270,6 +280,15 @@ toggleLabel.TextColor3 = Color3.new(1,1,1)
 toggleLabel.Font = Enum.Font.Code
 toggleLabel.TextSize = 16
 toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+local toggleLabel = Instance.new("TextLabel", toggleFrame)
+toggleLabel.Size = UDim2.new(1, -130, 0, 40)
+toggleLabel.Position = UDim2.new(0, 80, 0, 10)
+toggleLabel.BackgroundTransparency = 1
+toggleLabel.Text = "AutoBuy toggle 😋"
+toggleLabel.TextColor3 = Color3.new(1,1,1)
+toggleLabel.Font = Enum.Font.Code
+toggleLabel.TextSize = 16
+toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 -- Кнопка очистки выбранных семян
 local clearBtn = Instance.new("TextButton", toggleFrame)
@@ -306,6 +325,7 @@ local function updateSelectedText()
 		label.TextScaled = true
 	end
 end
+
 
 local enabled = false
 toggle.MouseButton1Click:Connect(function()
