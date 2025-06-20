@@ -163,22 +163,24 @@ scroll.ClipsDescendants = true
 local layout = Instance.new("UIListLayout", scroll)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- Инициализация label
+-- Label for selected seeds
 local label = Instance.new("TextLabel", buy)
-label.Size = UDim2.new(1, 0, 0, 30)
-label.Position = UDim2.new(0, 20, 0, 10)
+label.Size = UDim2.new(0, 280, 0, 40)
+label.Position = UDim2.new(0, 20, 0, 170)
 label.BackgroundTransparency = 1
-label.TextColor3 = Color3.new(1, 1, 1)
-label.Font = Enum.Font.Code
-label.TextSize = 16
 label.Text = "Выбрано: "
+label.TextColor3 = Color3.new(1,1,1)
+label.Font = Enum.Font.Code
+label.TextSize = 14
+label.TextXAlignment = Enum.TextXAlignment.Left
+label.TextWrapped = true
 
 for _, name in ipairs(sorted) do
 	local b = Instance.new("TextButton", scroll)
 	b.Size = UDim2.new(1,0,0,30)
 	b.Text = name
 	b.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
-	b.TextColor3 = new(1,1,1)
+	b.TextColor3 = Color3.new(1,1,1)
 	b.Font = Enum.Font.Code
 	b.TextSize = 16
 	b.MouseButton1Click:Connect(function()
