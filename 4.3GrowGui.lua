@@ -151,7 +151,7 @@ pageFrames["buy"] = buyPage
 local homeBtn = Instance.new("ImageButton", buyPage)
 homeBtn.Size = UDim2.new(0,28,0,28)
 homeBtn.Position = UDim2.new(0,10,0,10)
-homeBtn.Image = "rbxassetid://4952231068" -- иконка домика
+homeBtn.Image = "rbxthumb://type=Asset&id=4952231068&w=420&h=420" -- новая иконка
 homeBtn.BackgroundTransparency = 1
 homeBtn.MouseButton1Click:Connect(function()
 	switchPage("home")
