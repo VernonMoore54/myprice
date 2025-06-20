@@ -167,8 +167,11 @@ drop.Position = UDim2.new(0,20,0,60)
 drop.BackgroundColor3 = Color3.fromRGB(25,25,45)
 
 local uilist = Instance.new("ScrollingFrame", drop)
+local layout = Instance.new("UIListLayout", uilist)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
 uilist.Size = UDim2.new(1,0,1,0)
-uilist.CanvasSize = UDim2.new(0,0,2,0)
+game:GetService("RunService").RenderStepped:Wait()
+uilist.CanvasSize = UDim2.new(0, 0, 0, uilist.UIListLayout.AbsoluteContentSize.Y)
 uilist.BackgroundTransparency = 1
 uilist.ScrollBarThickness = 6
 
@@ -194,27 +197,36 @@ local function GetSeedStock()
 end
 
 local function refreshSeedList()
-	for i, child in ipairs(uilist:GetChildren()) do
+	for _, child in ipairs(uilist:GetChildren()) do
 		if child:IsA("TextButton") then child:Destroy() end
 	end
-	-- допустим SeedStock — ваша таблица всех семян
-	local i = 0
-	for seedName,_ in pairs(SeedStock) do
-		i=i+1
-		local btn = Instance.new("TextButton", uilist)
-		btn.Size = UDim2.new(1,0,0,30)
-		btn.Position = UDim2.new(0,0,0,(i-1)*30)
+
+	local sorted = {}
+	for seedName in pairs(SeedStock) do
+		table.insert(sorted, seedName)
+	end
+	table.sort(sorted)
+
+	for i, seedName in ipairs(sorted) do
+		local btn = Instance.new("TextButton")
+		btn.Size = UDim2.new(1, 0, 0, 30)
 		btn.Text = seedName
-		btn.TextColor3 = Color3.new(1,1,1)
-		btn.BackgroundColor3 = Color3.fromRGB(35,35,55)
+		btn.TextColor3 = Color3.new(1, 1, 1)
+		btn.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
 		btn.Font = Enum.Font.Code
 		btn.TextSize = 16
 		btn.BorderSizePixel = 0
+		btn.Parent = uilist
+
 		btn.MouseButton1Click:Connect(function()
 			selectedSeeds[seedName] = not selectedSeeds[seedName]
-			btn.BackgroundColor3 = selectedSeeds[seedName] and Color3.fromRGB(60,100,60) or Color3.fromRGB(35,35,55)
+			btn.BackgroundColor3 = selectedSeeds[seedName] and Color3.fromRGB(60, 100, 60) or Color3.fromRGB(35, 35, 55)
 		end)
 	end
+
+	-- Авто CanvasSize
+	task.wait() -- UI обновление
+	uilist.CanvasSize = UDim2.new(0, 0, 0, uilist.UIListLayout.AbsoluteContentSize.Y)
 end
 
 GetSeedStock()
