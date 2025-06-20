@@ -127,12 +127,38 @@ autoBuyBtn.Font = Enum.Font.Code
 autoBuyBtn.TextColor3 = Color3.new(1,1,1)
 autoBuyBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
 
+local autoPlantBtn = Instance.new("TextButton", home)
+autoPlantBtn.Size = UDim2.new(0,280,0,50)
+autoPlantBtn.Position = UDim2.new(0,20,0,80)
+autoPlantBtn.Text = "AutoPlantSeeds 🌾"
+autoPlantBtn.Font = Enum.Font.Code
+autoPlantBtn.TextColor3 = Color3.new(1,1,1)
+autoPlantBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
+
+autoPlantBtn.MouseButton1Click:Connect(function()
+	switchPage("plant")
+end)
+
 -- Buy page
 local buy = Instance.new("Frame", Content)
 buy.Size = UDim2.new(1,0,1,0)
 buy.BackgroundTransparency = 1
 buy.Visible = false
 pages["buy"] = buy
+
+local plant = Instance.new("Frame", Content)
+plant.Size = UDim2.new(1,0,1,0)
+plant.BackgroundTransparency = 1
+plant.Visible = false
+local back2 = Instance.new("ImageButton", plant)
+back2.Size = UDim2.new(0,28,0,28)
+back2.Position = UDim2.new(0,10,0,10)
+back2.Image = "rbxassetid://4952231049"
+back2.BackgroundTransparency = 1
+back2.MouseButton1Click:Connect(function()
+	switchPage("home")
+end)
+pages["plant"] = plant
 
 local back = Instance.new("ImageButton", buy)
 back.Size = UDim2.new(0,28,0,28)
@@ -350,100 +376,97 @@ autoBuyBtn.MouseButton1Click:Connect(function()
 end)
 switchPage("home")
 
---// AutoPlantSeeds Feature
-
---// AutoPlantSeeds Feature
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-
-local LocalPlayer = Players.LocalPlayer
-local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local Backpack = LocalPlayer:WaitForChild("Backpack")
-local GameEvents = ReplicatedStorage:WaitForChild("GameEvents")
-
-local MyFarm = (function()
-    local Farms = workspace:WaitForChild("Farm")
-    for _, farm in ipairs(Farms:GetChildren()) do
-        local owner = farm:FindFirstChild("Important") and farm.Important.Data.Owner
-        if owner and owner.Value == LocalPlayer.Name then
-            return farm
-        end
-    end
-end)()
-
-assert(MyFarm, "Ферма не найдена")
-
-local PlantLocations = MyFarm.Important.Plant_Locations
-local targetPart
-for _, obj in ipairs(PlantLocations:GetChildren()) do
-    if obj:IsA("BasePart") and obj:GetAttribute("Side") == "Right" then
-        targetPart = obj
-        break
-    end
-end
-
-assert(targetPart, "Не найдена правая грядка")
-local function getPlantPosition()
-    return targetPart.Position
-end
-
+-- AutoPlantSeeds Module Inline
 local planting = false
-local selectedSeeds = {} -- Установите это из GUI
+local selectedSeeds = {} -- будет ссылаться на selected из GUI
+
+local targetPart = nil
+do
+	local farm = MyFarm
+	if farm then
+		local locs = farm.Important.Plant_Locations:GetChildren()
+		for _, obj in ipairs(locs) do
+			if obj:IsA("BasePart") and obj:GetAttribute("Side") == "Right" then
+				targetPart = obj
+				break
+			end
+		end
+	end
+end
+assert(targetPart, "Не найдена правая грядка")
+
+local function getPlantPosition()
+	return targetPart.Position
+end
 
 local function equipTool(tool)
-    if tool and tool:IsA("Tool") and tool.Parent == Backpack then
-        tool.Parent = Character
-    end
+	if tool and tool:IsA("Tool") and tool.Parent == Backpack then
+		tool.Parent = LocalPlayer.Character
+	end
 end
 
 local function getAllToolsWithName(seedName)
-    local tools = {}
-    for _, t in ipairs(Backpack:GetChildren()) do
-        if t:IsA("Tool") and t.Name == (seedName .. " seed") then
-            table.insert(tools, t)
-        end
-    end
-    for _, t in ipairs(Character:GetChildren()) do
-        if t:IsA("Tool") and t.Name == (seedName .. " seed") then
-            table.insert(tools, t)
-        end
-    end
-    return tools
+	local tools = {}
+	for _, t in ipairs(Backpack:GetChildren()) do
+		if t:IsA("Tool") and t.Name == (seedName .. " seed") then
+			table.insert(tools, t)
+		end
+	end
+	for _, t in ipairs(LocalPlayer.Character:GetChildren()) do
+		if t:IsA("Tool") and t.Name == (seedName .. " seed") then
+			table.insert(tools, t)
+		end
+	end
+	return tools
 end
 
 local function startPlanting()
-    if planting then return end
-    planting = true
-    coroutine.wrap(function()
-        while planting do
-            local sorted = {}
-            for k, v in pairs(selectedSeeds) do
-                if v then table.insert(sorted, k) end
-            end
-            table.sort(sorted)
-            for _, seed in ipairs(sorted) do
-                local tools = getAllToolsWithName(seed)
-                if #tools == 0 then continue end
-                for _, tool in ipairs(tools) do
-                    equipTool(tool)
-                    local pos = getPlantPosition()
-                    GameEvents.Plant_RE:FireServer(pos, seed)
-                    wait(0.5)
-                end
-            end
-            wait(1)
-        end
-    end)()
+	if planting then return end
+	planting = true
+	coroutine.wrap(function()
+		while planting do
+			local sorted = {}
+			for k, v in pairs(selectedSeeds) do
+				if v then table.insert(sorted, k) end
+			end
+			table.sort(sorted)
+			for _, seed in ipairs(sorted) do
+				local tools = getAllToolsWithName(seed)
+				if #tools == 0 then continue end
+				for _, tool in ipairs(tools) do
+					equipTool(tool)
+					local pos = getPlantPosition()
+					GameEvents.Plant_RE:FireServer(pos, seed)
+					wait(0.5)
+				end
+			end
+			wait(1)
+		end
+	end)()
 end
 
 local function stopPlanting()
-    planting = false
+	planting = false
 end
 
-return {
-    Start = startPlanting,
-    Stop = stopPlanting,
-    SetSeeds = function(seeds)
-        selectedSeeds = seeds
-    end
-}
+-- GUI toggle inside plant page
+local togglePlant = Instance.new("TextButton", plant)
+togglePlant.Size = UDim2.new(0,60,0,40)
+togglePlant.Position = UDim2.new(0,20,0,60)
+togglePlant.Text = "🌾"
+togglePlant.Font = Enum.Font.Code
+togglePlant.TextSize = 24
+togglePlant.BackgroundColor3 = Color3.fromRGB(35,35,55)
+togglePlant.TextColor3 = Color3.new(1,1,1)
+
+local enabledPlant = false
+togglePlant.MouseButton1Click:Connect(function()
+	enabledPlant = not enabledPlant
+	togglePlant.Text = enabledPlant and "✅" or "🌾"
+	if enabledPlant then
+		selectedSeeds = selected
+		startPlanting()
+	else
+		stopPlanting()
+	end
+end)
