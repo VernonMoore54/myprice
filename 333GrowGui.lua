@@ -172,6 +172,27 @@ uilist.CanvasSize = UDim2.new(0,0,2,0)
 uilist.BackgroundTransparency = 1
 uilist.ScrollBarThickness = 6
 
+-- Получаем текущий список семян из интерфейса
+local function GetSeedStock()
+	local gui = PlayerGui:FindFirstChild("Seed_Shop")
+	if not gui then return {} end
+
+	local Items = gui:FindFirstChild("Blueberry", true)
+	if not Items then return {} end
+
+	local List = Items.Parent
+	for _, Item in pairs(List:GetChildren()) do
+		local MainFrame = Item:FindFirstChild("Main_Frame")
+		if MainFrame then
+			local stockText = MainFrame:FindFirstChild("Stock_Text")
+			if stockText then
+				local count = tonumber(stockText.Text:match("%d+"))
+				SeedStock[Item.Name] = count or 0
+			end
+		end
+	end
+end
+
 local function refreshSeedList()
 	for i, child in ipairs(uilist:GetChildren()) do
 		if child:IsA("TextButton") then child:Destroy() end
