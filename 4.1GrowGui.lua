@@ -167,13 +167,18 @@ drop.Position = UDim2.new(0,20,0,60)
 drop.BackgroundColor3 = Color3.fromRGB(25,25,45)
 
 local uilist = Instance.new("ScrollingFrame", drop)
-local layout = Instance.new("UIListLayout", uilist)
-layout.SortOrder = Enum.SortOrder.LayoutOrder
 uilist.Size = UDim2.new(1,0,1,0)
 game:GetService("RunService").RenderStepped:Wait()
-uilist.CanvasSize = UDim2.new(0, 0, 0, uilist.UIListLayout.AbsoluteContentSize.Y)
+uilist.CanvasSize = UDim2.new(0,0,0,0)
 uilist.BackgroundTransparency = 1
 uilist.ScrollBarThickness = 6
+uilist.ScrollBarImageTransparency = 0.4
+uilist.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 150)
+uilist.ScrollingDirection = Enum.ScrollingDirection.Y
+uilist.ClipsDescendants = true
+
+local layout = Instance.new("UIListLayout", uilist)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- Получаем текущий список семян из интерфейса
 local function GetSeedStock()
