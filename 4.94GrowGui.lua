@@ -163,14 +163,22 @@ scroll.ClipsDescendants = true
 local layout = Instance.new("UIListLayout", scroll)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
+-- Инициализация label
+local label = Instance.new("TextLabel", buy)
+label.Size = UDim2.new(1, 0, 0, 30)
+label.Position = UDim2.new(0, 20, 0, 10)
 label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(1, 1, 1)
+label.Font = Enum.Font.Code
+label.TextSize = 16
+label.Text = "Выбрано: "
 
 for _, name in ipairs(sorted) do
 	local b = Instance.new("TextButton", scroll)
 	b.Size = UDim2.new(1,0,0,30)
 	b.Text = name
 	b.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
-	b.TextColor3 = Color3.new(1,1,1)
+	b.TextColor3 = new(1,1,1)
 	b.Font = Enum.Font.Code
 	b.TextSize = 16
 	b.MouseButton1Click:Connect(function()
@@ -199,15 +207,6 @@ toggle.TextColor3 = Color3.new(1,1,1)
 
 local toggleLabel = Instance.new("TextLabel", toggleFrame)
 toggleLabel.Size = UDim2.new(1, -80, 0, 40)
-toggleLabel.Position = UDim2.new(0, 80, 0, 10)
-toggleLabel.BackgroundTransparency = 1
-toggleLabel.Text = "AutoBuy toggle 😋"
-toggleLabel.TextColor3 = Color3.new(1,1,1)
-toggleLabel.Font = Enum.Font.Code
-toggleLabel.TextSize = 16
-toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
-local toggleLabel = Instance.new("TextLabel", toggleFrame)
-toggleLabel.Size = UDim2.new(1, -130, 0, 40)
 toggleLabel.Position = UDim2.new(0, 80, 0, 10)
 toggleLabel.BackgroundTransparency = 1
 toggleLabel.Text = "AutoBuy toggle 😋"
@@ -252,7 +251,6 @@ local function updateSelectedText()
 	end
 end
 
-
 local enabled = false
 toggle.MouseButton1Click:Connect(function()
 	enabled = not enabled
@@ -275,6 +273,7 @@ autoBuyBtn.MouseButton1Click:Connect(function()
 	switchPage("buy")
 end)
 switchPage("home")
+
 -- Кнопка переключения сортировки (одна общая)
 local sortMode = "price"
 
@@ -339,5 +338,3 @@ end)
 
 -- Первичная отрисовка
 refreshSeedButtons()
-
-
