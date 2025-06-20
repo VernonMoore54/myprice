@@ -190,6 +190,19 @@ priceBtn.TextSize = 14
 priceBtn.TextColor3 = Color3.new(1,1,1)
 priceBtn.BackgroundColor3 = Color3.fromRGB(40,40,60)
 
+-- Обновление текста выбранных семян
+local function updateSelectedText()
+	local s = {}; for k,v in pairs(selected) do if v then table.insert(s, k) end end
+	local text = table.concat(s, ", ")
+	label.Text = "Выбрано: " .. text
+	label.TextScaled = false
+	label.TextSize = 14
+	label.TextWrapped = true
+	if label.TextBounds.X > label.AbsoluteSize.X then
+		label.TextScaled = true
+	end
+end
+
 local function refreshSeedButtons()
 	for _, child in ipairs(scroll:GetChildren()) do
 		if child:IsA("TextButton") then
@@ -311,19 +324,6 @@ clearBtn.MouseButton1Click:Connect(function()
 	end
 	label.Text = "Выбрано: "
 end)
-
--- Обновление текста выбранных семян
-local function updateSelectedText()
-	local s = {}; for k,v in pairs(selected) do if v then table.insert(s, k) end end
-	local text = table.concat(s, ", ")
-	label.Text = "Выбрано: " .. text
-	label.TextScaled = false
-	label.TextSize = 14
-	label.TextWrapped = true
-	if label.TextBounds.X > label.AbsoluteSize.X then
-		label.TextScaled = true
-	end
-end
 
 
 local enabled = false
