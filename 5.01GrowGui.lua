@@ -175,7 +175,7 @@ local sortMode = "name" -- name or price
 
 local azBtn = Instance.new("TextButton", buy)
 azBtn.Size = UDim2.new(0, 50, 0, 28)
-azBtn.Position = UDim2.new(0, 250, 0, 30)
+azBtn.Position = UDim2.new(0, 250 - 50, 0, 30)
 azBtn.Text = "A-Z"
 azBtn.Font = Enum.Font.Code
 azBtn.TextSize = 14
