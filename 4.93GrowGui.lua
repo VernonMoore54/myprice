@@ -163,7 +163,7 @@ scroll.ClipsDescendants = true
 local layout = Instance.new("UIListLayout", scroll)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
-label.BackgroundTransparency = 0.9
+label.BackgroundTransparency = 1
 
 for _, name in ipairs(sorted) do
 	local b = Instance.new("TextButton", scroll)
