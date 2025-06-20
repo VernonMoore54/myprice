@@ -221,6 +221,52 @@ toggleLabel.TextColor3 = Color3.new(1,1,1)
 toggleLabel.Font = Enum.Font.Code
 toggleLabel.TextSize = 16
 toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+local toggleLabel = Instance.new("TextLabel", toggleFrame)
+toggleLabel.Size = UDim2.new(1, -130, 0, 40)
+toggleLabel.Position = UDim2.new(0, 80, 0, 10)
+toggleLabel.BackgroundTransparency = 1
+toggleLabel.Text = "AutoBuy toggle 😋"
+toggleLabel.TextColor3 = Color3.new(1,1,1)
+toggleLabel.Font = Enum.Font.Code
+toggleLabel.TextSize = 16
+toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Кнопка очистки выбранных семян
+local clearBtn = Instance.new("TextButton", toggleFrame)
+clearBtn.Size = UDim2.new(0, 40, 0, 40)
+clearBtn.Position = UDim2.new(1, -45, 0, 10)
+clearBtn.Text = "X"
+clearBtn.TextColor3 = Color3.new(1, 0.6, 0.6)
+clearBtn.Font = Enum.Font.Code
+clearBtn.TextSize = 18
+clearBtn.BackgroundColor3 = Color3.fromRGB(45, 25, 25)
+clearBtn.BorderSizePixel = 0
+
+clearBtn.MouseButton1Click:Connect(function()
+	for name in pairs(selected) do
+		selected[name] = false
+	end
+	for _, child in ipairs(scroll:GetChildren()) do
+		if child:IsA("TextButton") then
+			child.BackgroundColor3 = Color3.fromRGB(35,35,55)
+		end
+	end
+	label.Text = "Выбрано: "
+end)
+
+-- Обновление текста выбранных семян
+local function updateSelectedText()
+	local s = {}; for k,v in pairs(selected) do if v then table.insert(s, k) end end
+	local text = table.concat(s, ", ")
+	label.Text = "Выбрано: " .. text
+	label.TextScaled = false
+	label.TextSize = 14
+	label.TextWrapped = true
+	if label.TextBounds.X > label.AbsoluteSize.X then
+		label.TextScaled = true
+	end
+end
+
 
 local enabled = false
 toggle.MouseButton1Click:Connect(function()
