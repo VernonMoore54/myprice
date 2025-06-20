@@ -256,6 +256,16 @@ toggle.MouseButton1Click:Connect(function()
 	toggle.Text = autoBuyEnabled and "👍" or "?"
 end)
 
+local label = Instance.new("TextLabel", toggleFrame)
+label.Size = UDim2.new(1, -80, 0, 40)
+label.Position = UDim2.new(0, 80, 0, 10)
+label.BackgroundTransparency = 1
+label.Text = "AutoBuy toggle 😋"
+label.TextColor3 = Color3.new(1,1,1)
+label.Font = Enum.Font.Code
+label.TextSize = 16
+label.TextXAlignment = Enum.TextXAlignment.Left
+
 --// Циклическая покупка
 spawn(function()
 	while true do
