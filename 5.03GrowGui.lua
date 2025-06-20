@@ -84,13 +84,12 @@ local RightArrow = Instance.new("TextButton", MainFrame)
 RightArrow.Size = UDim2.new(0, 24, 0, 50)
 RightArrow.Position = UDim2.new(1, -24, 0.5, -25)
 RightArrow.Text = "◀"
-RightArrow.Visible = false
+RightArrow.Visible = False
 RightArrow.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
 RightArrow.TextColor3 = Color3.new(0.8, 0.8, 1)
 RightArrow.Font = Enum.Font.Code
 RightArrow.TextSize = 20
 
-local isOpen = false
 local openTween = TweenService:Create(MainFrame, TweenInfo.new(0.35), {Position = UDim2.new(0, 0, 0.5, -200)})
 local closeTween = TweenService:Create(MainFrame, TweenInfo.new(0.35), {Position = UDim2.new(0, -320, 0.5, -200)})
 
