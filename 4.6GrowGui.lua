@@ -50,8 +50,19 @@ local MainFrame = Instance.new("Frame", ScreenGui)
 MainFrame.Size = UDim2.new(0, 320, 0, 400)
 MainFrame.Position = UDim2.new(0, -320, 0.5, -200)
 MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+MainFrame.BackgroundTransparency = 0.25
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
+
+--// Фоновое изображение
+local background = Instance.new("ImageLabel", MainFrame)
+background.Size = UDim2.new(1, 0, 1, 0)
+background.Position = UDim2.new(0, 0, 0, 0)
+background.Image = "rbxassetid://70998571392678"
+background.BackgroundTransparency = 1
+background.ImageTransparency = 0.2
+background.ScaleType = Enum.ScaleType.Crop
+background.ZIndex = 0
 
 --// Header
 local Header = Instance.new("TextLabel", MainFrame)
