@@ -8,6 +8,8 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 local GameEvents = ReplicatedStorage:WaitForChild("GameEvents")
 
+local SeedStock = {} -- Инициализация
+
 --// Удаляем старый GUI
 do
 	local old = PlayerGui:FindFirstChild("WaveGui")
@@ -194,6 +196,7 @@ local function refreshSeedList()
 	end
 end
 
+GetSeedStock()
 refreshSeedList()
 
 --// Переключатель включения AutoBuy
