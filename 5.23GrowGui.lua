@@ -7,9 +7,9 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui   = LocalPlayer:WaitForChild("PlayerGui")
 local GameEvents  = ReplicatedStorage:WaitForChild("GameEvents")
 local SeedData    = require(ReplicatedStorage:WaitForChild("Data"):WaitForChild("SeedData"))
+local Plant_RE    = GameEvents:WaitForChild("Plant_RE")
 
 --// Configurations
--- Автопосадка: список семян и интервалы
 local autoPlantSeeds    = {"Coconut", "Bamboo"}
 local autoPlantInterval = 0.5  -- сек между посадками
 local equipInterval     = 3    -- сек между повторным взятием в руки
@@ -40,9 +40,9 @@ assert(MyFarm, "Ферма не найдена")
 
 --// Создание GUI
 local ScreenGui = Instance.new("ScreenGui", PlayerGui)
-ScreenGui.Name            = "WaveGui"
-ScreenGui.ResetOnSpawn    = false
-ScreenGui.IgnoreGuiInset  = true
+ScreenGui.Name           = "WaveGui"
+ScreenGui.ResetOnSpawn   = false
+ScreenGui.IgnoreGuiInset = true
 
 local MainFrame = Instance.new("Frame", ScreenGui)
 MainFrame.Size             = UDim2.new(0, 320, 0, 400)
@@ -110,7 +110,7 @@ RightArrow.MouseButton1Click:Connect(function()
 end)
 
 --// Страницы
-local pages  = {}
+local pages = {}
 local current
 local function switchPage(name)
     if current then pages[current].Visible = false end
@@ -122,9 +122,8 @@ end
 local home = Instance.new("Frame", Content)
 home.Size             = UDim2.new(1,0,1,0)
 home.BackgroundTransparency = 1
-pages["home"]         = home
+pages["home"] = home
 
--- Кнопка AutoBuy
 local autoBuyBtn = Instance.new("TextButton", home)
 autoBuyBtn.Size             = UDim2.new(0,280,0,50)
 autoBuyBtn.Position         = UDim2.new(0,20,0,20)
@@ -133,7 +132,6 @@ autoBuyBtn.Font             = Enum.Font.Code
 autoBuyBtn.TextColor3       = Color3.new(1,1,1)
 autoBuyBtn.BackgroundColor3 = Color3.fromRGB(20,20,40)
 
--- Кнопка AutoPlant
 local autoPlantBtn = Instance.new("TextButton", home)
 autoPlantBtn.Size             = UDim2.new(0,280,0,50)
 autoPlantBtn.Position         = UDim2.new(0,20,0,90)
@@ -142,21 +140,13 @@ autoPlantBtn.Font             = Enum.Font.Code
 autoPlantBtn.TextColor3       = Color3.new(1,1,1)
 autoPlantBtn.BackgroundColor3 = Color3.fromRGB(20,20,40)
 
--- Buy page
+-- Buy page (без изменений) ...
 local buy = Instance.new("Frame", Content)
-buy.Size             = UDim2.new(1,0,1,0)
+buy.Size                   = UDim2.new(1,0,1,0)
 buy.BackgroundTransparency = 1
-buy.Visible          = false
-pages["buy"]         = buy
-
-local backBuy = Instance.new("ImageButton", buy)
-backBuy.Size    = UDim2.new(0,28,0,28)
-backBuy.Position= UDim2.new(0,10,0,10)
-backBuy.Image   = "rbxassetid://4952231049"
-backBuy.BackgroundTransparency = 1
-backBuy.MouseButton1Click:Connect(function() switchPage("home") end)
-
--- ... (здесь весь код покупки семян без изменений) ...
+buy.Visible                = false
+pages["buy"]               = buy
+-- ... (код покупки семян)
 
 -- AutoPlant page
 local plant = Instance.new("Frame", Content)
@@ -172,7 +162,6 @@ backPlant.Image    = "rbxassetid://4952231049"
 backPlant.BackgroundTransparency = 1
 backPlant.MouseButton1Click:Connect(function() switchPage("home") end)
 
--- Toggle для AutoPlant
 local toggleFrame = Instance.new("Frame", plant)
 toggleFrame.Size             = UDim2.new(0,280,0,60)
 toggleFrame.Position         = UDim2.new(0,20,0,60)
@@ -197,7 +186,7 @@ toggleLabel.Font             = Enum.Font.Code
 toggleLabel.TextSize         = 16
 toggleLabel.TextXAlignment   = Enum.TextXAlignment.Left
 
--- Логика автопосадки
+--// Логика автопосадки
 local plantEnabled = false
 togglePlant.MouseButton1Click:Connect(function()
     plantEnabled = not plantEnabled
@@ -209,20 +198,19 @@ togglePlant.MouseButton1Click:Connect(function()
                 for _, seedName in ipairs(autoPlantSeeds) do
                     if not plantEnabled then break end
                     local toolName = seedName .. " Seed"
-                    -- ищем в рюкзаке или уже в руках
-                    local tool = backpack:FindFirstChild(toolName) or LocalPlayer.Character:FindFirstChild(toolName)
+                    local tool = LocalPlayer.Backpack:FindFirstChild(toolName)
+                               or LocalPlayer.Character:FindFirstChild(toolName)
                     if tool then
                         local now = tick()
                         if now - lastEquip >= equipInterval then
                             tool.Parent = LocalPlayer.Character
                             lastEquip = now
                         end
-                        -- находим точку посадки Side="Right"
+                        -- ищем позицию Side="Right"
                         for _, loc in ipairs(MyFarm.Important.Plant_Locations.Can_Plant:GetChildren()) do
                             if loc:GetAttribute("Side") == "Right" then
                                 local p = loc.Position
-                                -- отправляем запрос на посадку
-                                GameEvents.Plant_RE:FireServer(vector.create(p.X, p.Y, p.Z), seedName)
+                                Plant_RE:FireServer(Vector3.new(p.X, p.Y, p.Z), seedName)
                                 break
                             end
                         end
@@ -235,9 +223,9 @@ togglePlant.MouseButton1Click:Connect(function()
     end
 end)
 
--- Подключаем переключатели страниц
-autoBuyBtn.MouseButton1Click   :Connect(function() switchPage("buy")    end)
-autoPlantBtn.MouseButton1Click :Connect(function() switchPage("autoPlant") end)
+-- Подключаем кнопки навигации
+autoBuyBtn.MouseButton1Click  :Connect(function() switchPage("buy")      end)
+autoPlantBtn.MouseButton1Click:Connect(function() switchPage("autoPlant")end)
 
--- Сразу показываем главную
+-- Стартовая страница
 switchPage("home")
