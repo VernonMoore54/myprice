@@ -37,17 +37,10 @@ local MyFarm = (function()
 end)()
 assert(MyFarm, "Ферма не найдена")
 
--- Поиск любой точки для посадки на ферме
-local rightPlantSpot = nil -- Переименовано для ясности, но переменная остается прежней
-local plantLocationsFolder = MyFarm.Important.Plant_Locations:WaitForChild("Can_Plant") -- Убедимся, что это существует
-for _, spot in ipairs(plantLocationsFolder:GetChildren()) do
-    if spot:IsA("Part") then -- Удален фильтр по атрибуту "Side"
-        rightPlantSpot = spot
-        break -- Берем первую найденную точку
-    end
-end
-assert(rightPlantSpot, "Точка посадки 'Can_Plant' не найдена на вашей ферме.")
-local plantPosition = rightPlantSpot.Position
+-- Поиск точки для посадки на ферме
+local plantObject = MyFarm.Important.Plant_Locations:WaitForChild("Can_Plant")
+-- Предполагаем, что Can_Plant является BasePart, как указано пользователем.
+local plantPosition = plantObject.Position -- Получаем позицию напрямую
 
 --// GUI
 local ScreenGui = Instance.new("ScreenGui", PlayerGui)
@@ -352,7 +345,7 @@ autoPlantToggleLabel.Text = "AutoPlant Toggle 😋"
 autoPlantToggleLabel.TextColor3 = Color3.new(1,1,1)
 autoPlantToggleLabel.Font = Enum.Font.Code
 autoPlantToggleLabel.TextSize = 16
-autoPlantToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local autoPlantEnabled = false
 autoPlantToggle.MouseButton1Click:Connect(function()
