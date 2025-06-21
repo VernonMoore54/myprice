@@ -8,9 +8,6 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 local GameEvents = ReplicatedStorage:WaitForChild("GameEvents")
 local SeedDataModule = ReplicatedStorage:WaitForChild("Data"):WaitForChild("SeedData")
 
--- Конфигурация для Auto Plant
-local AUTO_PLANT_SEEDS = {"Coconut", "Bamboo"} -- Семена, которые будут автоматически сажаться
-
 -- Получение данных семян
 local SeedData = require(SeedDataModule)
 local SeedStock = {} -- Названия семян, DisplayInShop = true
@@ -37,10 +34,20 @@ local MyFarm = (function()
 end)()
 assert(MyFarm, "Ферма не найдена")
 
--- Поиск точки для посадки на ферме
-local plantObject = MyFarm.Important.Plant_Locations:WaitForChild("Can_Plant")
--- Предполагаем, что Can_Plant является BasePart, как указано пользователем.
-local plantPosition = plantObject.Position -- Получаем позицию напрямую
+-- Конфигурация семян для автопосадки
+local seedsToPlant = {"Coconut", "Bamboo"}
+
+-- Поиск места для посадки с атрибутом Side == "Right"
+local plantLocations = MyFarm.Important.Plant_Locations
+local canPlantRight
+for _, obj in ipairs(plantLocations:GetChildren()) do
+	if obj.Name == "Can_Plant" and obj:GetAttribute("Side") == "Right" then
+		canPlantRight = obj
+		break
+	end
+end
+assert(canPlantRight, "Can_Plant с Side == 'Right' не найден")
+local plantPosition = canPlantRight.Position
 
 --// GUI
 local ScreenGui = Instance.new("ScreenGui", PlayerGui)
@@ -55,7 +62,6 @@ MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
 MainFrame.BackgroundTransparency = 0.25
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
-MainFrame.AnchorPoint = Vector2.new(0, 0.5) -- Центрирование по вертикали
 
 local bg = Instance.new("ImageLabel", MainFrame)
 bg.Size = UDim2.new(1, 0, 1, 0)
@@ -88,7 +94,6 @@ LeftArrow.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
 LeftArrow.TextColor3 = Color3.new(0.8, 0.8, 1)
 LeftArrow.Font = Enum.Font.Code
 LeftArrow.TextSize = 20
-LeftArrow.ZIndex = 2 -- Выше MainFrame
 
 local RightArrow = Instance.new("TextButton", MainFrame)
 RightArrow.Size = UDim2.new(0, 24, 0, 50)
@@ -136,16 +141,14 @@ autoBuyBtn.Text = "AutoBuySeeds 🌱"
 autoBuyBtn.Font = Enum.Font.Code
 autoBuyBtn.TextColor3 = Color3.new(1,1,1)
 autoBuyBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-autoBuyBtn.Name = "AutoBuyButton"
 
 local autoPlantBtn = Instance.new("TextButton", home)
 autoPlantBtn.Size = UDim2.new(0,280,0,50)
-autoPlantBtn.Position = UDim2.new(0,20,0,80) -- Смещение ниже AutoBuyBtn
-autoPlantBtn.Text = "AutoPlant 🌾"
+autoPlantBtn.Position = UDim2.new(0,20,0,80)
+autoPlantBtn.Text = "AutoPlant 🌿"
 autoPlantBtn.Font = Enum.Font.Code
 autoPlantBtn.TextColor3 = Color3.new(1,1,1)
 autoPlantBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
-autoPlantBtn.Name = "AutoPlantButton"
 
 -- Buy page
 local buy = Instance.new("Frame", Content)
@@ -154,16 +157,16 @@ buy.BackgroundTransparency = 1
 buy.Visible = false
 pages["buy"] = buy
 
-local backFromBuy = Instance.new("ImageButton", buy)
-backFromBuy.Size = UDim2.new(0,28,0,28)
-backFromBuy.Position = UDim2.new(0,10,0,10)
-backFromBuy.Image = "rbxassetid://4952231049" -- Стрелка назад
-backFromBuy.BackgroundTransparency = 1
-backFromBuy.MouseButton1Click:Connect(function()
+local back = Instance.new("ImageButton", buy)
+back.Size = UDim2.new(0,28,0,28)
+back.Position = UDim2.new(0,10,0,10)
+back.Image = "rbxassetid://4952231049"
+back.BackgroundTransparency = 1
+back.MouseButton1Click:Connect(function()
 	switchPage("home")
 end)
 
--- Drop list (for AutoBuy)
+-- Drop list
 local selected = {}
 local drop = Instance.new("Frame", buy)
 drop.Size = UDim2.new(0,280,0,100)
@@ -263,7 +266,6 @@ clearBtn.MouseButton1Click:Connect(function()
 		end
 	end
 	label.Text = "Выбрано: "
-	updateSelectedText() -- Обновление текста после очистки
 end)
 
 -- Обновление текста выбранных семян
@@ -279,25 +281,19 @@ local function updateSelectedText()
 	end
 end
 
-local autoBuyEnabled = false
+local enabled = false
 toggle.MouseButton1Click:Connect(function()
-	autoBuyEnabled = not autoBuyEnabled
-	toggle.Text = autoBuyEnabled and "👍" or "?"
+	enabled = not enabled
+	toggle.Text = enabled and "👍" or "?"
 end)
 
 spawn(function()
 	while true do
 		wait(1)
-		if not autoBuyEnabled then continue end
+		if not enabled then continue end
 		for seed in pairs(selected) do
 			if selected[seed] then
-				-- Используем pcall для безопасного вызова GameEvents.BuySeedStock
-				local success, err = pcall(function()
-					GameEvents.BuySeedStock:FireServer(seed)
-				end)
-				if not success then
-					warn("Ошибка при покупке семян " .. seed .. ": " .. err)
-				end
+				GameEvents.BuySeedStock:FireServer(seed)
 			end
 		end
 	end
@@ -308,92 +304,72 @@ autoBuyBtn.MouseButton1Click:Connect(function()
 end)
 
 -- Auto Plant page
-local autoPlantPage = Instance.new("Frame", Content)
-autoPlantPage.Size = UDim2.new(1,0,1,0)
-autoPlantPage.BackgroundTransparency = 1
-autoPlantPage.Visible = false
-pages["autoPlant"] = autoPlantPage
+local autoPlant = Instance.new("Frame", Content)
+autoPlant.Size = UDim2.new(1,0,1,0)
+autoPlant.BackgroundTransparency = 1
+autoPlant.Visible = false
+pages["autoPlant"] = autoPlant
 
-local backFromAutoPlant = Instance.new("ImageButton", autoPlantPage)
-backFromAutoPlant.Size = UDim2.new(0,28,0,28)
-backFromAutoPlant.Position = UDim2.new(0,10,0,10)
-backFromAutoPlant.Image = "rbxassetid://4952231049" -- Стрелка назад
-backFromAutoPlant.BackgroundTransparency = 1
-backFromAutoPlant.MouseButton1Click:Connect(function()
+local backAutoPlant = Instance.new("ImageButton", autoPlant)
+backAutoPlant.Size = UDim2.new(0,28,0,28)
+backAutoPlant.Position = UDim2.new(0,10,0,10)
+backAutoPlant.Image = "rbxassetid://4952231049"
+backAutoPlant.BackgroundTransparency = 1
+backAutoPlant.MouseButton1Click:Connect(function()
 	switchPage("home")
 end)
 
-local autoPlantToggleFrame = Instance.new("Frame", autoPlantPage)
-autoPlantToggleFrame.Size = UDim2.new(0,280,0,60)
-autoPlantToggleFrame.Position = UDim2.new(0,20,0,60) -- Смещение ниже кнопки "назад"
-autoPlantToggleFrame.BackgroundColor3 = Color3.fromRGB(25,25,45)
+local toggleFrameAP = Instance.new("Frame", autoPlant)
+toggleFrameAP.Size = UDim2.new(0,280,0,60)
+toggleFrameAP.Position = UDim2.new(0,20,0,60)
+toggleFrameAP.BackgroundColor3 = Color3.fromRGB(25,25,45)
 
-local autoPlantToggle = Instance.new("TextButton", autoPlantToggleFrame)
-autoPlantToggle.Size = UDim2.new(0,60,0,40)
-autoPlantToggle.Position = UDim2.new(0,10,0,10)
-autoPlantToggle.Font = Enum.Font.Code
-autoPlantToggle.TextSize = 24
-autoPlantToggle.Text = "?"
-autoPlantToggle.BackgroundColor3 = Color3.fromRGB(35,35,55)
-autoPlantToggle.TextColor3 = Color3.new(1,1,1)
+local toggleAP = Instance.new("TextButton", toggleFrameAP)
+toggleAP.Size = UDim2.new(0,60,0,40)
+toggleAP.Position = UDim2.new(0,10,0,10)
+toggleAP.Font = Enum.Font.Code
+toggleAP.TextSize = 24
+toggleAP.Text = "?"
+toggleAP.BackgroundColor3 = Color3.fromRGB(35,35,55)
+toggleAP.TextColor3 = Color3.new(1,1,1)
 
-local autoPlantToggleLabel = Instance.new("TextLabel", autoPlantToggleFrame)
-autoPlantToggleLabel.Size = UDim2.new(1, -80, 0, 40)
-autoPlantToggleLabel.Position = UDim2.new(0, 80, 0, 10)
-autoPlantToggleLabel.BackgroundTransparency = 1
-autoPlantToggleLabel.Text = "AutoPlant Toggle 😋"
-autoPlantToggleLabel.TextColor3 = Color3.new(1,1,1)
-autoPlantToggleLabel.Font = Enum.Font.Code
-autoPlantToggleLabel.TextSize = 16
-toggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+local toggleLabelAP = Instance.new("TextLabel", toggleFrameAP)
+toggleLabelAP.Size = UDim2.new(1, -80, 0, 40)
+toggleLabelAP.Position = UDim2.new(0, 80, 0, 10)
+toggleLabelAP.BackgroundTransparency = 1
+toggleLabelAP.Text = "AutoPlant toggle 🌿"
+toggleLabelAP.TextColor3 = Color3.new(1,1,1)
+toggleLabelAP.Font = Enum.Font.Code
+toggleLabelAP.TextSize = 16
+toggleLabelAP.TextXAlignment = Enum.TextXAlignment.Left
 
 local autoPlantEnabled = false
-autoPlantToggle.MouseButton1Click:Connect(function()
+toggleAP.MouseButton1Click:Connect(function()
 	autoPlantEnabled = not autoPlantEnabled
-	autoPlantToggle.Text = autoPlantEnabled and "👍" or "?"
-end)
-
--- Логика Auto Plant
-spawn(function()
-	while true do
-		wait(0.5) -- Задержка между попытками посадки
-		if not autoPlantEnabled then continue end
-
-		-- Проверяем наличие семян в инвентаре игрока (LocalPlayer.Backpack)
-		for _, seedName in ipairs(AUTO_PLANT_SEEDS) do
-			local seedTool = LocalPlayer.Backpack:FindFirstChild(seedName .. " Seed") -- Пример: "Coconut Seed"
-			if seedTool then
-				-- Экипируем инструмент (перемещаем в LocalPlayer.Character)
-				local success, err = pcall(function()
-					seedTool.Parent = LocalPlayer.Character
-				end)
-				if not success then
-					warn("Ошибка при экипировке семян " .. seedName .. ": " .. err)
-				else
-					-- Отправляем запрос на посадку
-					local plantArgs = {
-						plantPosition, -- Используем найденную позицию
-						seedName
-					}
-					local plantSuccess, plantErr = pcall(function()
-						GameEvents.Plant_RE:FireServer(unpack(plantArgs))
-					end)
-					if not plantSuccess then
-						warn("Ошибка при посадке семян " .. seedName .. ": " .. plantErr)
-					end
-					-- После успешной посадки или попытки, можно снова убрать инструмент в рюкзак, если нужно,
-					-- но обычно игра делает это автоматически или оставляет его экипированным до следующего действия.
-					-- Для непрерывной посадки лучше оставить его экипированным или быстро переключать.
-					break -- Сажаем только одно семя за цикл, чтобы не спамить
-				end
-			end
-		end
-	end
+	toggleAP.Text = autoPlantEnabled and "👍" or "?"
 end)
 
 autoPlantBtn.MouseButton1Click:Connect(function()
 	switchPage("autoPlant")
 end)
 
--- Изначально отображаем домашнюю страницу
 switchPage("home")
+
+-- Логика автопосадки
+spawn(function()
+	while true do
+		wait(0.5)
+		if not autoPlantEnabled then continue end
+		for _, seed in ipairs(seedsToPlant) do
+			local toolName = seed .. " Seed"
+			local tool = LocalPlayer.Backpack:FindFirstChild(toolName)
+			if tool then
+				tool.Parent = LocalPlayer.Character
+				wait(0.1) -- Небольшая задержка для экипировки
+				local args = {plantPosition, seed}
+				GameEvents.Plant_RE:FireServer(unpack(args))
+				break
+			end
+		end
+	end
+end)
