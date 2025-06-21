@@ -41,7 +41,7 @@ assert(MyFarm, "Ферма не найдена")
 local rightPlantSpot = nil -- Переименовано для ясности, но переменная остается прежней
 local plantLocationsFolder = MyFarm.Important.Plant_Locations:WaitForChild("Can_Plant") -- Убедимся, что это существует
 for _, spot in ipairs(plantLocationsFolder:GetChildren()) do
-    if spot:IsA("BasePart") then -- Удален фильтр по атрибуту "Side"
+    if spot:IsA("Part") then -- Удален фильтр по атрибуту "Side"
         rightPlantSpot = spot
         break -- Берем первую найденную точку
     end
