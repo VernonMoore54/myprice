@@ -41,7 +41,7 @@ assert(MyFarm, "Ферма не найдена")
 local rightPlantSpot = nil
 local plantLocationsFolder = MyFarm.Important.Plant_Locations:WaitForChild("Can_Plant") -- Убедимся, что это существует
 for _, spot in ipairs(plantLocationsFolder:GetChildren()) do
-    if spot:IsA("BasePart") and spot:GetAttribute("Side") == "Right" then
+    if spot:IsA("BasePart") and spot:GetAttribute("Side") == "Left" then
         rightPlantSpot = spot
         break
     end
