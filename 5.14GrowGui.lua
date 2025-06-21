@@ -239,7 +239,7 @@ clearBtn.MouseButton1Click:Connect(function()
     for _, child in ipairs(scroll:GetChildren()) do
         if child:IsA("TextButton") then child.BackgroundColor3 = Color3.fromRGB(35,35,55) end
     end
-    label.Text = "Выбрано: "\end)
+    label.Text = "Выбрано: " end)
 
 local enabled = false
 toggle.MouseButton1Click:Connect(function()
