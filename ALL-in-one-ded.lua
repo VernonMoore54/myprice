@@ -1,7 +1,7 @@
 --// Список URL’ов для загрузки
 local urls = {
     "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/COROUTINES-REJOIN.lua",
-    "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/bondi.lua",
+    "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/bondi-R.lua",
     "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/COROUTINES-REJOIN---.lua",
     "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/AutoTP-To-Lobby.lua",
     "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/AutoKill-To-Lobby.lua",
