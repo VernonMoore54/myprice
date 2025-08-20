@@ -1,10 +1,9 @@
-repeat task.wait() until game:IsLoaded()
-repeat task.wait() until game.Players.LocalPlayer
-repeat task.wait() until game.Players.LocalPlayer.Character
+
+repeat task.wait(1) until game.Players.LocalPlayer.Character
 
 task.wait()
 
-setfpscap(15)
+setfpscap(10)
 
 -- This file was protected using Luraph Obfuscator v14.4.1 [https://lura.ph/]
 
