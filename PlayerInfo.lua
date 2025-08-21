@@ -3,7 +3,7 @@ local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
 
 -- Настройки
-local verticalOffset = -200
+local verticalOffset = -100
 local textSize = 35
 
 -- Создаем GUI
