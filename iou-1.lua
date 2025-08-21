@@ -46,6 +46,14 @@ if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen") then
     LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen"):Destroy()
 end
 
+task.wait(3)
+-- Цикл повторения
+repeat
+    LocalPlayer.Character.Humanoid.Health = 0
+    task.wait(3)
+until LocalPlayer.PlayerGui.HUD.Main.GameVersion.Text == "v1.791"
+task.wait(2)
+
 task.spawn(function()
     if game.Lighting:WaitForChild("DepthOfField", 10) then
         game.Lighting.DepthOfField:Destroy()
@@ -911,7 +919,7 @@ task.spawn(function()
             print("Prestiged")
             Teleport()
         elseif LocalPlayer.PlayerStats.Level.Value == 50 then
-		    if not Character:FindFirstChild("FocusCam") then
+		    if Character:FindFirstChild("FocusCam") then
                 Character.FocusCam:Destroy()
                 break
             end
