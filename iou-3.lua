@@ -46,6 +46,9 @@ if LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen") then
     LocalPlayer.PlayerGui:FindFirstChild("LoadingScreen"):Destroy()
 end
 
+task.wait(2)
+LocalPlayer.Character.Humanoid.Health = 0
+
 task.spawn(function()
     if game.Lighting:WaitForChild("DepthOfField", 10) then
         game.Lighting.DepthOfField:Destroy()
