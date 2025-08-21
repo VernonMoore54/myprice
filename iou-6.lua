@@ -785,7 +785,7 @@ local function autoStory()
     
     elseif questPanel:FindFirstChild("Defeat Leaky Eye Luca") and getgenv().standList[LocalPlayer.PlayerStats.Stand.Value] then
         print("LEAKY EYE LUCA")
-        LocalPlayer.Character.HumanoidRootPart.Position = -377, 0, -735
+        LocalPlayer.Character.HumanoidRootPart.Position = (-377, 0, -735)
         if killNPC("Leaky Eye Luca", 15) then
             task.wait(1)
             storyDialogue()
