@@ -4,7 +4,7 @@ until game:IsLoaded()
 
 
 
-local script = [[
+local function pon()
 local Players = game:GetService('Players')
 local TeleportService = game:GetService('TeleportService')
 
@@ -21,7 +21,7 @@ while true do
     end
     task.wait(3)
 end
-]]
+end
 
 
 
@@ -32,9 +32,9 @@ if teleportFunc then
         task.wait(0.1)
         until game:IsLoaded()
         
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-0.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-1.lua"))()
     ]])
 end
 
-script()
+pon()
 
