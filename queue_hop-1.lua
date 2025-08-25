@@ -1,9 +1,16 @@
-repeat task.wait(1)
+repeat
+    task.wait(1)
 until game:IsLoaded()
 
-queueteleport(loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-0.lua"))())
-
-do
+task.spawn(function()
+queue_on_teleport(
+    loadstring(
+        game:HttpGet(
+            'https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-0.lua'
+        )
+    )()
+)
+end)
 
 local Players = game:GetService('Players')
 local TeleportService = game:GetService('TeleportService')
@@ -22,4 +29,4 @@ while true do
     task.wait(3)
 end
 
-end
+
