@@ -2,13 +2,13 @@ repeat
     task.wait(1)
 until game:IsLoaded()
 
-task.spawn(function()
-    local ZOV = loadstring(game:HttpGet('https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-1.lua'))()
+
+    local ZOV = loadstring(game:HttpGet('https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-2.lua'))()
 
     queue_on_teleport(
         ZOV
     )
-end)
+
 
 local Players = game:GetService('Players')
 local TeleportService = game:GetService('TeleportService')
