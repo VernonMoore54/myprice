@@ -1,3 +1,6 @@
+    repeat task.wait(1)
+    until game:IsLoaded()
+
     local Players = game:GetService("Players")
     local KeepInfYield = false
     local TeleportCheck = false
@@ -8,7 +11,7 @@
     local script_to_execute = [[
         -- Здесь ваш loadstring
         -- Например:
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-1.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-0.lua"))()
     ]]
 
     -- Функция вызова queue_on_teleport
