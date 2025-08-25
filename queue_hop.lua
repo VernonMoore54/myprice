@@ -1,18 +1,10 @@
 repeat
-    task.wait(1)
+    task.wait(0.1)
 until game:IsLoaded()
 
-local teleportFunc = queueonteleport or queue_on_teleport
-if teleportFunc then
-    teleportFunc([[
-        if not game:IsLoaded() then
-            game.Loaded:Wait()
-        end
-        
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-0.lua"))()
-    ]])
-end
 
+
+local script = [[
 local Players = game:GetService('Players')
 local TeleportService = game:GetService('TeleportService')
 
@@ -29,4 +21,20 @@ while true do
     end
     task.wait(3)
 end
+]]
+
+
+
+local teleportFunc = queueonteleport or queue_on_teleport
+if teleportFunc then
+    teleportFunc([[
+        repeat
+        task.wait(0.1)
+        until game:IsLoaded()
+        
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-0.lua"))()
+    ]])
+end
+
+script()
 
