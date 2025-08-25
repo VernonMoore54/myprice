@@ -14,7 +14,7 @@ local function setupQueue(scriptUrl)
 end
 
 -- URL твоего скрипта
-local SCRIPT_URL = "https://raw.githubusercontent.com/yourusername/yourrepo/main/serverhop.lua"
+local SCRIPT_URL = "https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop.lua"
 
 -- Настройка очереди при телепорте
 local TeleportCheck = false
