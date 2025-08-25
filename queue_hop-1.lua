@@ -9,23 +9,16 @@
     --=== Ваш loadstring для исполнения после телепортации ===--
     -- Вставьте вашу ссылку или скрипт в следующий блок:
     local script_to_execute = [[
-        -- Здесь ваш loadstring
-        -- Например:
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-0.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-3.lua"))()
     ]]
 
     -- Функция вызова queue_on_teleport
     local function setupTeleportQueue()
-        if KeepInfYield and not TeleportCheck and queueteleport then
             TeleportCheck = true
-            queueteleport(script_to_execute)
-        end
+            queueteleport(loadstring(game:HttpGet("https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-3.lua"))())
     end
 
-    -- Перехват события телепорта
-    Players.LocalPlayer.OnTeleport:Connect(function(state)
-        setupTeleportQueue()
-    end)
+    setupTeleportQueue()
 
     -- Команды для управления queue_on_teleport:
     -- Активировать очередь после телепорта
