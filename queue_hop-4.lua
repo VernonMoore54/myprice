@@ -3,11 +3,9 @@ repeat
 until game:IsLoaded()
 
 
-    local ZOV = loadstring(game:HttpGet('https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-2.lua'))()
+    local ZOV = loadstring(game:HttpGet('https://raw.githubusercontent.com/VernonMoore54/myprice/refs/heads/main/queue_hop-3.lua'))()
 
-    queue_on_teleport(
-        ZOV
-    )
+    queue_on_teleport(ZOV)
 
 
 local Players = game:GetService('Players')
