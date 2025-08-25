@@ -1,3 +1,6 @@
+repeat task.wait(1)
+until game:IsLoaded()
+
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 
