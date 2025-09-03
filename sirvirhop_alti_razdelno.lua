@@ -1,4 +1,4 @@
-local function Teleport()
+local function Teleport123()
     do
         -- Функция для чтения JobId из Avaible-Server.txt
         local function readAvailableJobId()
@@ -116,4 +116,4 @@ local function Teleport()
     end
 end
 
-Teleport()
+Teleport123()
