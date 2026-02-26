@@ -1,0 +1,19 @@
+task.wait(60)
+if game.PlaceId == 79546208627805 then
+task.spawn(function()
+
+while true do
+local Players = game:GetService('Players')
+local TeleportService = game:GetService('TeleportService')
+local player = Players.LocalPlayer
+
+TeleportService:Teleport(79546208627805, player)
+task.wait(3)
+game:Shutdown()
+end
+
+end)
+print(join)
+task.wait(3)
+end
+end
