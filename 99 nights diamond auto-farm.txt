@@ -1,0 +1,9 @@
+repeat task.wait(0.1)
+until game:IsLoaded()
+
+getgenv().WebhookURL = "https://discord.com/api/webhooks/1375394949037555763/wFZtdjUScT8DRzJP17fIaUizeEXgcwcCmQZEprue9uPb7vi88RKVrOrbDrhKxfy0Oi_7" --If not used do not write anything
+setfpscap(15)
+
+getgenv().maxday = 114
+getgenv().webhook = "Url Here" -- sends after max day reached
+loadstring(game:HttpGet('https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FNDayFarm.lua'))()
